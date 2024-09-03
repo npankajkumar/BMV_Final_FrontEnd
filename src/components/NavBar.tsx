@@ -4,9 +4,9 @@ import {
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar"
-const NavBar = () => {
+const NavBar = ({className}:{className?:string}) => {
   return (
-    <div className="border-2 flex justify-between h-16 items-center font-bold" >
+    <div className={`border-2 flex justify-between h-16 items-center font-bold ${className}`} >
         <h1 className="text-3xl ml-4">Book My Venue</h1>
         <div className="flex">
         <Button variant="outline" className="mr-10 hover:shadow-sm">Bookings</Button>
