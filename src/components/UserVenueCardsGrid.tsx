@@ -1,15 +1,27 @@
-import React from 'react'
 import { CardTitle } from './ui/card'
-import {venueCardsData} from "../db.ts"
 import VenueCard from './VenueCard'
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
-const UserVenueCardsGrid = ({className, title}:{className?:string, title:string}) => {
+interface cardData {
+  title: string;
+  rating: number;
+  city: string;
+  imageUrl: string;
+  provider: string;
+  latitude: number;
+  longitude:number
+}
+
+const UserVenueCardsGrid = ({className, title, cardDataArray}:{className?:string, title:string, cardDataArray:cardData[]}) => {
   return (
     <div className={`${className}`}>
         <CardTitle className='mb-4'>{title}:</CardTitle>
-        <div className='grid grid-cols-3 gap-4'>
-            {venueCardsData.map(cardData=><VenueCard title={cardData.title} city={cardData.city} rating={cardData.rating} imageUrl={cardData.imageUrl} provider={cardData.city} />)}
-        </div>
+        <ScrollArea className="w-full whitespace-nowrap rounded-md border">
+      <div className="flex w-max space-x-4 p-4">
+        {cardDataArray.map((cardData,i) => <div key={i}><VenueCard title={cardData.title} city={cardData.city} rating={cardData.rating} imageUrl={cardData.imageUrl} provider={cardData.provider} latitude={cardData.latitude} longitude={cardData.longitude}/></div>)}
+      </div>
+      <ScrollBar orientation="horizontal" className='text-primary'/>
+    </ScrollArea>
     </div>
   )
 }
