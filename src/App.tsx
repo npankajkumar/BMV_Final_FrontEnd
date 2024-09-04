@@ -1,19 +1,15 @@
-import NavBar from "./components/NavBar"
-import SearchBar from "./components/SearchBar"
-import UserVenueCardsGrid from "./components/UserVenueCardsGrid"
-import { venueCardsData } from "./db"
-import Venue from "./pages/user/Venue"
+import NavBar from "./components/NavBar";
+import RegisterVenue from "./components/RegisterVenue";
 
 function App() {
-
   return (
-    <div className="w-full">
+    <div className="w-full h-svh">
       <NavBar />
-      {/* <SearchBar className="mx-auto my-8"/>
-      <UserVenueCardsGrid title="Top-rated" className="ml-10" cardDataArray={venueCardsData}/> */}
-      <Venue/>
+      <div className="m-5">
+        <RegisterVenue />
+      </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
