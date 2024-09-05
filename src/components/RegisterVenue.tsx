@@ -3,17 +3,18 @@ import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 import { Button } from "./ui/button";
 import { SelectScrollable } from "./SelectKindOf";
+import MultipleImageUpload from "./MultipleImageUpload";
 
 const RegisterVenue = () => {
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white shadow-xl rounded-lg mt-8 mb-8">
-      <h1 className="text-2xl font-bold mb-6 text-center">
+    <div className="max-w-3xl mx-auto p-8  shadow-lg rounded-md mt-10 mb-10">
+      <h1 className="text-3xl font-semibold mb-8 text-center text-gray-800">
         Register Your Venue
       </h1>
-      <div className="mb-4">
+      <div className="mb-6">
         <Label
           htmlFor="propertyName"
-          className="block text-base font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700"
         >
           Property Name:
         </Label>
@@ -21,22 +22,22 @@ const RegisterVenue = () => {
           type="text"
           id="propertyName"
           placeholder="Enter your property name"
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-10"
+          className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-500 focus:border-gray-500"
         />
       </div>
-      <div className="mb-4">
+      <div className="mb-6">
         <Label
           htmlFor="propertyType"
-          className="block text-base font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700"
         >
           Kind of Property:
         </Label>
         <SelectScrollable />
       </div>
-      <div className="mb-4">
+      <div className="mb-6">
         <Label
           htmlFor="address"
-          className="block text-base font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700"
         >
           Address:
         </Label>
@@ -44,40 +45,32 @@ const RegisterVenue = () => {
           type="text"
           id="address"
           placeholder="Enter the address of your property"
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm h-10"
+          className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-500 focus:border-gray-500"
         />
       </div>
-      <div className="mb-4">
-        <Label
-          htmlFor="picture"
-          className="block text-base font-medium text-gray-700"
-        >
-          Upload images of your Property:
+      <div className="mb-6">
+        <Label className="block text-sm font-medium text-gray-700">
+          Upload Images of Your Property:
         </Label>
-        <Input
-          id="picture"
-          type="file"
-          multiple
-          className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 h-14"
-        />
+        <MultipleImageUpload />
       </div>
-      <div className="mb-4">
+      <div className="mb-6">
         <Label
           htmlFor="message"
-          className="block text-base font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700"
         >
-          Rules and Regulations of your property:
+          Rules and Regulations of Your Property:
         </Label>
         <Textarea
           placeholder="Start typing..."
           id="message"
-          className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          className="mt-2 block w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-gray-500 focus:border-gray-500"
         />
       </div>
       <div className="text-center">
         <Button
           variant="outline"
-          className="mt-4 px-6 py-2 bg-indigo-600 text-white font-semibold rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 h-9 text-base"
+          className="px-6 py-2 bg-primary text-white font-semibold rounded-md shadow-sm hover:bg-gray-800 hover:text-white"
         >
           Submit
         </Button>
