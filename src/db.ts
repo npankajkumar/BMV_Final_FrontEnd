@@ -34,3 +34,31 @@ export const availableSlots: Slot[] = [
   { id: "slot19", amount: 1000, status: "available", from: new Date("2024-09-19T09:30:00"), to: new Date("2024-09-19T13:30:00"), duration: 4 },
   { id: "slot20", amount: 1050, status: "blocked", from: new Date("2024-09-20T15:00:00"), to: new Date("2024-09-20T19:00:00"), duration: 4 }
 ];
+
+export const chartData = [
+  { "day": 1, "earnings": 200 },
+  { "day": 2, "earnings": 150 },
+  { "day": 3, "earnings": 220 },
+  { "day": 4, "earnings": 180 },
+  { "day": 5, "earnings": 210 },
+  { "day": 6, "earnings": 190 },
+  { "day": 7, "earnings": 230 },
+  { "day": 8, "earnings": 170 },
+  { "day": 9, "earnings": 250 },
+  { "day": 10, "earnings": 160 },
+  { "day": 11, "earnings": 240 },
+  { "day": 12, "earnings": 200 },
+  { "day": 13, "earnings": 180 },
+  { "day": 14, "earnings": 220 },
+  { "day": 15, "earnings": 210 },
+  { "day": 16, "earnings": 190 },
+  { "day": 17, "earnings": 230 },
+  { "day": 18, "earnings": 170 },
+  { "day": 19, "earnings": 250 },
+  { "day": 20, "earnings": 160 },
+  { "day": 21, "earnings": 240 },
+  { "day": 22, "earnings": 200 },
+  { "day": 23, "earnings": 180 },
+  
+]
+

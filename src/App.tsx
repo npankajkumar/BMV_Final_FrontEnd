@@ -1,15 +1,13 @@
 import NavBar from "./components/NavBar";
-import RegisterVenue from "./components/RegisterVenue";
-import { DataTable } from "./components/data-table/DataTable";
-import { columns } from "./components/data-table/columns";
-import { availableSlots } from "./db";
+import {EarningsChart} from "./components/line-chart/LineChart"
+import { chartData } from "./db";
 
 function App() {
   return (
     <div className="w-full h-svh">
       <NavBar />
       <div className="m-5">
-        <DataTable columns={columns} data={availableSlots}/>
+        <EarningsChart className="w-1/4 h-1/4" data={chartData} percentageIncrease={0.12} bookings={100}/>
       </div>
     </div>
   );
