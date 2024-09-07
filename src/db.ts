@@ -62,3 +62,85 @@ export const chartData = [
   
 ]
 
+export const earningsByDayConfig = {
+  earnings: {
+    label: "Earnings",
+  },
+  monday: {
+    label: "Monday",
+    color: "hsl(var(--chart-1))",
+  },
+  tuesday: {
+    label: "Tuesday",
+    color: "hsl(var(--chart-2))",
+  },
+  wednesday: {
+    label: "Wednesday",
+    color: "hsl(var(--chart-3))",
+  },
+  thursday: {
+    label: "Thursday",
+    color: "hsl(var(--chart-4))",
+  },
+  friday: {
+    label: "Friday",
+    color: "hsl(var(--chart-5))",
+  },
+  saturday:{
+    label: "Saturday",
+    color: "hsl(var(--chart-6))",
+  },
+  sunday:{
+    label:"Sunday",
+    color: "hsl(var(--chart-7))"
+  }
+}
+
+export const earningsByHourConfig = {
+  earnings:{label:"Earnings"},
+  h12am: { label: "12 A.M - 1 A.M", color: "hsl(347, 77%, 50%)" },
+  h1am: { label: "1 A.M - 2 A.M", color: "hsl(347, 77%, 55%)" },
+  h2am: { label: "2 A.M - 3 A.M", color: "hsl(347, 77% ,45%)" },
+  h3am: { label: "3 A.M - 4 A.M", color: "hsl(347, 77% 6,0%)" },
+  h4am: { label: "4 A.M - 5 A.M", color: "hsl(347, 77% 40,%)" },
+  h5am: { label: "5 A.M - 6 A.M", color: "hsl(347, 77% 65%,)" },
+  h6am: { label: "6 A.M - 7 A.M", color: "hsl(347, 77% 35%)," },
+  h7am: { label: "7 A.M - 8 A.M", color: "hsl(347, 77% 70%)", },
+  h8am: { label: "8 A.M - 9 A.M", color: "hsl(347, 77% 30%)" ,},
+  h9am: { label: "9 A.M - 10 A.M", color: "hsl(347, 77%, 75%)" ,},
+  h10am: { label: "10 A.M - 11 A.M", color: "hsl(347, 77%, 25%)" },
+  h11am: { label: "11 A.M - 12 P.M", color: "hsl(347, 77% ,80%)" },
+  h12pm: { label: "12 P.M - 1 P.M", color: "hsl(347, 77% 2,0%)" },
+  h1pm: { label: "1 P.M - 2 P.M", color: "hsl(347, 77% 85,%)" },
+  h2pm: { label: "2 P.M - 3 P.M", color: "hsl(347, 77% 15%,)" },
+  h3pm: { label: "3 P.M - 4 P.M", color: "hsl(347, 77% 90%)," },
+  h4pm: { label: "4 P.M - 5 P.M", color: "hsl(347, 77% 10%)", },
+  h5pm: { label: "5 P.M - 6 P.M", color: "hsl(347, 77% 95%)" ,},
+  h6pm: { label: "6 P.M - 7 P.M", color: "hsl(347, 77%, 5%)" },
+  h7pm: { label: "7 P.M - 8 P.M", color: "hsl(347, 77%, 100%)" ,},
+  h8pm: { label: "8 P.M - 9 P.M", color: "hsl(347, 77%, 50%)" },
+  h9pm: { label: "9 P.M - 10 P.M", color: "hsl(347, 77% ,55%)" },
+  h10pm: { label: "10 P.M - 11 P.M", color: "hsl(347, 77%, 45%)" },
+  h11pm: { label: "11 P.M - 12 A.M", color: "red" }
+};
+
+export const earningsByDayChartData = [
+  { "day": "monday", "earnings": 275, "fill": "var(--color-monday)" },
+  { "day": "tuesday", "earnings": 320, "fill": "var(--color-tuesday)" },
+  { "day": "wednesday", "earnings": 290, "fill": "var(--color-wednesday)" },
+  { "day": "thursday", "earnings": 310, "fill": "var(--color-thursday)" },
+  { "day": "friday", "earnings": 280, "fill": "var(--color-friday)" },
+  { "day": "saturday", "earnings": 350, "fill": "var(--color-saturday)" },
+  { "day": "sunday", "earnings": 300, "fill": "var(--color-sunday)" }
+]
+
+
+
+export const earningsByHourChartData = [
+  { "hour": "h12am", "earnings": 275, "fill": "var(--color-h12am)" },
+  { "hour": "h1am", "earnings": 150, "fill": "var(--color-h1am)" },
+  { "hour": "h2am", "earnings": 200, "fill": "var(--color-h2am)" },
+  { "hour": "h3am", "earnings": 180, "fill": "var(--color-h3am)" },
+  { "hour": "h4am", "earnings": 220, "fill": "var(--color-h4am)" },
+  { "hour": "h5am", "earnings": 190, "fill": "var(--color-h5am)" },
+];
