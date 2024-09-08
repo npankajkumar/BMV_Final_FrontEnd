@@ -38,15 +38,22 @@ const FormSchema = z.object({
   }),
   startTime: z
     .string({
-      required_error: "Please select an email to display.",
+      required_error: "Please select a start date.",
+    }),
+    endTime: z
+    .string({
+      required_error: "Please select an end date.",
     })
 })
 
-export function DatePickerForm() {
+export function HoursCard() {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
 
+
+  const slotDate = form.watch("slotDate")
+  const startTime = form.watch("startTime");
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
    console.log(data)
@@ -55,19 +62,20 @@ export function DatePickerForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="grid grid-cols-3 gap-4">
         <FormField
           control={form.control}
           name="slotDate"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Date of birth</FormLabel>
+            <FormItem className="flex flex-col my-auto">
+              <FormLabel>Slot Date</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
                       variant={"outline"}
                       className={cn(
-                        "w-[240px] pl-3 text-left font-normal",
+                        "pl-3 text-left font-normal my-2",
                         !field.value && "text-muted-foreground"
                       )}
                     >
@@ -94,9 +102,6 @@ export function DatePickerForm() {
                   />
                 </PopoverContent>
               </Popover>
-              <FormDescription>
-                Your date of birth is used to calculate your age.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -105,23 +110,51 @@ export function DatePickerForm() {
           control={form.control}
           name="startTime"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
+            <FormItem className="flex flex-col my-auto justify-center">
+              <FormLabel>Start Time</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a verified email to display" />
+                    <SelectValue placeholder="Select a start time" />
                   </SelectTrigger>
                 </FormControl>
                 <SelectContent>
-                  {generateTimeStrings(form.getValues("slotDate")).map(timeString=><SelectItem key={timeString} value={timeString}>{timeString}</SelectItem>)}
+                  {generateTimeStrings(slotDate).map((time,i)=><SelectItem key={i} value={`${time.hour}-${time.minute}`}>{`${time.hour}-${time.minute}`}</SelectItem>)}
                 </SelectContent>
               </Select>
               <FormMessage />
             </FormItem>
           )}
         />
-        
+
+        {startTime && <FormField
+          control={form.control}
+          name="endTime"
+          render={({ field }) => (
+            <FormItem className="flex flex-col my-auto justify-center">
+              <FormLabel>End Time</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select an end time" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent className="h-40">
+                  {generateTimeStrings(slotDate).filter(time=>{const h =parseInt(startTime.split("-")[0]); const m=parseInt(startTime.split("-")[1])+15;
+                  if(time.hour<h || (time.hour==h && time.minute<m)){
+                    return false
+                  }
+                  else{
+                    return true
+                  }
+                  }).map((time,i)=><SelectItem key={i} value={`${time.hour}-${time.minute}`}>{`${time.hour}-${time.minute}`}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />}
+        </div>
         <Button type="submit">Submit</Button>
       </form>
     </Form>

@@ -29,8 +29,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrig
 import { add, isToday, set } from "date-fns"
 import { useEffect, useState } from "react"
 import { time } from "console"
+import { HoursCard } from "./HoursCard"
 
-export function DialogDemo() {
+export function CreateSlotDialouge() {
 
   return (
     <Dialog>
@@ -76,15 +77,12 @@ export function DialogDemo() {
         </Card>
       </TabsContent>
     </Tabs>
-        <DialogFooter>
-          <Button type="submit">Save changes</Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
 }
 
-const HoursCard = ()=>{
+const HCard = ()=>{
   const [date, setDate] = useState<Date>(new Date());
   const [fromDate, setFromDate] = useState<Date>(new Date());
   const [toDate, setToDate] = useState<Date>(new Date());
@@ -134,7 +132,7 @@ const HoursCard = ()=>{
 const TimeSelection = ({from, handleTimeSelection}:{from:Date,  handleTimeSelection:(timeString: string) => void})=>{
   let [times, setTimes] = useState<string[]>([]);
     useEffect(()=>{
-   setTimes(generateTimeStrings(from));
+  //  setTimes(generateTimeStrings(from));
     },[])
 
     return <Select onValueChange={handleTimeSelection}>
@@ -162,7 +160,8 @@ export function generateTimeStrings(startDate:Date) {
       let period = hour < 12 ? "A.M" : "P.M";
       let displayHour = hour % 12 === 0 ? 12 : hour % 12;
       let displayMinute = minute === 0 ? "00" : minute;
-      times.push(`${displayHour}:${displayMinute} ${period}`);
+      // times.push(`${displayHour}${displayMinute}`);
+      times.push({hour, minute})
     }
   }
   return times;
