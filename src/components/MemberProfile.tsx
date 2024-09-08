@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import MemberProfilePage from "./MemberProfilePage";
+// import VenueProfilePage from "./VenueProfilePage";
 
 const MemberProfile = () => {
   const [activeMenuItem, setActiveMenuItem] = useState("Profile");
@@ -25,13 +26,8 @@ const MemberProfile = () => {
             <p>Here are your bookings.</p>
           </div>
         );
-      case "My Properties":
-        return (
-          <div>
-            <h2 className="text-2xl font-bold">My Properties</h2>
-            <p>Here are your properties.</p>
-          </div>
-        );
+      case "My Venues":
+        return <div>{/* <VenueProfilePage /> */}</div>;
       case "Others":
         return (
           <div>
@@ -75,13 +71,13 @@ const MemberProfile = () => {
           </li>
           <li
             className={`px-4 py-3 rounded-lg text-center text-lg font-bold cursor-pointer transition-colors duration-200 ${
-              activeMenuItem === "My Properties"
+              activeMenuItem === "My Venues"
                 ? "bg-primary text-white"
                 : "bg-gray-200 text-gray-700 hover:bg-red-400 hover:text-white"
             }`}
-            onClick={() => setActiveMenuItem("My Properties")}
+            onClick={() => setActiveMenuItem("My Venues")}
           >
-            My Properties
+            My Venues
           </li>
           <li
             className={`px-4 py-3 rounded-lg text-center text-lg font-bold cursor-pointer transition-colors duration-200 ${
@@ -95,8 +91,6 @@ const MemberProfile = () => {
           </li>
         </ul>
       </div>
-
-      {/* Content Area */}
       <div className="w-3/4 p-6">{renderContent()}</div>
     </div>
   );
