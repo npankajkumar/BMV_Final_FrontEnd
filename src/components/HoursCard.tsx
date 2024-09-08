@@ -31,20 +31,49 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { generateTimeStrings } from "./CreateSlotDialouge"
+import { Input } from "./ui/input"
+import { DialogClose } from "./ui/dialog"
 
 const FormSchema = z.object({
   slotDate: z.date({
-    required_error: "A date of birth is required.",
+    required_error: "A slot date is required.",
   }),
   startTime: z
     .string({
       required_error: "Please select a start date.",
     }),
-    endTime: z
+  endTime: z
     .string({
       required_error: "Please select an end date.",
-    })
+    }),
+  repeat: z
+  .string({
+    required_error: "Please select repeat condition.",
+  }),
+  until: z
+  .string({
+  }).optional().default("end of day"),
+  weekdayPrice: z
+  .string({
+    required_error: "Please set weekday price.",
+  }),
+  weekendPrice: z
+  .string({
+    required_error: "Please set weekend price.",
+  })
 })
+
+const getUntilConditions = (repeatCondition:string)=>{
+  if(repeatCondition=="do not repeat"){
+    return [];
+  }
+  else if(repeatCondition=="daily"){
+    return ["end of week", "end of month"]
+  }
+  else{
+    return ["end of month"]
+  }
+}
 
 export function HoursCard() {
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -54,6 +83,7 @@ export function HoursCard() {
 
   const slotDate = form.watch("slotDate")
   const startTime = form.watch("startTime");
+  const repeat = form.watch("repeat")
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
    console.log(data)
@@ -62,7 +92,7 @@ export function HoursCard() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <div className="grid grid-cols-3 gap-4">
+        <div className="grid grid-cols-3 gap-4 my-4">
         <FormField
           control={form.control}
           name="slotDate"
@@ -106,7 +136,7 @@ export function HoursCard() {
             </FormItem>
           )}
         />
-        <FormField
+        {slotDate && <FormField
           control={form.control}
           name="startTime"
           render={({ field }) => (
@@ -125,7 +155,7 @@ export function HoursCard() {
               <FormMessage />
             </FormItem>
           )}
-        />
+        />}
 
         {startTime && <FormField
           control={form.control}
@@ -155,7 +185,93 @@ export function HoursCard() {
           )}
         />}
         </div>
-        <Button type="submit">Submit</Button>
+
+        <div className="grid grid-cols-2 gap-4 my-4">
+        <FormField
+          control={form.control}
+          name="repeat"
+          render={({ field }) => (
+            <FormItem className="flex flex-col my-auto justify-center">
+              <FormLabel>Repeat</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select repeat condition" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {["do not repeat", "daily", "weekly"].map((condition,i)=><SelectItem key={i} value={condition}>{condition}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {repeat && repeat != "do not repeat" && <FormField
+          control={form.control}
+          name="until"
+          render={({ field }) => (
+            <FormItem className="flex flex-col my-auto justify-center">
+              <FormLabel>Until</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select until condition" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {
+                    getUntilConditions(repeat).map((condition,i)=><SelectItem key={i} value={condition}>{condition}</SelectItem>)}
+                </SelectContent>
+              </Select>
+              <FormMessage />
+            </FormItem>
+          )}
+        />}
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 my-4">
+        <FormField
+          control={form.control}
+          name="weekdayPrice"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Weekday Price</FormLabel>
+              <FormControl>
+                <Input placeholder="Weekday price" type="number" {...field} />
+              </FormControl>
+              <FormDescription>
+                {"Mon-Fri"}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+            )}
+            />
+          <FormField
+          control={form.control}
+          name="weekendPrice"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Weekday Price</FormLabel>
+              <FormControl>
+                <Input placeholder="Weekend price" type="number" {...field} />
+              </FormControl>
+              <FormDescription>
+                {"Sat-Sun"}
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+            )}
+            />
+        </div>
+        <div className="flex justify-around gap-4">
+            <DialogClose asChild>
+              <Button>Cancel</Button>
+            </DialogClose>
+            <DialogClose asChild>
+              <Button type="submit">Submit</Button>
+            </DialogClose>
+        </div>
       </form>
     </Form>
   )
