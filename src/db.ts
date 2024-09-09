@@ -144,3 +144,27 @@ export const earningsByHourChartData = [
   { "hour": "h4am", "earnings": 220, "fill": "var(--color-h4am)" },
   { "hour": "h5am", "earnings": 190, "fill": "var(--color-h5am)" },
 ];
+type slot = {id:string, start:Date, end: Date, price:number, status:"booked"|"blocked"|"available"}
+
+export const slots:slot[] = [
+  { id: "1", start: new Date("2024-09-10T08:00:00"), end: new Date("2024-09-10T09:00:00"), price: 100, status: "available" },
+  { id: "2", start: new Date("2024-09-10T09:30:00"), end: new Date("2024-09-10T10:30:00"), price: 150, status: "booked" },
+  { id: "3", start: new Date("2024-09-10T11:00:00"), end: new Date("2024-09-10T12:00:00"), price: 120, status: "blocked" },
+  { id: "4", start: new Date("2024-09-10T12:30:00"), end: new Date("2024-09-10T13:30:00"), price: 130, status: "available" },
+  { id: "5", start: new Date("2024-09-10T14:00:00"), end: new Date("2024-09-10T15:00:00"), price: 140, status: "booked" },
+  { id: "6", start: new Date("2024-09-10T15:30:00"), end: new Date("2024-09-10T16:30:00"), price: 110, status: "blocked" },
+  { id: "7", start: new Date("2024-09-10T17:00:00"), end: new Date("2024-09-10T18:00:00"), price: 160, status: "available" },
+  { id: "8", start: new Date("2024-09-10T18:30:00"), end: new Date("2024-09-10T19:30:00"), price: 170, status: "booked" },
+  { id: "9", start: new Date("2024-09-10T20:00:00"), end: new Date("2024-09-10T21:00:00"), price: 180, status: "blocked" },
+  { id: "10", start: new Date("2024-09-10T21:30:00"), end: new Date("2024-09-10T22:30:00"), price: 190, status: "available" },
+  { id: "11", start: new Date("2024-09-11T08:00:00"), end: new Date("2024-09-11T09:00:00"), price: 200, status: "booked" },
+  { id: "12", start: new Date("2024-09-11T09:30:00"), end: new Date("2024-09-11T10:30:00"), price: 210, status: "blocked" },
+  { id: "13", start: new Date("2024-09-11T11:00:00"), end: new Date("2024-09-11T12:00:00"), price: 220, status: "available" },
+  { id: "14", start: new Date("2024-09-11T12:30:00"), end: new Date("2024-09-11T13:30:00"), price: 230, status: "booked" },
+  { id: "15", start: new Date("2024-09-11T14:00:00"), end: new Date("2024-09-11T15:00:00"), price: 240, status: "blocked" },
+  { id: "16", start: new Date("2024-09-11T15:30:00"), end: new Date("2024-09-11T16:30:00"), price: 250, status: "available" },
+  { id: "17", start: new Date("2024-09-11T17:00:00"), end: new Date("2024-09-11T18:00:00"), price: 260, status: "booked" },
+  { id: "18", start: new Date("2024-09-11T18:30:00"), end: new Date("2024-09-11T19:30:00"), price: 270, status: "blocked" },
+  { id: "19", start: new Date("2024-09-11T20:00:00"), end: new Date("2024-09-11T21:00:00"), price: 280, status: "available" },
+  { id: "20", start: new Date("2024-09-11T21:30:00"), end: new Date("2024-09-11T22:30:00"), price: 290, status: "booked" }
+];
