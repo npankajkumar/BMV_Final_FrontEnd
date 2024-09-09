@@ -252,7 +252,7 @@ export function HoursCard() {
           name="weekendPrice"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Weekday Price</FormLabel>
+              <FormLabel>Weekend Price</FormLabel>
               <FormControl>
                 <Input placeholder="Weekend price" type="number" {...field} />
               </FormControl>

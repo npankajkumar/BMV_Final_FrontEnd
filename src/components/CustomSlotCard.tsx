@@ -27,13 +27,13 @@ const CustomSlotCard = () => {
     <div>
         <div className='flex flex-col gap-2'>
             <p className='font-semibold'>{"Start"}</p>
-            <div className='grid grid-cols-2'>
+            <div className='grid grid-cols-2 gap-4'>
             <Popover>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
-            "w-[280px] justify-start text-left font-normal",
+            "w-[280px] justify-start my-auto text-left font-normal",
             !startDate && "text-muted-foreground"
           )}
         >
@@ -82,13 +82,13 @@ const CustomSlotCard = () => {
         </div>
         <div className='flex flex-col gap-2'>
             <p className='font-semibold'>{"End"}</p>
-            <div className='grid grid-cols-2'>
+            <div className='grid grid-cols-2 gap-4'>
             <Popover>
       <PopoverTrigger asChild>
         <Button
           variant={"outline"}
           className={cn(
-            "w-[280px] justify-start text-left font-normal",
+            "w-[280px] justify-start my-auto text-left font-normal",
             !endDate && "text-muted-foreground"
           )}
         >
@@ -116,16 +116,16 @@ const CustomSlotCard = () => {
           {
             ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24"].filter(hour=>
                 {const ch = parseInt(hour);
-                    if((startDate ?? new Date())<=(endDate??new Date()) && (parseInt(startHour??"24"))<ch)
-                        return false
-                    return true
+                    if((startDate ?? new Date())<=(endDate??new Date()) && (parseInt(startHour??"24"))<=ch)
+                        return true
+                    return false
             }).map(hour=><SelectItem key={hour} value={hour}>{hour}</SelectItem>)
           }
         </SelectGroup>
       </SelectContent>
     </Select>
     {" : "}
-    <Select onValueChange={setStartMinute} defaultValue={startMinute}>
+    <Select onValueChange={setEndMinute} defaultValue={endMinute}>
       <SelectTrigger className="">
         <SelectValue placeholder="MM"/>
       </SelectTrigger>
