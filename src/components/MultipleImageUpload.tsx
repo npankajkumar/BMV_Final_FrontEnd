@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { Input } from "./ui/input";
+import { Button } from "./ui/button";
 
 const MultipleImageUpload = () => {
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
@@ -17,12 +19,13 @@ const MultipleImageUpload = () => {
 
   return (
     <div className="w-full">
-      <input
+      <Input
+      id="picture"
         type="file"
         multiple
         accept="image/*"
         onChange={handleImageChange}
-        className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md mb-2 py-2 px-4 focus:outline-none focus:ring-gray-500 focus:border-gray-500"
+        // className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md mb-2 py-2 px-4 focus:outline-none focus:ring-gray-500 focus:border-gray-500"
       />
 
       {selectedImages.length > 0 && (
@@ -37,22 +40,22 @@ const MultipleImageUpload = () => {
                 alt={`Selected ${index}`}
                 className="w-full h-32 object-cover rounded-md"
               />
-              <button
+              <Button
                 onClick={() => removeImage(index)}
-                className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full text-xs"
+                // className="absolute top-2 right-2 bg-red-500 text-white p-1 rounded-full text-xs"
               >
                 X
-              </button>
+              </Button>
             </div>
           ))}
         </div>
       )}
-      <button
-        className="block w-full bg-gray-700 text-white py-2 px-4 rounded-md font-semibold hover:bg-gray-800 transition"
+      <Button
+      className="my-3"
         onClick={() => console.log("Images to upload:", selectedImages)}
       >
         Upload Images
-      </button>
+      </Button>
     </div>
   );
 };

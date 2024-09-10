@@ -2,9 +2,54 @@ import VenuePageHeader from "@/components/VenuePageHeader"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 import { IndianRupee } from "lucide-react"
+import { useEffect, useState } from "react"
 
 const Venue = () => {
+
+  const [pageLoading, setPageLoading] = useState(true);
+    useEffect(()=>{
+        // axios.get('https://api.example.com/data')
+        //       .then(response => {
+        //         setData(response.data);
+        //         setLoading(false);
+        //       })
+        //       .catch(error => {
+        //         console.error('Error fetching data:', error);
+        //         setLoading(false);
+        //       });
+        setTimeout(() => {
+            setPageLoading(false);
+          }, 5000); 
+        }
+    )
+  if(pageLoading)return (
+    <div className='p-4 '>        
+        <div className="grid grid-cols-2 space-x-4  p-4">
+                <div className='flex flex-col gap-2'>
+                <Skeleton className='w-40 h-10'/>
+                <Skeleton className='w-30 h-10'/>
+                <Skeleton className='w-10 h-10'/>
+                </div>
+                <div className='flex flex-col gap-2'>
+                <Skeleton className='w-40 h-10'/>
+                <Skeleton className='w-40 h-10'/>
+                <div className='flex gap-2'>
+                <Skeleton className='w-10 h-10'/>
+                <Skeleton className='w-10 h-10'/>
+                </div>
+                </div>
+    </div>
+    <div className="grid grid-cols-3 gap-4">
+    <Skeleton className="h-60 w-full rounded-md"/>
+    <div className="col-span-2">
+      <Skeleton className="h-60"/>
+    </div>
+    </div>
+    </div>
+  )
+
     const imageUrl =  "https://media.hudle.in/photos/49940"
   return (
     <div className="p-6">

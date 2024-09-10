@@ -8,13 +8,13 @@ import MultipleImageUpload from "./MultipleImageUpload";
 const RegisterVenue = () => {
   return (
     <div className="max-w-3xl mx-auto p-8  shadow-lg rounded-md mt-10 mb-10">
-      <h1 className="text-3xl font-semibold mb-8 text-center text-gray-800">
+      <h1 className="text-3xl font-semibold mb-8 text-center">
         Register Your Venue
       </h1>
       <div className="mb-6">
         <Label
           htmlFor="propertyName"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium "
         >
           Property Name:
         </Label>
@@ -28,7 +28,7 @@ const RegisterVenue = () => {
       <div className="mb-6">
         <Label
           htmlFor="propertyType"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium "
         >
           Kind of Property:
         </Label>
@@ -37,7 +37,7 @@ const RegisterVenue = () => {
       <div className="mb-6">
         <Label
           htmlFor="address"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium "
         >
           Address:
         </Label>
@@ -49,15 +49,15 @@ const RegisterVenue = () => {
         />
       </div>
       <div className="mb-6">
-        <Label className="block text-sm font-medium text-gray-700">
+        <Label className="block text-sm font-medium my-2">
           Upload Images of Your Property:
         </Label>
         <MultipleImageUpload />
       </div>
-      <div className="mb-6">
+      <div className="my-3">
         <Label
           htmlFor="message"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium "
         >
           Rules and Regulations of Your Property:
         </Label>

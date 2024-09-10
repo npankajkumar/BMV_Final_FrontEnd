@@ -8,9 +8,10 @@ const Index = () => {
     const navigate = useNavigate();
     const token = localStorage.getItem("auth");
     useEffect(()=>{
-        if(!token || (token!="user" && token!="provider"))
+        if(!token || (token!="user" && token!="provider")){
+            navigate("/login");
+        }
         setRootLoading(false);
-        navigate("/login");
     })
     if(rootLoading)
         return <div>Loading</div>

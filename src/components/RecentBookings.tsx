@@ -2,7 +2,7 @@ import RecentBookingPerson from "./RecentBookingPerson";
 
 const RecentBookings = () => {
   return (
-    <div className="p-5 border rounded-lg w-[400px] bg-card text-card-foreground shadow">
+    <div className="p-5 border rounded-lg bg-card text-card-foreground shadow">
       <h1 className="text-2xl font-semibold mb-4 border-b pb-2">
         Recent Bookings
       </h1>
