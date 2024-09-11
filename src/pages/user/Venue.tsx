@@ -1,14 +1,53 @@
+import PayCheckOutCard from "@/components/PayCheckOutCard"
+import SlotBox from "@/components/SlotBox"
 import VenuePageHeader from "@/components/VenuePageHeader"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
+import { slots } from "@/db"
 import { IndianRupee } from "lucide-react"
 import { useEffect, useState } from "react"
 
-const Venue = () => {
+type venue = {
+
+}
+type slot = {id:string, start:Date, end: Date, price:number, status:"booked"|"blocked"|"available"}
+
+
+const Venue = (venue?:venue) => {
 
   const [pageLoading, setPageLoading] = useState(true);
+  const [book, setBooking] = useState(false);
+  // const [selectedSlots, setSelectedSlots] = useState<any[]>([]);
+  // const [amount, setAmount] = useState(0);
+
+    const [selectedSlots, setSelectedSlots] = useState<slot[]>([]);
+  const [cartValue, setCartValue] = useState<number>(0);
+
+  const handleSlotBoxClick = (selectedSlot:slot, selected:boolean)=>{
+    if(selected){
+      const find = selectedSlots.find(s=>s.id==selectedSlot.id)
+      if(find)
+        return;
+      setSelectedSlots(c=>[...c,selectedSlot])
+      setCartValue(c=>c+selectedSlot.price);
+    }
+    else{
+      const find = selectedSlots.find(s=>s.id==selectedSlot.id)
+      if(!find)
+        return;
+      setSelectedSlots(c=>c.filter(s=>s.id!=selectedSlot.id))
+      setCartValue(c=>c-selectedSlot.price);
+    }
+  }
+
+  // const onSlotClick=(slot:any)=>{
+  //   const find = selectedSlots.find(s=>s.id==slot.id)
+    
+  //   setSelectedSlots(c=>[...c,slot])
+  //   setAmount(c=>c+slot)
+  // } 
     useEffect(()=>{
         // axios.get('https://api.example.com/data')
         //       .then(response => {
@@ -54,9 +93,9 @@ const Venue = () => {
   return (
     <div className="p-6">
 
-    <VenuePageHeader/>
+    <VenuePageHeader book={book} onBookClick={()=>{setBooking(c=>!c)}}/>
     <Separator className="my-6"/>
-    <div className="grid grid-cols-3 gap-4">
+    {!book?<div className="grid grid-cols-3 gap-4">
         <ScrollArea className="h-60 w-full whitespace-nowrap rounded-md">
             <div className="flex flex-col gap-4 w-max mx-auto">
                 {[1,2,3].map(i=><div key={i} className=" ">
@@ -96,7 +135,17 @@ const Venue = () => {
             <div className="text-2xl font-bold flex gap-1 my-2 mx-2">Exclusive:<IndianRupee className="h-5 w-5 mt-2" /> <div className="my-auto">230 </div><div className="text-sm font-normal my-auto mt-2">/ week</div></div>
 
         </div>
-    </div>
+    </div>:<div className="grid grid-cols-4 gap-4">
+           <ScrollArea className="col-span-3 h-76">
+         <div className="m-5 grid grid-cols-4 gap-4">
+         {slots.map((slot)=> <SlotBox key={slot.id} slot={slot} onClick={handleSlotBoxClick}/>)}
+         </div>
+       </ScrollArea>
+       <div className="col-span-1">
+
+    <PayCheckOutCard amount={cartValue} charges={1} taxes={1}/>
+       </div>
+      </div>}
 
     </div>
   )

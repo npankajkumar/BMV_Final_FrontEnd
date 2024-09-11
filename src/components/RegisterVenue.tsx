@@ -16,7 +16,7 @@ const RegisterVenue = () => {
           htmlFor="propertyName"
           className="block text-sm font-medium "
         >
-          Property Name:
+          Venue  Name:
         </Label>
         <Input
           type="text"

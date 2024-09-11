@@ -26,7 +26,7 @@ const Bookings = () => {
     )
     if(pageLoading){
         return (
-            <div className='mx-40 flex flex-col gap-2'>
+            <div className='mx-40 flex flex-col gap-2 '>
                 {[1,2,3].map((i)=><Card key={i} className="grid grid-cols-2 space-x-4  p-4">
                 <div className='flex flex-col gap-2'>
                 <Skeleton className='w-40 h-10'/>
@@ -47,7 +47,7 @@ const Bookings = () => {
         )
     }
   return (
-    <div className='mx-40'>
+    <div className='mx-40 my-32'>
         <BookingCard/>
     </div>
   )

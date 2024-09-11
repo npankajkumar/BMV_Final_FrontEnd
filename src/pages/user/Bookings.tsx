@@ -47,7 +47,7 @@ const Bookings = () => {
         )
     }
   return (
-    <div className='mx-40'>
+    <div className='mx-40 my-10'>
         <BookingCard/>
     </div>
   )

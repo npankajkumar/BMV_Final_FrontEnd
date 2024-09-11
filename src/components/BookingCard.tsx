@@ -10,7 +10,7 @@ const BookingCard = () => {
   const startTime = "12:30 pm";
   const endTime = "02:30pm";
   return (
-    <div className="w-full border-4 border-secondary grid grid-cols-2  p-4 bg-gray-50 rounded-lg shadow-lg">
+    <div className="w-full border-4 border-secondary grid grid-cols-2  p-4 bg-gray-50 rounded-lg">
       <div>
         <h1 className="text-3xl font-bold text-black ">{cardName}</h1>
         <h1 className="text-xl  text-gray-700 mb-2">{venueName}</h1>
@@ -30,18 +30,12 @@ const BookingCard = () => {
           <IndianRupee className="w-4 h-8 inline"/><span className="mr-4 text-black font-semibold">{amount}</span>
         </div>
         <div className="flex">
-          <Button
-            variant="outline"
+          {status && <Button
             className="mr-2 hover:shadow-sm text-white bg-primary font-semibold py-2 px-4 "
           >
             Cancel
           </Button>
-          <Button
-            variant="outline"
-            className="mr-2 hover:shadow-sm text-black bg-blue-500 font-semibold py-2 px-4 "
-          >
-            Download Receipt
-          </Button>
+}
         </div>
       </div>
     </div>

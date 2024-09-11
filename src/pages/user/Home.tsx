@@ -1,4 +1,7 @@
+import SearchBar from '@/components/SearchBar';
+import UserVenueCardsGrid from '@/components/UserVenueCardsGrid';
 import { Skeleton } from '@/components/ui/skeleton';
+import { venueCardsData } from '@/db';
 import React, { useEffect, useState } from 'react'
 
 const Home = () => {
@@ -26,7 +29,11 @@ const Home = () => {
     </div>
     )
   return (
-    <div>Home</div>
+    <div className='p-5'>
+      <SearchBar className='my-10 mx-auto'/>
+      <UserVenueCardsGrid className='my-4' title='Top-Rated' cardDataArray={venueCardsData.slice(0,5)}/>
+      <UserVenueCardsGrid className="my-4" title='Top-Booked' cardDataArray={venueCardsData.slice(0,5)}/>
+    </div>
   )
 }
 

@@ -3,7 +3,7 @@ import { Separator } from "./ui/separator"
 import { Badge } from "./ui/badge"
 import { Button } from "./ui/button"
 
-const VenuePageHeader = () => {
+const VenuePageHeader = ({book,onBookClick}:{book:boolean,onBookClick:()=>void}) => {
     const keywords = ["good", "keyword2","keyword3","keyword4","keyword5" ]
   return (
     <div className=" grid grid-cols-2 space-y-0.5">
@@ -14,7 +14,7 @@ const VenuePageHeader = () => {
             <Separator orientation="vertical" />
           <p className="flex gap-2 my-auto">4.5 <Star className="w-4 h-4 my-auto text-primary"/></p>
           <Separator orientation="vertical" />
-          <Button className="bg-primary">Book</Button>
+          <Button className="bg-primary" onClick={onBookClick}>{book?"Cancel":"Book"}</Button>
           </div>
         </div>
         <div className="flex flex-col gap-2">
