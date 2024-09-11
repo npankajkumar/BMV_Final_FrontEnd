@@ -1,14 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-const NavBar = ({ className }: { className?: string }) => {
+import { Link, useNavigate } from "react-router-dom";
+const NavBar = ({ className, clientType }: { className?: string, clientType:string }) => {
+  
+  const navigate = useNavigate();
+
   return (
     <div
       className={`border-b-2 flex justify-between h-12 items-center w-full font-bold ${className}`}
     >
-      <h1 className="text-xl ml-4 text-nowrap">Book My Venue</h1>
+      <Button className="text-xl ml-4 text-nowrap" variant={"ghost"}><Link to={"/"}>Book My Venue</Link></Button>
       <div className="flex">
-        <Button variant="link" className="mr-10 text-primary">
-          Bookings
+      {clientType=="provider" && <Button variant="link" className="mr-10 text-primary">
+      <Link to={"/venues"}>Venues</Link>
+        </Button>}
+        <Button variant="link" className="mr-10 text-primary" >
+        <Link to={"/bookings"}>Bookings</Link>
         </Button>
         <Button
           variant="outline"
@@ -17,6 +24,7 @@ const NavBar = ({ className }: { className?: string }) => {
           Logout
         </Button>
         {/* <Button variant="outline" className="mr-10 rounded-full hover:bg-slate-300">P</Button> */}
+        <Link to={"/profile"}>
         <Avatar className="mr-4 hover:cursor-pointer">
           <AvatarImage
             src="https://github.com/shadcn.png"
@@ -24,6 +32,7 @@ const NavBar = ({ className }: { className?: string }) => {
           />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
+        </Link>
       </div>
     </div>
   );

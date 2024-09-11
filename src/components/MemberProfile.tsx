@@ -1,6 +1,7 @@
 import { useState } from "react";
 
 import MemberProfilePage from "./MemberProfilePage";
+import { Separator } from "./ui/separator";
 // import VenueProfilePage from "./VenueProfilePage";
 
 const MemberProfile = () => {
@@ -12,29 +13,16 @@ const MemberProfile = () => {
         return (
           <div>
             <MemberProfilePage
-              firstName="Niketh"
-              lastName="Donthula"
+              name="Donthula"
               email="nikethdonthula@gmail.com "
               phone="8247373288"
             />
           </div>
         );
-      case "Bookings":
-        return (
-          <div>
-            <h2 className="text-2xl font-bold">Bookings</h2>
-            <p>Here are your bookings.</p>
-          </div>
-        );
+     
       case "My Venues":
         return <div>{/* <VenueProfilePage /> */}</div>;
-      case "Others":
-        return (
-          <div>
-            <h2 className="text-2xl font-bold">Others</h2>
-            <p>Other information will appear here.</p>
-          </div>
-        );
+      
       default:
         return (
           <div>
@@ -46,7 +34,7 @@ const MemberProfile = () => {
   };
 
   return (
-    <div className="flex w-[95%] h-[95%] mx-auto mt-10 bg-white shadow-lg rounded-lg overflow-hidden">
+    <div className="flex w-[95%] h-[95%] mx-auto mt-10 bg-white  rounded-lg overflow-hidden">
       <div className="w-1/4 bg-gray-50 p-4">
         <ul className="space-y-4">
           <li
@@ -59,16 +47,7 @@ const MemberProfile = () => {
           >
             Profile
           </li>
-          <li
-            className={`px-4 py-3 rounded-lg text-center text-lg font-bold cursor-pointer transition-colors duration-200 ${
-              activeMenuItem === "Bookings"
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-red-400 hover:text-white"
-            }`}
-            onClick={() => setActiveMenuItem("Bookings")}
-          >
-            Bookings
-          </li>
+          
           <li
             className={`px-4 py-3 rounded-lg text-center text-lg font-bold cursor-pointer transition-colors duration-200 ${
               activeMenuItem === "My Venues"
@@ -79,18 +58,9 @@ const MemberProfile = () => {
           >
             My Venues
           </li>
-          <li
-            className={`px-4 py-3 rounded-lg text-center text-lg font-bold cursor-pointer transition-colors duration-200 ${
-              activeMenuItem === "Others"
-                ? "bg-primary text-white"
-                : "bg-gray-200 text-gray-700 hover:bg-red-400 hover:text-white"
-            }`}
-            onClick={() => setActiveMenuItem("Others")}
-          >
-            Others
-          </li>
         </ul>
       </div>
+      <Separator orientation="vertical" className="h-72"/>
       <div className="w-3/4 p-6">{renderContent()}</div>
     </div>
   );

@@ -1,7 +1,9 @@
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { MapPin, MoveUpRight, Star } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const VenueCard = ({
+  id,
   title,
   rating,
   city,
@@ -10,6 +12,7 @@ const VenueCard = ({
   latitude,
   longitude,
 }: {
+  id:number,
   title: string;
   rating: number;
   city: string;
@@ -19,6 +22,7 @@ const VenueCard = ({
   longitude: number;
 }) => {
   return (
+    <Link to={"/venues/1"}>
     <Card className="p-2 w-80 h-60 shadow-xl">
       <img
         src={`${imageUrl}`}
@@ -50,6 +54,7 @@ const VenueCard = ({
         </a>
       </div>
     </Card>
+    </Link>
   );
 };
 

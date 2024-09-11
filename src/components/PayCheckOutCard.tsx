@@ -19,10 +19,10 @@ const PayCheckOutCard: React.FC<PayCheckOutCardProps> = ({
   charges,
   taxes,
 }) => {
-  const total = amount + charges + taxes;
+  const total = amount + (amount<1000?10:50)
 
   return (
-    <Card className="w-1/5 bg-white shadow-md rounded-lg p-3">
+    <Card className=" bg-white shadow-md rounded-lg p-3">
       <CardHeader>
         <CardTitle className="text-2xl font-bold text-gray-800">Cart</CardTitle>
       </CardHeader>
@@ -32,12 +32,8 @@ const PayCheckOutCard: React.FC<PayCheckOutCardProps> = ({
           <span className="text-gray-800">{amount}</span>
         </div>
         <div className="flex justify-between">
-          <Label className="font-medium text-gray-600">Charges:</Label>
-          <span className="text-gray-800">{charges}</span>
-        </div>
-        <div className="flex justify-between">
-          <Label className="font-medium text-gray-600">Taxes:</Label>
-          <span className="text-gray-800">{taxes}</span>
+          <Label className="font-medium text-gray-600">Platform Charges:</Label>
+          <span className="text-gray-800">{amount<1000?10:50}</span>
         </div>
         <div className="flex justify-between border-t border-gray-200 pt-2">
           <Label className="font-semibold text-gray-800">Total:</Label>

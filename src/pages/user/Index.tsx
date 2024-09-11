@@ -4,9 +4,12 @@ import Profile from './Profile';
 import Bookings from './Bookings';
 import Venue from './Venue';
 import Home from './Home';
+import NavBar from '@/components/NavBar';
 
 const Index = () => {
   return (
+    <div>
+      <NavBar clientType='user'/>
       <Routes>
         <Route path='/' element={<div><Home/></div>}/>
         <Route path='/profile' element={<Profile/>}/>
@@ -14,6 +17,7 @@ const Index = () => {
         <Route path='/venues/:id' element={<div><Venue/></div>}/>
         <Route path='*' element={<div>User Not Found</div>}/>
       </Routes>
+    </div>
   )
 }
 

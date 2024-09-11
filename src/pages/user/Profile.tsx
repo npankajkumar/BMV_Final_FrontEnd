@@ -1,3 +1,5 @@
+import MemberProfile from '@/components/MemberProfile';
+import MemberProfilePage from '@/components/MemberProfilePage';
 import { Skeleton } from '@/components/ui/skeleton';
 import React, { useEffect, useState } from 'react'
 
@@ -26,6 +28,9 @@ const Profile = () => {
         </div>
     </div>
   )
+  return <div className='py-10 px-36'>
+    <MemberProfilePage className='w-2/3 '  name='kjhg' email='jhf' phone='jvf'/>
+    </div>
 }
 
 export default Profile
