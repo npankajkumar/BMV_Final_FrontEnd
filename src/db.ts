@@ -168,3 +168,72 @@ export const slots:slot[] = [
   { id: "19", start: new Date("2024-09-11T20:00:00"), end: new Date("2024-09-11T21:00:00"), price: 280, status: "available" },
   { id: "20", start: new Date("2024-09-11T21:30:00"), end: new Date("2024-09-11T22:30:00"), price: 290, status: "booked" }
 ];
+
+export const categories = [
+  "turf",
+  "box cricket",
+  "ground",
+  "shed",
+  "playarea",
+  "others"
+]
+
+export function generateTimeSlots(startTimeStr = '00:00:00') {
+  const timeSlots = [];
+  const startTime = new Date();
+  const [hours, minutes, seconds] = startTimeStr.split(':').map(Number);
+  startTime.setHours(hours, minutes, seconds, 0);
+
+  // Increment the start time by 15 minutes
+  startTime.setMinutes(startTime.getMinutes() + 15);
+
+  // Round up to the nearest 15-minute interval
+  const remainder = startTime.getMinutes() % 15;
+  if (remainder !== 0) {
+      startTime.setMinutes(startTime.getMinutes() + (15 - remainder));
+  }
+
+  while (startTime.getDay() <= new Date().getDay()) {
+      const label = startTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+      const value = startTime.toTimeString().split(' ')[0];
+
+      timeSlots.push({ label, value });
+
+      startTime.setMinutes(startTime.getMinutes() + 15);
+  }
+
+  return timeSlots;
+}
+
+export function generateDurations(startTimeStr = '00:00:00') {
+  const timeSlots = [];
+  const startTime = new Date();
+  const [hours, minutes, seconds] = startTimeStr.split(':').map(Number);
+  startTime.setHours(hours, minutes, seconds, 0);
+
+  // Increment the start time by 15 minutes
+  startTime.setMinutes(startTime.getMinutes() + 15);
+
+  // Round up to the nearest 15-minute interval
+  const remainder = startTime.getMinutes() % 15;
+  if (remainder !== 0) {
+      startTime.setMinutes(startTime.getMinutes() + (15 - remainder));
+  }
+
+  while (startTime.getDay() <= new Date().getDay()) {
+      const hours = startTime.getHours()
+      let label = "";
+      if(hours>0){
+        label = label + hours+" hrs "
+      }
+      if(startTime.getMinutes()>0)
+      label += startTime.getMinutes()+" mins"
+      const value = startTime.toTimeString().split(' ')[0];
+
+      timeSlots.push({ label, value });
+
+      startTime.setMinutes(startTime.getMinutes() + 15);
+  }
+
+  return timeSlots;
+}
