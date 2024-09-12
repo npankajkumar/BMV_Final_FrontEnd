@@ -12,7 +12,7 @@ const VenueCard = ({
   latitude,
   longitude,
 }: {
-  id:number,
+  id: number;
   title: string;
   rating: number;
   city: string;
@@ -22,20 +22,21 @@ const VenueCard = ({
   longitude: number;
 }) => {
   return (
-    <Link to={"/venues/1"}>
     <Card className="p-2 w-80 h-60 shadow-xl">
-      <img
-        src={`${imageUrl}`}
-        alt="VenueImage"
-        className="h-4/6 w-full rounded-md"
-      />
-      <div className="flex justify-between w-full pt-2 pb-1 px-2">
-        <CardTitle className="">{title}</CardTitle>
-        <CardContent className="m-0 p-0 text-lg flex gap-1">
-          {rating}
-         <Star className="w-4 h-4 my-auto text-yellow-500"/>
-        </CardContent>
-      </div>
+      <Link to={"/venues/1"}>
+        <img
+          src={`${imageUrl}`}
+          alt="VenueImage"
+          className="h-4/6 w-full rounded-md"
+        />
+        <div className="flex justify-between w-full pt-2 pb-1 px-2">
+          <CardTitle className="">{title}</CardTitle>
+          <CardContent className="m-0 p-0 text-lg flex gap-1">
+            {rating}
+            <Star className="w-4 h-4 my-auto text-yellow-500" />
+          </CardContent>
+        </div>
+      </Link>
       <div className="flex justify-between w-full px-2 py-1">
         <CardContent className="p-0">{provider}</CardContent>
         <MapPin className="w-4 h-4 ml-auto my-auto" />
@@ -54,7 +55,6 @@ const VenueCard = ({
         </a>
       </div>
     </Card>
-    </Link>
   );
 };
 

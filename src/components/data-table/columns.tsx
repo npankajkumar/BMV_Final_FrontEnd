@@ -1,49 +1,54 @@
-"use client"
+"use client";
 
-import { ColumnDef } from "@tanstack/react-table"
-import { Checkbox } from "../ui/checkbox"
-import { Button } from "../ui/button"
-import { ArrowUpDown } from "lucide-react"
+import { ColumnDef } from "@tanstack/react-table";
+import { Checkbox } from "../ui/checkbox";
+import { Button } from "../ui/button";
+import { ArrowUpDown } from "lucide-react";
+import { Input } from "../ui/input";
+import { EditButton } from "./DataTable";
 
 export type Slot = {
-  id: string
-  amount: number
-  status: "available" | "blocked" 
-  from:Date
-  to:Date
-  duration: number
-}
+  id: string;
+  weekdayPrice: number;
+  weekendPrice: number;
+  status: "available" | "blocked";
+  from: Date;
+  to: Date;
+  duration: number;
+};
 
 export const columns: ColumnDef<Slot>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
     accessorKey: "from",
-    header: "From",
+    header: "Start Time",
+    cell: ({ row }) => {
+      const from = row.original.from;
+      return (
+        <div className="text-center">
+          {(from.getHours() > 12 ? from.getHours() - 12 : from.getHours()) +
+            ":" +
+            (from.getMinutes() > 0 ? from.getMinutes() : "00") +
+            " " +
+            (from.getHours() > 12 ? "A.M" : "P.M")}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "to",
-    header: "To",
+    header: "End Time",
+    cell: ({ row }) => {
+      const to = row.original.to;
+      return (
+        <div className="text-center">
+          {(to.getHours() > 12 ? to.getHours() - 12 : to.getHours()) +
+            ":" +
+            (to.getMinutes() > 0 ? to.getMinutes() : "00") +
+            " " +
+            (to.getHours() > 12 ? "A.M" : "P.M")}
+        </div>
+      );
+    },
   },
   {
     accessorKey: "duration",
@@ -56,33 +61,61 @@ export const columns: ColumnDef<Slot>[] = [
           Duration
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
-    cell: ({ row }) => <div>{row.getValue("duration")+" hours"}</div>,
+    cell: ({ row }) => (
+      <div className="text-center">{row.getValue("duration") + " hours"}</div>
+    ),
   },
   {
-    accessorKey: "amount",
+    accessorKey: "weekdayPrice",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Amount
+          Weekday Price
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
-      )
+      );
     },
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"))
+      const amount = row.original.weekdayPrice;
 
       // Format the amount as a dollar amount
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "INR",
-      }).format(amount)
+      }).format(amount);
 
-      return <div className="text-right font-medium">{formatted}</div>
+      return <div className="text-center font-medium ">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "weekendPrice",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Weekend Price
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      console.log(row.original);
+      const amount = row.original.weekendPrice;
+
+      // Format the amount as a dollar amount
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "INR",
+      }).format(amount);
+
+      return <div className="text-center right font-medium">{formatted}</div>;
     },
   },
   {
@@ -93,18 +126,14 @@ export const columns: ColumnDef<Slot>[] = [
     id: "edit",
     enableHiding: false,
     cell: ({ row }) => {
+      console.log(row.original.weekdayPrice);
       return (
-        <Button onClick={()=>{console.log(row.original.id)}}>Edit</Button>
-      )
+        <EditButton
+          status={row.original.status}
+          weekdayPrice={row.original.weekdayPrice}
+          weekendPrice={row.original.weekendPrice}
+        />
+      );
     },
   },
-  {
-    id: "delete",
-    enableHiding: false,
-    cell: ({ row }) => {
-      return (
-        <Button className="bg-red-500" onClick={()=>{console.log(row.original.id)}}>Delete</Button>
-      )
-    },
-  }
-]
+];

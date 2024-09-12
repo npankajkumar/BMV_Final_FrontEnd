@@ -27,7 +27,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -41,6 +41,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import LoadingButton from "@/components/LoadingButton";
+import { useEffect, useState } from "react";
 
 const FormSchema = z.object({
   name: z.string({ required_error: "Name is required" }).min(3, {
@@ -68,16 +70,6 @@ const FormSchema = z.object({
 });
 
 export function InputForm() {}
-function onSubmit(data: z.infer<typeof FormSchema>) {
-  toast({
-    title: "You submitted the following values:",
-    description: (
-      <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-        <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-      </pre>
-    ),
-  });
-}
 
 const AddVenue = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
@@ -97,9 +89,29 @@ const AddVenue = () => {
     },
   });
 
+  const [addLoading, setAddLoading] = useState<boolean>(false);
+
   const categoryWatch = form.watch("category");
   const geoLocationWatch = form.watch("geoLocation");
   const openingTimeWatch = form.watch("openingTime");
+
+  const navigate = useNavigate();
+
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    setAddLoading(true);
+    setTimeout(() => {
+      setAddLoading(false);
+      navigate("/");
+    }, 2000);
+    toast({
+      title: "You submitted the following values:",
+      description: (
+        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
 
   if (geoLocationWatch) {
     navigator.geolocation.getCurrentPosition(
@@ -127,7 +139,9 @@ const AddVenue = () => {
               <Link to={"/"}>
                 <Button variant={"outline"}>Cancel</Button>
               </Link>
-              <Button type="submit">Add</Button>
+              <LoadingButton type="submit" loading={addLoading}>
+                Add
+              </LoadingButton>
             </div>
           </div>
           <div className="my-2 grid grid-cols-1 lg:grid-cols-2">

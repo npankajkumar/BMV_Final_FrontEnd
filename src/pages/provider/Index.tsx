@@ -6,6 +6,7 @@ import AddVenue from "./AddVenue";
 import Bookings from "./Bookings";
 import Venues from "./Venues";
 import Profile from "./Profile";
+import Venue from "./Venue";
 
 const Index = () => {
   return (
@@ -24,10 +25,7 @@ const Index = () => {
           }
         />
         <Route path="/venues/new" element={<AddVenue />} />
-        <Route
-          path="/venues/:id"
-          element={<div>Provider Venue Managment</div>}
-        />
+        <Route path="/venues/:id" element={<Venue />} />
         <Route path="*" element={<div>Provider Not Found</div>} />
       </Routes>
     </div>

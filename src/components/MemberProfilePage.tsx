@@ -16,22 +16,24 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form"
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "./ui/button";
 import { DialogClose } from "@/components/ui/dialog";
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useForm } from "react-hook-form"
-import { z } from "zod"
- 
-import { toast } from "@//hooks/use-toast"
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+
+import { toast } from "@//hooks/use-toast";
+import { useState } from "react";
+import LoadingButton from "./LoadingButton";
 
 const FormSchema = z.object({
-  name: z.string().min(1, {message:"Name is required"}),
-  email: z.string().email({message:"Not a valid email"}),
-  phone: z.string().regex(new RegExp("[0-9]{10}"),{message:"Not a valid phone number"})
-})
+  name: z.string().min(1, { message: "Name is required" }),
+  email: z.string().email({ message: "Not a valid email" }),
+  phone: z.string().min(1, { message: "Phone number required" }),
+});
 
 const MemberProfilePage = ({
   className,
@@ -39,20 +41,26 @@ const MemberProfilePage = ({
   email,
   phone,
 }: {
-  className?:string
+  className?: string;
   name: string;
   email: string;
   phone: string;
 }) => {
+  const [profileSaveLoading, setProfileSaveLoading] = useState<boolean>(false);
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name: "",
-      phone:"",
-      email:""
+      phone: "",
+      email: "",
     },
-  })
+  });
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    setProfileSaveLoading(true);
+    setTimeout(() => {
+      setProfileSaveLoading(false);
+    }, 2000);
     toast({
       title: "You submitted the following values:",
       description: (
@@ -60,7 +68,8 @@ const MemberProfilePage = ({
           <code className="text-white">{JSON.stringify(data, null, 2)}</code>
         </pre>
       ),
-    })}
+    });
+  }
   return (
     <div className={"h-full p-6 pt-2 bg-white  rounded-lg" + className}>
       <h2 className="text-xl font-bold mb-3 text-left text-gray-800">
@@ -69,25 +78,18 @@ const MemberProfilePage = ({
 
       <div className="flex justify-between space-x-6 w-[80%]">
         <div className="flex-1 space-y-3">
-
           <div className="p-2 bg-gray-50 rounded-md shadow-sm">
-            <span className="block text-sm font-medium mb-1">
-              Name
-            </span>
+            <span className="block text-sm font-medium mb-1">Name</span>
             <span className="block text-base ">{name}</span>
           </div>
 
           <div className="p-2 bg-gray-50 rounded-md shadow-sm">
-            <span className="block text-sm font-medium  mb-1">
-              Email
-            </span>
+            <span className="block text-sm font-medium  mb-1">Email</span>
             <span className="block text-base ">{email}</span>
           </div>
 
           <div className="p-2 bg-gray-50 rounded-md shadow-sm">
-            <span className="block text-sm font-medium mb-1">
-              Phone
-            </span>
+            <span className="block text-sm font-medium mb-1">Phone</span>
             <span className="block text-base ">{phone}</span>
           </div>
         </div>
@@ -95,9 +97,7 @@ const MemberProfilePage = ({
         <div className="pl-16 flex flex-col items-start justify-around p-4">
           <Avatar className="h-24 w-24 rounded-full bg-gray-300 flex items-center justify-center shadow-lg">
             <AvatarFallback className="text-lg text-gray-700">
-              <Label className="text-3xl font-bold">
-                {name[0]}
-              </Label>
+              <Label className="text-3xl font-bold">{name[0]}</Label>
             </AvatarFallback>
           </Avatar>
           <div className="">
@@ -119,52 +119,61 @@ const MemberProfilePage = ({
                   </DialogDescription>
                 </DialogHeader>
                 <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="name" {...field} />
-              </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="email" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="phone"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="phone no" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit">Submit</Button>
-      </form>
-    </Form>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="w-2/3 space-y-6"
+                  >
+                    <FormField
+                      control={form.control}
+                      name="name"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Name</FormLabel>
+                          <FormControl>
+                            <Input placeholder="name" {...field} />
+                          </FormControl>
+                          <FormDescription>
+                            This is your public display name.
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Email</FormLabel>
+                          <FormControl>
+                            <Input placeholder="email" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="phone"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Phone Number</FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="phone no"
+                              type="number"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <LoadingButton type="submit" loading={profileSaveLoading}>
+                      Submit
+                    </LoadingButton>
+                  </form>
+                </Form>
               </DialogContent>
             </Dialog>
           </div>

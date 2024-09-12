@@ -13,26 +13,26 @@ export const venueCardsData = [
 ];
 
 export const availableSlots: Slot[] = [
-  { id: "slot1", amount: 100, status: "available", from: new Date("2024-09-01T08:00:00"), to: new Date("2024-09-01T12:00:00"), duration: 4 },
-  { id: "slot2", amount: 200, status: "blocked", from: new Date("2024-09-02T09:30:00"), to: new Date("2024-09-02T11:30:00"), duration: 2 },
-  { id: "slot3", amount: 150, status: "available", from: new Date("2024-09-03T14:00:00"), to: new Date("2024-09-03T18:00:00"), duration: 4 },
-  { id: "slot4", amount: 300, status: "blocked", from: new Date("2024-09-04T10:00:00"), to: new Date("2024-09-04T15:00:00"), duration: 5 },
-  { id: "slot5", amount: 250, status: "available", from: new Date("2024-09-05T07:00:00"), to: new Date("2024-09-05T13:00:00"), duration: 6 },
-  { id: "slot6", amount: 350, status: "blocked", from: new Date("2024-09-06T16:00:00"), to: new Date("2024-09-06T20:00:00"), duration: 4 },
-  { id: "slot7", amount: 400, status: "available", from: new Date("2024-09-07T11:00:00"), to: new Date("2024-09-07T14:00:00"), duration: 3 },
-  { id: "slot8", amount: 450, status: "blocked", from: new Date("2024-09-08T13:00:00"), to: new Date("2024-09-08T17:00:00"), duration: 4 },
-  { id: "slot9", amount: 500, status: "available", from: new Date("2024-09-09T09:00:00"), to: new Date("2024-09-09T12:00:00"), duration: 3 },
-  { id: "slot10", amount: 550, status: "blocked", from: new Date("2024-09-10T15:00:00"), to: new Date("2024-09-10T19:00:00"), duration: 4 },
-  { id: "slot11", amount: 600, status: "available", from: new Date("2024-09-11T08:30:00"), to: new Date("2024-09-11T12:30:00"), duration: 4 },
-  { id: "slot12", amount: 650, status: "blocked", from: new Date("2024-09-12T10:00:00"), to: new Date("2024-09-12T14:00:00"), duration: 4 },
-  { id: "slot13", amount: 700, status: "available", from: new Date("2024-09-13T13:30:00"), to: new Date("2024-09-13T17:30:00"), duration: 4 },
-  { id: "slot14", amount: 750, status: "blocked", from: new Date("2024-09-14T09:00:00"), to: new Date("2024-09-14T13:00:00"), duration: 4 },
-  { id: "slot15", amount: 800, status: "available", from: new Date("2024-09-15T11:00:00"), to: new Date("2024-09-15T15:00:00"), duration: 4 },
-  { id: "slot16", amount: 850, status: "blocked", from: new Date("2024-09-16T14:00:00"), to: new Date("2024-09-16T18:00:00"), duration: 4 },
-  { id: "slot17", amount: 900, status: "available", from: new Date("2024-09-17T10:00:00"), to: new Date("2024-09-17T14:00:00"), duration: 4 },
-  { id: "slot18", amount: 950, status: "blocked", from: new Date("2024-09-18T12:00:00"), to: new Date("2024-09-18T16:00:00"), duration: 4 },
-  { id: "slot19", amount: 1000, status: "available", from: new Date("2024-09-19T09:30:00"), to: new Date("2024-09-19T13:30:00"), duration: 4 },
-  { id: "slot20", amount: 1050, status: "blocked", from: new Date("2024-09-20T15:00:00"), to: new Date("2024-09-20T19:00:00"), duration: 4 }
+  { id: "slot1", weekdayPrice: 100, weekendPrice: 2000, status: "available", from: new Date("2024-09-01T08:00:00"), to: new Date("2024-09-01T12:00:00"), duration: 4 },
+  { id: "slot2", weekdayPrice: 200, weekendPrice: 2000, status: "blocked", from: new Date("2024-09-02T09:30:00"), to: new Date("2024-09-02T11:30:00"), duration: 2 },
+  { id: "slot3", weekdayPrice: 150, weekendPrice: 2000, status: "available", from: new Date("2024-09-03T14:00:00"), to: new Date("2024-09-03T18:00:00"), duration: 4 },
+  { id: "slot4", weekdayPrice: 300, weekendPrice: 2000, status: "blocked", from: new Date("2024-09-04T10:00:00"), to: new Date("2024-09-04T15:00:00"), duration: 5 },
+  { id: "slot5", weekdayPrice: 250, weekendPrice: 2000, status: "available", from: new Date("2024-09-05T07:00:00"), to: new Date("2024-09-05T13:00:00"), duration: 6 },
+  { id: "slot6", weekdayPrice: 350, weekendPrice: 2000, status: "blocked", from: new Date("2024-09-06T16:00:00"), to: new Date("2024-09-06T20:00:00"), duration: 4 },
+  { id: "slot7", weekdayPrice: 400, weekendPrice: 2000, status: "available", from: new Date("2024-09-07T11:00:00"), to: new Date("2024-09-07T14:00:00"), duration: 3 },
+  { id: "slot8", weekdayPrice: 450, weekendPrice: 2000, status: "blocked", from: new Date("2024-09-08T13:00:00"), to: new Date("2024-09-08T17:00:00"), duration: 4 },
+  { id: "slot9", weekdayPrice: 500, weekendPrice: 2000, status: "available", from: new Date("2024-09-09T09:00:00"), to: new Date("2024-09-09T12:00:00"), duration: 3 },
+  { id: "slot10", weekdayPrice: 550, weekendPrice: 2000, status: "blocked", from: new Date("2024-09-10T15:00:00"), to: new Date("2024-09-10T19:00:00"), duration: 4 },
+  { id: "slot11", weekdayPrice: 600, weekendPrice: 2000, status: "available", from: new Date("2024-09-11T08:30:00"), to: new Date("2024-09-11T12:30:00"), duration: 4 },
+  { id: "slot12", weekdayPrice: 650, weekendPrice: 2000, status: "blocked", from: new Date("2024-09-12T10:00:00"), to: new Date("2024-09-12T14:00:00"), duration: 4 },
+  { id: "slot13", weekdayPrice: 700, weekendPrice: 2000, status: "available", from: new Date("2024-09-13T13:30:00"), to: new Date("2024-09-13T17:30:00"), duration: 4 },
+  { id: "slot14", weekdayPrice: 750, weekendPrice: 2000, status: "blocked", from: new Date("2024-09-14T09:00:00"), to: new Date("2024-09-14T13:00:00"), duration: 4 },
+  { id: "slot15", weekdayPrice: 800, weekendPrice: 2000, status: "available", from: new Date("2024-09-15T11:00:00"), to: new Date("2024-09-15T15:00:00"), duration: 4 },
+  { id: "slot16", weekdayPrice: 850, weekendPrice: 2000, status: "blocked", from: new Date("2024-09-16T14:00:00"), to: new Date("2024-09-16T18:00:00"), duration: 4 },
+  { id: "slot17", weekdayPrice: 900, weekendPrice: 2000, status: "available", from: new Date("2024-09-17T10:00:00"), to: new Date("2024-09-17T14:00:00"), duration: 4 },
+  { id: "slot18", weekdayPrice: 950, weekendPrice: 2000, status: "blocked", from: new Date("2024-09-18T12:00:00"), to: new Date("2024-09-18T16:00:00"), duration: 4 },
+  { id: "slot19", weekdayPrice: 1000, weekendPrice: 2000, status: "available", from: new Date("2024-09-19T09:30:00"), to: new Date("2024-09-19T13:30:00"), duration: 4 },
+  { id: "slot20", weekdayPrice: 1050, weekendPrice: 2000, status: "blocked", from: new Date("2024-09-20T15:00:00"), to: new Date("2024-09-20T19:00:00"), duration: 4 }
 ];
 
 export const chartData = [
