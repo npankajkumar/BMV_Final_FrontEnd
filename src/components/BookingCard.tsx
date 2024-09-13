@@ -1,41 +1,65 @@
 import { IndianRupee } from "lucide-react";
 import { Button } from "./ui/button";
+import { format } from "date-fns";
+
+type Slot = {
+  id: number;
+  startTime: Date;
+  endTime: Date;
+};
+
+type Booking = {
+  id: number;
+  venue: string;
+  provider: string;
+  slotDate: Date;
+  status: string;
+  slots: Slot[];
+};
 const BookingCard = () => {
   const cardName = "Box Cricket";
   const status = "UpComing";
   const venueName = "Eagle Academy";
   const amount = 3000;
   const today = new Date();
-  const formattedDate = today.toLocaleDateString();
+  const formattedDate = format(today, "dd/MM/yyyy");
   const startTime = "12:30 pm";
   const endTime = "02:30pm";
   return (
-    <div className="w-full border-4 border-secondary grid grid-cols-2  p-4 bg-gray-50 rounded-lg">
-      <div>
-        <h1 className="text-3xl font-bold text-black ">{cardName}</h1>
-        <h1 className="text-xl  text-gray-700 mb-2">{venueName}</h1>
-        <div className="mt-2 text-gray-900 font-medium">{formattedDate}</div>
-        <div className=" text-gray-900 text-lg">
-          <span className="font-semibold">Slot: </span>
-          <span className="font-semibold">{startTime} </span> <span className="font-semibold">To: </span> <span className="font-semibold">{endTime} </span>
+    <div className="w-full border grid grid-cols-6  p-4 rounded-lg">
+      <div className="col-span-4">
+        <h1 className="text-2xl font-bold">{cardName}</h1>
+        <h1 className="text-lg   mb-2">{venueName}</h1>
+        <div className="mt-2  font-medium">{formattedDate}</div>
+        <div className=" ">
+          <span className="font-semibold">Slots: </span>
+          <span className="">{startTime} </span>{" "}
+          <span className="font-semibold">- </span>{" "}
+          <span className="">{endTime} </span>
         </div>
       </div>
-      <div className="flex flex-col justify-center ml-auto">
-        <div className="mb-2">
+      <div className="flex flex-col justify-center ml-auto col-span-2">
+        <div className="">
+          <span className="mr-4 font-semibold text-gray-800">Booking Id:</span>
+          <span className="mr-4 text-black font-semibold">
+            {"B9934hib7bkkgj"}
+          </span>
+        </div>
+        <div className="">
           <span className="mr-4 font-semibold text-gray-800">Status:</span>
           <span className="mr-4 text-black font-semibold">{status}</span>
         </div>
-        <div className="mb-2">
+        <div className="">
           <span className="mr-4 font-semibold text-gray-800">Paid:</span>
-          <IndianRupee className="w-4 h-8 inline"/><span className="mr-4 text-black font-semibold">{amount}</span>
+          <IndianRupee className="w-4 h-8 inline" />
+          <span className="mr-4 text-black font-semibold">{amount}</span>
         </div>
         <div className="flex">
-          {status && <Button
-            className="mr-2 hover:shadow-sm text-white bg-primary font-semibold py-2 px-4 "
-          >
-            Cancel
-          </Button>
-}
+          {status && (
+            <Button className="ml-auto hover:shadow-sm bg-primary font-semibold py-2 px-4 ">
+              Cancel
+            </Button>
+          )}
         </div>
       </div>
     </div>
