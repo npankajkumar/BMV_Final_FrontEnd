@@ -1,9 +1,38 @@
 import { Label } from "@radix-ui/react-label";
 import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { useState } from "react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import LoadingButton from "./LoadingButton";
 
 const Login = () => {
+  const [loginLoading, setLoginLoading] = useState(false);
+
+  const FormSchema = z.object({
+    email: z.string().email({ message: "This is not a valid email." }),
+    password: z.string(),
+  });
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    // Submission
+  }
+
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] max-w-lg">
       <h1 className="text-3xl font-bold mb-4 text-center">Login</h1>
@@ -18,36 +47,55 @@ const Login = () => {
           <Label htmlFor="r2">Provider</Label>
         </div>
       </RadioGroup>
-
-      <div className="grid gap-3">
-        <div className="grid gap-1">
-          <Label htmlFor="email">Email</Label>
-          <Input
-            type="email"
-            id="email"
-            placeholder="Type your Email"
-            className="p-2 border rounded"
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(() => {})}
+          className="w-full space-y-6"
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="Type you Email" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="grid gap-1">
-          <Label htmlFor="password">Password</Label>
-          <Input
-            type="password"
-            id="password"
-            placeholder="Type your password"
-            className="p-2 border rounded"
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Password</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Type your Email"
+                    type="password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
           />
-        </div>
-        <div className="flex justify-center items-center mt-1">
-          <Label>Don't have an account?</Label>
-          <Button variant="link" className="text-primary">
-            Register
-          </Button>
-        </div>
-        <Button className="bg-primary text-white p-2 rounded mt-1 shadow-md font-semibold text-md">
-          Login
-        </Button>
-      </div>
+          <LoadingButton
+            type="submit"
+            loadingTitle="Submit"
+            loading={loginLoading}
+            onClick={() => {
+              setLoginLoading(true);
+            }}
+            variant={"outline"}
+            className="bg-primary w-full text-white p-2  mt-1 shadow-md font-semibold text-md"
+          >
+            Login
+          </LoadingButton>
+        </form>
+      </Form>
     </div>
   );
 };

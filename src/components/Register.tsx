@@ -9,12 +9,17 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
+import LoadingButton from "./LoadingButton";
+import { useState } from "react";
 
 export const Register = () => {
+  const [registerLoading, setRegisterLoading] = useState(false);
+
   const FormSchema = z.object({
     username: z.string().min(2, {
       message: "Valid name is required.",
@@ -40,6 +45,19 @@ export const Register = () => {
   return (
     <div className="max-w-md mx-auto p-8 flex flex-col rounded-md mt-10 mb-10 border border-gray-200">
       <h1 className="text-3xl mb-2 text-center">Register</h1>
+      <RadioGroup
+        defaultValue="default"
+        className="flex justify-center mb-4 mt-2 w-full"
+      >
+        <div className="flex items-center space-x-2">
+          <RadioGroupItem value="default" id="r1" />
+          <Label htmlFor="r1">User</Label>
+        </div>
+        <div className="flex items-center space-x-2 ml-4">
+          <RadioGroupItem value="comfortable" id="r2" />
+          <Label htmlFor="r2">Provider</Label>
+        </div>
+      </RadioGroup>
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(() => {})}
@@ -97,7 +115,7 @@ export const Register = () => {
                 <FormControl>
                   <Input
                     placeholder="Set your password"
-                    type="text"
+                    type="password"
                     {...field}
                   />
                 </FormControl>
@@ -111,9 +129,18 @@ export const Register = () => {
               Login
             </Button>
           </div>
-          <Button type="submit" className="mt-1 w-full">
+          <LoadingButton
+            type="submit"
+            loadingTitle="Submit"
+            loading={registerLoading}
+            onClick={() => {
+              setRegisterLoading(true);
+            }}
+            variant={"outline"}
+            className="bg-primary w-full text-white p-2  mt-1 shadow-md font-semibold text-md"
+          >
             Submit
-          </Button>
+          </LoadingButton>
         </form>
       </Form>
     </div>
