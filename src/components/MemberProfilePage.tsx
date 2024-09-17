@@ -3,7 +3,6 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -20,7 +19,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "./ui/button";
-import { DialogClose } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -51,9 +49,9 @@ const MemberProfilePage = ({
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: "",
-      phone: "",
-      email: "",
+      name: name,
+      phone: phone,
+      email: email,
     },
   });
   function onSubmit(data: z.infer<typeof FormSchema>) {
@@ -62,12 +60,7 @@ const MemberProfilePage = ({
       setProfileSaveLoading(false);
     }, 2000);
     toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
+      title: "Profile Edited Successfully",
     });
   }
   return (
@@ -130,7 +123,7 @@ const MemberProfilePage = ({
                         <FormItem>
                           <FormLabel>Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="name" {...field} />
+                            <Input placeholder="Enter your name" {...field} />
                           </FormControl>
                           <FormDescription>
                             This is your public display name.
@@ -146,7 +139,7 @@ const MemberProfilePage = ({
                         <FormItem>
                           <FormLabel>Email</FormLabel>
                           <FormControl>
-                            <Input placeholder="email" {...field} />
+                            <Input placeholder="Enter email" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -160,7 +153,7 @@ const MemberProfilePage = ({
                           <FormLabel>Phone Number</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="phone no"
+                              placeholder="Enter phone number"
                               type="number"
                               {...field}
                             />
