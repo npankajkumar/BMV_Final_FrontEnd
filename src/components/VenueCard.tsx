@@ -23,7 +23,7 @@ const VenueCard = ({
 }) => {
   return (
     <Card className="p-2 w-80 h-60 shadow-xl">
-      <Link to={"/venues/1"}>
+      <Link to={`/venues/${id}`}>
         <img
           src={`${imageUrl}`}
           alt="VenueImage"

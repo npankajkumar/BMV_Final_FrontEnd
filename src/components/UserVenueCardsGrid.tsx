@@ -3,7 +3,8 @@ import VenueCard from "./VenueCard";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 
 interface cardData {
-  title: string;
+  id: number;
+  name: string;
   rating: number;
   city: string;
   imageUrl: string;
@@ -26,11 +27,11 @@ const UserVenueCardsGrid = ({
       <CardTitle className="mb-4">{title}:</CardTitle>
       <ScrollArea className="w-full whitespace-nowrap rounded-md border">
         <div className="flex w-max space-x-4 p-4">
-          {cardDataArray.map((cardData, i) => (
-            <div key={i}>
+          {cardDataArray.map((cardData) => (
+            <div key={cardData.id}>
               <VenueCard
-                id={i}
-                title={cardData.title}
+                id={cardData.id}
+                title={cardData.name}
                 city={cardData.city}
                 rating={cardData.rating}
                 imageUrl={cardData.imageUrl}

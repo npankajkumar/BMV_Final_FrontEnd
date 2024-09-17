@@ -18,6 +18,8 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 type venue = {};
 type slot = {
@@ -28,12 +30,11 @@ type slot = {
   status: "booked" | "blocked" | "available";
 };
 
-const Venue = (venue?: venue) => {
+const Venue = () => {
+  const params = useParams();
+  const [venue, setVenue] = useState<any>();
   const [pageLoading, setPageLoading] = useState(true);
   const [book, setBooking] = useState(false);
-  // const [selectedSlots, setSelectedSlots] = useState<any[]>([]);
-  // const [amount, setAmount] = useState(0);
-
   const [selectedSlots, setSelectedSlots] = useState<slot[]>([]);
   const [cartValue, setCartValue] = useState<number>(0);
   const [date, setDate] = useState<Date>();
@@ -59,19 +60,18 @@ const Venue = (venue?: venue) => {
   //   setAmount(c=>c+slot)
   // }
   useEffect(() => {
-    // axios.get('https://api.example.com/data')
-    //       .then(response => {
-    //         setData(response.data);
-    //         setLoading(false);
-    //       })
-    //       .catch(error => {
-    //         console.error('Error fetching data:', error);
-    //         setLoading(false);
-    //       });
-    setTimeout(() => {
-      setPageLoading(false);
-    }, 5000);
-  });
+    axios
+      .get(`http://localhost:5059/api/Venues/${parseInt(params.id ?? "1")}`)
+      .then((response) => {
+        setVenue(response.data);
+        console.log(response.data);
+        setPageLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setPageLoading(false);
+      });
+  }, []);
   if (pageLoading)
     return (
       <div className="p-4 ">
@@ -103,6 +103,7 @@ const Venue = (venue?: venue) => {
   return (
     <div className="p-6">
       <VenuePageHeader
+        venue={venue}
         btnName="Book"
         book={book}
         onBookClick={() => {

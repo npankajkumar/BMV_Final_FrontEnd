@@ -3,24 +3,21 @@ import CustomSearchBar from "@/components/CustomSearchBar";
 import UserVenueCardsGrid from "@/components/UserVenueCardsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
 import { venueCardsData } from "@/db";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 const Home = () => {
   const [pageLoading, setPageLoading] = useState(true);
+  const [topRatedVenues, setTopRatedVenues] = useState<any>([]);
+  const [topBookedVenues, setTopBookedVenues] = useState<any>([]);
+
   useEffect(() => {
-    // axios.get('https://api.example.com/data')
-    //       .then(response => {
-    //         setData(response.data);
-    //         setLoading(false);
-    //       })
-    //       .catch(error => {
-    //         console.error('Error fetching data:', error);
-    //         setLoading(false);
-    //       });
-    setTimeout(() => {
+    getTopRatedVenues().then((res) => {
+      setTopRatedVenues(res.topRatedVenues);
+      setTopBookedVenues(res.topBookedVenues);
       setPageLoading(false);
-    }, 5000);
-  });
+    });
+  }, []);
   if (pageLoading)
     return (
       <div className="grid md:grid-cols-3 grid-cols-1 gap-4 p-5">
@@ -36,15 +33,63 @@ const Home = () => {
       <UserVenueCardsGrid
         className="my-4"
         title="Top-Rated"
-        cardDataArray={venueCardsData.slice(0, 5)}
+        cardDataArray={topRatedVenues}
       />
       <UserVenueCardsGrid
         className="my-4"
         title="Top-Booked"
-        cardDataArray={venueCardsData.slice(0, 5)}
+        cardDataArray={topBookedVenues}
       />
     </div>
   );
+};
+
+const getTopRatedVenues = async () => {
+  const result = [];
+  const res = await axios.get(
+    "http://localhost:5059/api/Venues?topRated=true&topbooked=true"
+  );
+  const trVenues = res.data.topRatedVenues;
+  const tbVenues = res.data.topBookedVenues;
+
+  const trVenuePromises = trVenues.map(async (v: any) => {
+    const pName = await getProviderById(v.providerId);
+    return {
+      id: v.id,
+      name: v.name,
+      rating: v.rating,
+      city: v.city,
+      imageUrl: v.image1,
+      provider: pName,
+      latitude: v.latitude,
+      longitude: v.longitude,
+    };
+  });
+  const tbVenuePromises = tbVenues.map(async (v: any) => {
+    const pName = await getProviderById(v.providerId);
+    return {
+      id: v.id,
+      name: v.name,
+      rating: v.rating,
+      city: v.city,
+      imageUrl: v.image1,
+      provider: pName,
+      latitude: v.latitude,
+      longitude: v.longitude,
+    };
+  });
+
+  const resolvedTrVenues = await Promise.all(trVenuePromises);
+  const resolvedTbVenues = await Promise.all(tbVenuePromises);
+  return {
+    topRatedVenues: resolvedTrVenues,
+    topBookedVenues: resolvedTbVenues,
+  };
+};
+
+const getProviderById = async (id: number) => {
+  const res = await axios.get(`http://localhost:5059/api/Providers/${id}`);
+  return res.data.name;
 };
 
 export default Home;
