@@ -1,29 +1,34 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import { add, format, set } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
+import * as React from "react";
+import { add, format, set } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
 
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
+} from "@/components/ui/popover";
 
 interface componentsProps {
-    className?:string,
-    fromDate?:Date,
-    toDate?:Date,
-    date:Date,
-    handleDateChange: (date:Date|undefined) => void
-    setDate?:React.Dispatch<React.SetStateAction<Date>>
+  className?: string;
+  fromDate?: Date;
+  toDate?: Date;
+  date: Date;
+  handleDateChange: (date: Date | undefined) => void;
+  setDate?: React.Dispatch<React.SetStateAction<Date>>;
 }
 
-export function ConditionalDatePicker({className, fromDate, toDate, date, handleDateChange}:componentsProps) {
-
+export function ConditionalDatePicker({
+  className,
+  fromDate,
+  toDate,
+  date,
+  handleDateChange,
+}: componentsProps) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -38,23 +43,21 @@ export function ConditionalDatePicker({className, fromDate, toDate, date, handle
           {date ? format(date, "PPP") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className={"w-auto p-0"+className}>
+      <PopoverContent className={"w-auto p-0" + className}>
         <Calendar
           mode="single"
           selected={date}
           onSelect={handleDateChange}
-          disabled={(date) =>{
-            if(fromDate && date < add(fromDate,{days:-1})){
-                return true
+          disabled={(date) => {
+            if (fromDate && date < add(fromDate, { days: -1 })) {
+              return true;
             }
-            if(toDate && date > add(toDate,{days:-1}))
-              return true
-          return false;
-          }
-        }
+            if (toDate && date > add(toDate, { days: -1 })) return true;
+            return false;
+          }}
           initialFocus
         />
       </PopoverContent>
     </Popover>
-  )
+  );
 }

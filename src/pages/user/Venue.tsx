@@ -1,3 +1,4 @@
+import { ConditionalDatePicker } from "@/components/ConditionalDatePicker";
 import PayCheckOutCard from "@/components/PayCheckOutCard";
 import SlotBox from "@/components/SlotBox";
 import VenuePageHeader from "@/components/VenuePageHeader";
@@ -6,8 +7,17 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { slots } from "@/db";
-import { IndianRupee } from "lucide-react";
+import { endOfMonth, endOfWeek, format } from "date-fns";
+import { CalendarIcon, IndianRupee } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type venue = {};
 type slot = {
@@ -26,6 +36,7 @@ const Venue = (venue?: venue) => {
 
   const [selectedSlots, setSelectedSlots] = useState<slot[]>([]);
   const [cartValue, setCartValue] = useState<number>(0);
+  const [date, setDate] = useState<Date>();
 
   const handleSlotBoxClick = (selectedSlot: slot, selected: boolean) => {
     if (selected) {
@@ -176,6 +187,31 @@ const Venue = (venue?: venue) => {
       ) : (
         <div className="grid grid-cols-4 gap-4">
           <ScrollArea className="col-span-3 h-76">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={cn(
+                    "w-[280px] justify-start text-left font-normal",
+                    !date && "text-muted-foreground"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {date ? format(date, "PPP") : <span>Pick a date</span>}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0">
+                <Calendar
+                  mode="single"
+                  selected={date}
+                  onSelect={setDate}
+                  disabled={(date) =>
+                    date > endOfMonth(new Date()) || date <= new Date()
+                  }
+                  initialFocus
+                />
+              </PopoverContent>
+            </Popover>
             <div className="m-5 grid grid-cols-4 gap-4">
               {slots.map((slot) => (
                 <SlotBox
