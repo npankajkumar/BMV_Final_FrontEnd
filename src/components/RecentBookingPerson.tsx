@@ -1,11 +1,11 @@
 import { Avatar, AvatarFallback } from "./ui/avatar";
 const RecentBookingPerson = ({
   name,
-  phoneNumber,
+  date,
   amount,
 }: {
   name: string;
-  phoneNumber: string;
+  date: string;
   amount: number;
 }) => {
   return (
@@ -15,7 +15,7 @@ const RecentBookingPerson = ({
       </Avatar>
       <div className="ml-4 space-y-1">
         <p className="text-sm font-medium leading-none">{name}</p>
-        <p className="text-sm text-muted-foreground">{phoneNumber}</p>
+        <p className="text-sm text-muted-foreground">{date}</p>
       </div>
       <div className="ml-auto font-medium">+&#8377;{amount}</div>
     </div>

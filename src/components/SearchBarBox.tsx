@@ -1,11 +1,23 @@
+import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import { Search } from "lucide-react";
 import { useState } from "react";
 
 interface SearchBarBoxProps {
-  setResults: (results: { name: string }[]) => void;
+  setResults: (results: venue[]) => void;
   setShowPopover: (show: boolean) => void;
 }
+
+type venue = {
+  venueId: number;
+  venueName: string;
+  venueDescription: string;
+  venueCategory: string;
+  providerName: string;
+  city: string;
+  latitude: number;
+  longitude: number;
+};
 
 const SearchBarBox: React.FC<SearchBarBoxProps> = ({
   setResults,
@@ -15,20 +27,24 @@ const SearchBarBox: React.FC<SearchBarBoxProps> = ({
 
   const fetchData = (value: string) => {
     axios
-      .get("https://jsonplaceholder.typicode.com/users")
-      .then((response) => {
-        const data = response.data;
-        const results = data.filter((user: { name: string }) => {
-          return (
-            user &&
-            user.name &&
-            user.name.toLowerCase().includes(value.toLowerCase())
-          );
+      .get(`http://localhost:5143/api/Search?q=${value}`)
+      .then((res) => {
+        let venues = res.data.map((venue: venue) => {
+          return {
+            venueId: venue.venueId,
+            venueName: venue.venueName,
+            venueDescription: venue.venueDescription,
+            venueCategory: venue.venueCategory,
+            providerName: venue.providerName,
+            city: venue.city,
+            latitude: venue.latitude,
+            longitude: venue.longitude,
+          };
         });
-        setResults(results);
+        setResults(venues);
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
+      .catch((e) => {
+        console.log(e);
       });
   };
 

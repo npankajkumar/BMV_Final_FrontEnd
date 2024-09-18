@@ -2,9 +2,20 @@ import { useState, useEffect, useRef } from "react";
 import SearchBarBox from "./SearchBarBox";
 import SearchResultsList from "./SearchResultsList";
 
+type venue = {
+  venueId: number;
+  venueName: string;
+  venueDescription: string;
+  venueCategory: string;
+  providerName: string;
+  city: string;
+  latitude: number;
+  longitude: number;
+};
+
 const CustomSearchBar: React.FC = () => {
   const [showPopover, setShowPopover] = useState(false);
-  const [results, setResults] = useState<{ name: string }[]>([]);
+  const [results, setResults] = useState<venue[]>([]);
   const searchBarRef = useRef<HTMLDivElement>(null);
 
   const handleDocumentClick = (event: MouseEvent) => {

@@ -1,22 +1,20 @@
 import RecentBookingPerson from "./RecentBookingPerson";
 
-const RecentBookings = () => {
+const RecentBookings = ({ bookings }: { bookings: any[] }) => {
   return (
     <div className="p-5 border rounded-lg bg-card text-card-foreground shadow">
       <h1 className="text-2xl font-semibold mb-4 border-b pb-2">
-        Recent Bookings
+        Recent Earnings
       </h1>
       <div className="space-y-4">
-        <RecentBookingPerson
-          name="Niketh Donthula"
-          phoneNumber="8247373288"
-          amount={3000}
-        />
-        <RecentBookingPerson
-          name="Sathvik Kolla"
-          phoneNumber="1234567890"
-          amount={3500}
-        />
+        {bookings.map((booking) => (
+          <RecentBookingPerson
+            key={booking.id}
+            name={booking.customerId}
+            date={booking.createdAt}
+            amount={booking.amount}
+          />
+        ))}
       </div>
     </div>
   );

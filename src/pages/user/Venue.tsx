@@ -6,8 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { slots } from "@/db";
-import { endOfMonth, endOfWeek, format } from "date-fns";
+import { endOfMonth, format, isWeekend, startOfDay } from "date-fns";
 import { CalendarIcon, IndianRupee } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
@@ -38,40 +37,47 @@ const Venue = () => {
   const [selectedSlots, setSelectedSlots] = useState<slot[]>([]);
   const [cartValue, setCartValue] = useState<number>(0);
   const [date, setDate] = useState<Date>();
+  const [slots, setSlots] = useState<any>([]);
 
   const handleSlotBoxClick = (selectedSlot: slot, selected: boolean) => {
     if (selected) {
-      const find = selectedSlots.find((s) => s.id == selectedSlot.id);
+      const find = selectedSlots.find((s) => s.id === selectedSlot.id);
       if (find) return;
       setSelectedSlots((c) => [...c, selectedSlot]);
       setCartValue((c) => c + selectedSlot.price);
     } else {
-      const find = selectedSlots.find((s) => s.id == selectedSlot.id);
+      const find = selectedSlots.find((s) => s.id === selectedSlot.id);
       if (!find) return;
-      setSelectedSlots((c) => c.filter((s) => s.id != selectedSlot.id));
+      setSelectedSlots((c) => c.filter((s) => s.id !== selectedSlot.id));
       setCartValue((c) => c - selectedSlot.price);
     }
   };
 
-  // const onSlotClick=(slot:any)=>{
-  //   const find = selectedSlots.find(s=>s.id==slot.id)
-
-  //   setSelectedSlots(c=>[...c,slot])
-  //   setAmount(c=>c+slot)
-  // }
   useEffect(() => {
     axios
       .get(`http://localhost:5059/api/Venues/${parseInt(params.id ?? "1")}`)
       .then((response) => {
         setVenue(response.data);
-        console.log(response.data);
         setPageLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
         setPageLoading(false);
       });
-  }, []);
+  }, [params.id]);
+
+  useEffect(() => {
+    axios
+      .get(
+        `http://localhost:5059/api/Slot?date=${format(
+          date ?? new Date(),
+          "dd-MM-yyyy"
+        )}&venueId=${params.id}`
+      )
+      .then((res) => setSlots(res.data))
+      .catch((e) => console.log(e));
+  }, [date, params.id]);
+
   if (pageLoading)
     return (
       <div className="p-4 ">
@@ -207,24 +213,43 @@ const Venue = () => {
                   selected={date}
                   onSelect={setDate}
                   disabled={(date) =>
-                    date > endOfMonth(new Date()) || date <= new Date()
+                    date > endOfMonth(new Date()) ||
+                    date < startOfDay(new Date())
                   }
                   initialFocus
                 />
               </PopoverContent>
             </Popover>
             <div className="m-5 grid grid-cols-4 gap-4">
-              {slots.map((slot) => (
-                <SlotBox
-                  key={slot.id}
-                  slot={slot}
-                  onClick={handleSlotBoxClick}
-                />
-              ))}
+              {slots.length < 1 ? (
+                <div className="text-lg font-semibold">No slots</div>
+              ) : (
+                slots.map((slot: any) => (
+                  <SlotBox
+                    key={slot.id}
+                    slot={{
+                      id: slot.id,
+                      start: slot.start,
+                      end: slot.end,
+                      price: isWeekend(date ?? new Date())
+                        ? slot.weekendPrice
+                        : slot.weekendPrice,
+                      status: slot.status,
+                    }}
+                    onClick={handleSlotBoxClick}
+                  />
+                ))
+              )}
             </div>
           </ScrollArea>
           <div className="col-span-1">
-            <PayCheckOutCard amount={cartValue} charges={1} taxes={1} />
+            <PayCheckOutCard
+              date={date ?? new Date()}
+              amount={cartValue}
+              charges={1}
+              taxes={1}
+              selectedSlots={selectedSlots}
+            />
           </div>
         </div>
       )}

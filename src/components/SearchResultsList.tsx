@@ -2,8 +2,19 @@ import React from "react";
 import SearchResult from "./SearchResult";
 
 interface SearchResultsListProps {
-  results: { name: string }[];
+  results: venue[];
 }
+
+type venue = {
+  venueId: number;
+  venueName: string;
+  venueDescription: string;
+  venueCategory: string;
+  providerName: string;
+  city: string;
+  latitude: number;
+  longitude: number;
+};
 
 const SearchResultsList: React.FC<SearchResultsListProps> = ({ results }) => {
   return (
@@ -15,9 +26,10 @@ const SearchResultsList: React.FC<SearchResultsListProps> = ({ results }) => {
           </div>
         </div>
       )}
-      {results.map((res, id) => (
-        <SearchResult key={id} result={res} />
-      ))}
+      {results.map((res, id) => {
+        console.log(res);
+        return <SearchResult key={id} result={res} />;
+      })}
     </div>
   );
 };

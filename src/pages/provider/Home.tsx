@@ -1,3 +1,4 @@
+import DashboardCard from "@/components/DashboardCard";
 import DashboardCardGrid from "@/components/DashboardCardGrid";
 import RecentBookings from "@/components/RecentBookings";
 import {
@@ -9,28 +10,38 @@ import { Card, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { chartData } from "@/db";
+import axios from "axios";
 import { format } from "date-fns";
-import { Plus } from "lucide-react";
+import { Box, IndianRupee, Plus, Star } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Home = ({ provider }: { provider: any }) => {
   const [pageLoading, setPageLoading] = useState(true);
+  const [dashboard, setDashboard] = useState<any>();
   useEffect(() => {
-    // axios.get('https://api.example.com/data')
-    //       .then(response => {
-    //         setData(response.data);
-    //         setLoading(false);
-    //       })
-    //       .catch(error => {
-    //         console.error('Error fetching data:', error);
-    //         setLoading(false);
-    //       });
-    setTimeout(() => {
-      setPageLoading(false);
-    }, 2000);
-  });
-
+    setPageLoading(true);
+    axios
+      .get("http://localhost:5059/api/Dashboard", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      })
+      .then((res) => {
+        setDashboard(res.data);
+        setPageLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        setPageLoading(false);
+      });
+  }, []);
+  let chartd: any[] = [];
+  if (dashboard) {
+    chartd = dashboard.cData.earnings.map((e: any, i: any) => {
+      return { day: i + 1, earnings: e };
+    });
+  }
   if (pageLoading) {
     return (
       <div className="p-5">
@@ -64,26 +75,35 @@ const Home = ({ provider }: { provider: any }) => {
         </Link>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 my-5">
-        <DashboardCardGrid className="col-span-3" />
-        <Card className="h-full p-4 col-span-1">
-          <CardTitle className="my-2">Upcoming Slot</CardTitle>
-          <div className="flex gap-2">
-            <p className="font-semibold text-lg">7:30 P.M - 8:30 P.M</p>
-            <p className="font-light text-sm mt-1">
-              {format(new Date(), "dd/MM/yyyy")}
-            </p>
-          </div>
-          <p className="font-light text-sm">Box Cricket</p>
-        </Card>
+        <div className={`col-span-3 grid grid-cols-1 gap-4 md:grid-cols-3`}>
+          <DashboardCard
+            cardHeader="Total Earnings"
+            customMessage=""
+            value={dashboard.totalEarnings}
+            icon={<IndianRupee />}
+          />
+          <DashboardCard
+            cardHeader="Total Bookings"
+            customMessage=""
+            value={dashboard.totalBookings}
+            icon={<Box />}
+          />
+          <DashboardCard
+            cardHeader="Overall Rating"
+            customMessage=""
+            value={dashboard.overallRating}
+            icon={<Star />}
+          />
+        </div>
       </div>
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <BarChartComponent
           className=""
-          data={chartData}
+          data={chartd}
           bookings={100}
           percentageIncrease={1.5}
         />
-        <RecentBookings />
+        <RecentBookings bookings={dashboard.recentBookings} />
       </div>
     </div>
   );
