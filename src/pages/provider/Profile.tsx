@@ -32,7 +32,12 @@ const Profile = ({ provider }: { provider: any }) => {
     );
   return (
     <div className="py-10 px-36">
-      <MemberProfilePage className="" name="kjhg" email="jhf" phone="jvf" />
+      <MemberProfilePage
+        className=""
+        name={provider.name}
+        email={provider.email}
+        phone={provider.mobile}
+      />
     </div>
   );
 };
