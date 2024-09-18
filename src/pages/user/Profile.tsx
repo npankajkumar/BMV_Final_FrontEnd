@@ -34,6 +34,15 @@ const Profile = () => {
         setPageLoading(false);
       });
   }, []);
+
+  const handleProfileUpdate = (updatedData: {
+    name: string;
+    mobile: string;
+  }) => {
+    setName(updatedData.name);
+    setMobile(updatedData.mobile);
+  };
+
   if (pageLoading)
     return (
       <div className="h-[90vh] w-[100%] flex flex-col justify-around">
@@ -47,13 +56,15 @@ const Profile = () => {
         </div>
       </div>
     );
+
   return (
     <div className="py-10 px-36">
       <MemberProfilePage
         className="w-2/3 "
         name={name.charAt(0).toUpperCase() + name.slice(1)}
         email={email}
-        phone={mobile}
+        mobile={mobile}
+        onProfileUpdate={handleProfileUpdate}
       />
     </div>
   );

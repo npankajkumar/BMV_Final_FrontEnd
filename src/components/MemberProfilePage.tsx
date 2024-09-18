@@ -26,64 +26,115 @@ import { z } from "zod";
 import { toast } from "@//hooks/use-toast";
 import { useState } from "react";
 import LoadingButton from "./LoadingButton";
+import axios from "axios";
 
 const FormSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  email: z.string().email({ message: "Not a valid email" }),
-  phone: z.string().min(1, { message: "Phone number required" }),
+  mobile: z.string().min(1, { message: "mobile number required" }),
 });
 
 const MemberProfilePage = ({
   className,
   name,
   email,
-  phone,
+  mobile,
+  onProfileUpdate,
 }: {
   className?: string;
   name: string;
   email: string;
-  phone: string;
+  mobile: string;
+  onProfileUpdate: (updatedData: {
+    name: string;
+    mobile: string;
+  }) => void;
 }) => {
   const [profileSaveLoading, setProfileSaveLoading] = useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [url, setUrl] = useState("");
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name: name,
-      phone: phone,
-      email: email,
+      mobile: mobile,
     },
   });
+
+  
+
+  const handleDialogOpen = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setProfileSaveLoading(true);
     setTimeout(() => {
       setProfileSaveLoading(false);
-    }, 2000);
-    toast({
-      title: "Profile Edited Successfully",
-    });
+    }, 1000);
+
+    if (localStorage.getItem("auth") == "user") {
+      setUrl("http://localhost:5059/api/Customers");
+    }
+    if (localStorage.getItem("auth") == "provider") {
+      setUrl("http://localhost:5059/api/Providers");
+    }
+    axios
+      .put(
+        url,
+        {
+          name: data.name,
+          email: email,
+          mobile: data.mobile,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      )
+      .then(() => {
+        toast({
+          className: "border-2 border-primary",
+          title: "Profile Edited Successfully",
+        });
+        console.log("hi");
+        onProfileUpdate({
+          name: data.name,
+          mobile: data.mobile,
+        });
+        handleDialogClose();
+      })
+      .catch(() => {
+        toast({
+          className: "border-2 border-primary",
+          title: "Couldn't update profile",
+        });
+      });
   }
+
   return (
     <div className={"h-full p-6 pt-2 bg-white  rounded-lg" + className}>
       <h2 className="text-xl font-bold mb-3 text-left text-gray-800">
         Your Profile :
       </h2>
-
       <div className="flex justify-between space-x-6 w-[80%]">
         <div className="flex-1 space-y-3">
           <div className="p-2 bg-gray-50 rounded-md shadow-sm">
             <span className="block text-sm font-medium mb-1">Name</span>
             <span className="block text-base ">{name}</span>
           </div>
-
           <div className="p-2 bg-gray-50 rounded-md shadow-sm">
             <span className="block text-sm font-medium  mb-1">Email</span>
             <span className="block text-base ">{email}</span>
           </div>
-
           <div className="p-2 bg-gray-50 rounded-md shadow-sm">
-            <span className="block text-sm font-medium mb-1">Phone</span>
-            <span className="block text-base ">{phone}</span>
+            <span className="block text-sm font-medium mb-1">mobile</span>
+            <span className="block text-base ">{mobile}</span>
           </div>
         </div>
 
@@ -94,11 +145,12 @@ const MemberProfilePage = ({
             </AvatarFallback>
           </Avatar>
           <div className="">
-            <Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button
                   variant={"outline"}
                   className="px-4 py-1 h-10 bg-primary text-white font-semibold rounded-lg shadow hover:bg-red-500 hover:text-white transition duration-200"
+                  onClick={handleDialogOpen}
                 >
                   Edit Details
                 </Button>
@@ -132,28 +184,16 @@ const MemberProfilePage = ({
                         </FormItem>
                       )}
                     />
+                    
                     <FormField
                       control={form.control}
-                      name="email"
+                      name="mobile"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Enter email" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="phone"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
+                          <FormLabel>mobile Number</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Enter phone number"
+                              placeholder="Enter mobile number"
                               type="number"
                               {...field}
                             />
