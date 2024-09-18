@@ -6,11 +6,18 @@ import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
 import CustomBookingCard from "@/components/CustomBookingCard";
+import { useNavigate } from "react-router-dom";
 
 const Bookings = () => {
   const toast = useToast();
   const [pageLoading, setPageLoading] = useState(true);
+  const [bookings, setBookings] = useState();
+  const navigate = useNavigate();
   useEffect(() => {
+    const token = localStorage.getItem("auth");
+    if (!token) {
+      navigate("/login?redirect=bookings");
+    }
     // axios.get('https://api.example.com/data')
     //       .then(response => {
     //         setData(response.data);

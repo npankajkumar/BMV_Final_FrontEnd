@@ -7,25 +7,51 @@ import Bookings from "./Bookings";
 import Venues from "./Venues";
 import Profile from "./Profile";
 import Venue from "./Venue";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { toast } from "@/hooks/use-toast";
 
 const Index = () => {
+  const [provider, setProvider] = useState<any>();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    axios
+      .get("http://localhost:5059/api/Providers", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setProvider(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        toast({ title: "Error occured" });
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
+  }, []);
+  if (loading) {
+    return <div>loading</div>;
+  }
   return (
     <div>
       <NavBar clientType="provider" />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/bookings" element={<Bookings />} />
+        <Route path="/" element={<Home provider={provider} />} />
+        <Route path="/profile" element={<Profile provider={provider} />} />
+        <Route path="/bookings" element={<Bookings provider={provider} />} />
         <Route
           path="/venues"
           element={
             <div>
-              <Venues />
+              <Venues provider={provider} />
             </div>
           }
         />
-        <Route path="/venues/new" element={<AddVenue />} />
-        <Route path="/venues/:id" element={<Venue />} />
+        <Route path="/venues/new" element={<AddVenue provider={provider} />} />
+        <Route path="/venues/:id" element={<Venue provider={provider} />} />
         <Route path="*" element={<div>Provider Not Found</div>} />
       </Routes>
     </div>

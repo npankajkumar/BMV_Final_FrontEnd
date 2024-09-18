@@ -43,6 +43,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import LoadingButton from "@/components/LoadingButton";
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const FormSchema = z.object({
   name: z.string({ required_error: "Name is required" }).min(3, {
@@ -51,12 +52,18 @@ const FormSchema = z.object({
   city: z.string({ required_error: "Name is reuired" }).min(2, {
     message: "City must be at least 2 characters.",
   }),
+  description: z
+    .string({ required_error: "Description is required" })
+    .min(10, {
+      message: "Description must be at least 10 characters.",
+    })
+    .max(200, { message: "Description must be less than 200 characters." }),
   address: z
     .string({ required_error: "Address is required" })
     .min(10, {
       message: "Address must be at least 10 characters.",
     })
-    .max(100, { message: "Address must be less than 100 characters." }),
+    .max(200, { message: "Address must be less than 200 characters." }),
   latitude: z.string(),
   longitude: z.string(),
   category: z.string({ required_error: "Category is required" }),
@@ -71,12 +78,13 @@ const FormSchema = z.object({
 
 export function InputForm() {}
 
-const AddVenue = () => {
+const AddVenue = ({ provider }: { provider: any }) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       name: "",
       city: "",
+      description: "",
       address: "",
       latitude: "",
       longitude: "",
@@ -99,15 +107,50 @@ const AddVenue = () => {
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setAddLoading(true);
-    setTimeout(() => {
-      setAddLoading(false);
-      navigate("/");
-    }, 2000);
+    // setTimeout(() => {
+    //   setAddLoading(false);
+    //   navigate("/");
+    // }, 2000);
+
+    const resData = {
+      name: data.name,
+      description: data.description,
+      address: data.address,
+      city: data.city,
+      latitude: parseFloat(data.latitude),
+      longitude: parseFloat(data.longitude),
+      category: data.category == "others" ? data.otherCategory : data.category,
+      slotDetails: {
+        openingTime: data.openingTime,
+        closingTime: data.closingTime,
+        durationInMinutes: convertToMinutes(data.duration),
+        weekdayPrice: parseFloat(data.weekdayPrice),
+        weekendPrice: parseFloat(data.weekendPrice),
+      },
+    };
+    console.log(resData);
+    axios
+      .post("http://localhost:5059/api/Venues", resData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          "Content-Type": "application/json",
+        },
+      })
+      .then((b) => {
+        console.log(b);
+        toast({ title: "Venue Created" });
+        setAddLoading(false);
+      })
+      .catch((e) => {
+        console.log(e);
+        toast({ title: "Error occured" });
+        setAddLoading(false);
+      });
     toast({
       title: "You submitted the following values:",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          <code className="text-white">{JSON.stringify(resData, null, 2)}</code>
         </pre>
       ),
     });
@@ -170,6 +213,19 @@ const AddVenue = () => {
                     <FormLabel>City</FormLabel>
                     <FormControl>
                       <Input placeholder="Hyderabad" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="description"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Description</FormLabel>
+                    <FormControl>
+                      <Textarea placeholder="Description" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -467,5 +523,15 @@ const AddVenue = () => {
     </div>
   );
 };
+
+function convertToMinutes(timeString: string): number {
+  // Split the time string into hours, minutes, and seconds
+  const [hours, minutes, seconds] = timeString.split(":").map(Number);
+
+  // Calculate total minutes
+  const totalMinutes = hours * 60 + minutes + seconds / 60;
+
+  return totalMinutes;
+}
 
 export default AddVenue;

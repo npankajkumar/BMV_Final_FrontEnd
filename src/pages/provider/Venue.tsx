@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Check, ChevronsUpDown, Star } from "lucide-react";
 import { z } from "zod";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Dialog,
   DialogClose,
@@ -50,21 +50,31 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { DataTable } from "@/components/data-table/DataTable";
 import { columns } from "@/components/data-table/columns";
 import LoadingButton from "@/components/LoadingButton";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import axios from "axios";
 
-const Venue = () => {
-  const category = "Turf";
+const Venue = ({ provider }: { provider: any }) => {
   const [venueSaveLoading, setVenueSaveLoading] = useState<boolean>(false);
-
+  let { id } = useParams();
+  const venue = provider.venues.find((v: any) => v.id == id);
   const navigate = useNavigate();
   const route = useLocation().pathname;
+  const [category, setCategory] = useState();
 
-  const handleVenueSaveClick = () => {
-    setVenueSaveLoading(true);
-    setTimeout(() => {
-      setVenueSaveLoading(false);
-      //change any state to re render
-    }, 2000);
+  useEffect(() => {
+    getCategoryById(venue.categoryId).then((c) => setCategory(c.name));
+  }, []);
+
+  const handleVenueSaveClick = (data: any) => {
+    const reqData = {
+      name: data.name,
+      description: data.description,
+      address: data.address,
+      city: data.city,
+      latitude: parseFloat(data.latitude),
+      longitude: parseFloat(data.longitude),
+      category: data.category == "others" ? data.otherCategory : data.category,
+    };
   };
 
   const FormSchema = z.object({
@@ -89,26 +99,44 @@ const Venue = () => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
-      name: "",
-      city: "",
-      address: "",
-      latitude: "",
-      longitude: "",
-      category: "",
+      name: venue.name,
+      city: venue.city,
+      address: venue.address,
+      latitude: venue.latitude,
+      longitude: venue.longitude,
+      category: category,
       geoLocation: false,
       otherCategory: "",
     },
   });
   function onSubmit(data: z.infer<typeof FormSchema>) {
-    handleVenueSaveClick();
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
+    setVenueSaveLoading(false);
+    axios
+      .put(
+        `http://localhost:5059/api/Venues/${id}`,
+        {
+          name: data.name,
+          address: data.address,
+          city: data.city,
+          latitude: parseFloat(data.latitude),
+          longitude: parseFloat(data.longitude),
+          category:
+            data.category == "others" ? data.otherCategory : data.category,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          },
+        }
+      )
+      .then(() => {
+        toast({ title: "Edited" });
+        setVenueSaveLoading(false);
+        navigate(`/venues/${id}`);
+      })
+      .catch(() => {
+        toast({ title: "Error occured" });
+      });
   }
   const categoryWatch = form.watch("category");
   const geoLocationWatch = form.watch("geoLocation");
@@ -131,12 +159,12 @@ const Venue = () => {
     <div className="p-4">
       <div className=" grid grid-cols-2 space-y-0.5">
         <div className="flex flex-col gap-2 justify-center">
-          <h2 className="text-2xl font-bold tracking-tight">Box Cricket</h2>
+          <h2 className="text-2xl font-bold tracking-tight">{venue.name}</h2>
           <div className="flex gap-2">
-            <h3 className="text-xl tracking-tight mb-1">Eagle Academy</h3>
+            <h3 className="text-xl tracking-tight mb-1">{provider.name}</h3>
             <Separator orientation="vertical" />
             <p className="flex gap-2 my-auto">
-              4.5 <Star className="w-4 h-4 my-auto text-primary" />
+              {venue.rating} <Star className="w-4 h-4 my-auto text-primary" />
             </p>
             <Separator orientation="vertical" />
             <Dialog>
@@ -372,12 +400,7 @@ const Venue = () => {
           </div>
         </div>
         <div className="flex flex-col gap-2">
-          <p className="text-sm text-wrap">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, quam
-            iste nobis consequatur ea sit consequuntur tenetur? A, nemo magni
-            quas reiciendis placeat sint laborum adipisci vitae voluptatum non
-            dolorem!
-          </p>
+          <p className="text-sm text-wrap">{venue.description}</p>
           <div className="flex gap-2">
             <Badge variant="outline" className="border-primary">
               {category}
@@ -436,6 +459,11 @@ const Header = ({
       </div>
     </div>
   );
+};
+
+const getCategoryById = async (id: number) => {
+  const res = await axios.get(`http://localhost:5059/api/Category/${id}`);
+  return res.data;
 };
 
 export default Venue;

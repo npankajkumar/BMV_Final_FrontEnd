@@ -1,28 +1,43 @@
 import BookingCard from "@/components/BookingCard";
-import { useToast } from "@/hooks/use-toast";
 
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
+import { useNavigate } from "react-router-dom";
+import { toast } from "@/hooks/use-toast";
 
-const Bookings = () => {
-  const toast = useToast();
+const Bookings = ({ provider }: { provider: any }) => {
   const [pageLoading, setPageLoading] = useState(true);
+  const [bookings, setBookings] = useState([]);
+  const navigate = useNavigate();
   useEffect(() => {
-    // axios.get('https://api.example.com/data')
-    //       .then(response => {
-    //         setData(response.data);
-    //         setLoading(false);
-    //       })
-    //       .catch(error => {
-    //         console.error('Error fetching data:', error);
-    //         setLoading(false);
-    //       });
-    setTimeout(() => {
-      setPageLoading(false);
-    }, 5000);
-  });
+    const client = localStorage.getItem("auth");
+    if (!client || client != "provider") {
+      navigate("/login?redirect=bookings");
+    }
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      navigate("/login?redirect=bookings");
+    }
+    axios
+      .get("http://localhost:5059/api/Booking", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+      .then((response) => {
+        setBookings(response.data);
+        console.log(response.data);
+        setPageLoading(false);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast({
+          title: "Error occured",
+          description: "Refresh the page and try again",
+        });
+        setPageLoading(false);
+      });
+  }, []);
   if (pageLoading) {
     return (
       <div className="mx-40 flex flex-col gap-2 ">

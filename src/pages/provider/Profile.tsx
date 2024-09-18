@@ -3,7 +3,7 @@ import MemberProfilePage from "@/components/MemberProfilePage";
 import { Skeleton } from "@/components/ui/skeleton";
 import React, { useEffect, useState } from "react";
 
-const Profile = () => {
+const Profile = ({ provider }: { provider: any }) => {
   const [pageLoading, setPageLoading] = useState(true);
   useEffect(() => {
     // axios.get('https://api.example.com/data')
