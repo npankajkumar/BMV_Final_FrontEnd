@@ -1,3 +1,4 @@
+import { format } from "date-fns";
 import RecentBookingPerson from "./RecentBookingPerson";
 
 const RecentBookings = ({ bookings }: { bookings: any[] }) => {
@@ -10,8 +11,8 @@ const RecentBookings = ({ bookings }: { bookings: any[] }) => {
         {bookings.map((booking) => (
           <RecentBookingPerson
             key={booking.id}
-            name={booking.customerId}
-            date={booking.createdAt}
+            name={booking.customerName}
+            date={format(booking.createdAt, "dd-MM-yyyy, hh:mm")}
             amount={booking.amount}
           />
         ))}
