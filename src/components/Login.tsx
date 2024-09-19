@@ -64,8 +64,8 @@ const Login = () => {
   }
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] max-w-lg">
-      <h1 className="text-3xl font-bold mb-4 text-center">Login</h1>
+    <div className="p-6 rounded-lg border border-gray-200 w-[400px] max-w-lg border-t-0">
+      <h1 className="text-3xl font-semi-bold mb-4 text-center">Login</h1>
 
       <RadioGroup defaultValue="default" className="flex justify-center mb-4">
         <div className="flex items-center space-x-2">

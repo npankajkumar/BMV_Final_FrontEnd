@@ -13,7 +13,7 @@ import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { Label } from "./ui/label";
+import { Label } from "@radix-ui/react-label";
 import LoadingButton from "./LoadingButton";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
@@ -73,7 +73,7 @@ export const Register = () => {
     setRegisterLoading(false);
   }
   return (
-    <div className="max-w-md mx-auto p-8 flex flex-col rounded-md mt-10 mb-10 border border-gray-200">
+    <div className="max-w-md mx-auto p-8 flex flex-col rounded-md mt-5 mb-10 border border-gray-200 border-t-0">
       <h1 className="text-3xl mb-2 text-center">Register</h1>
       <RadioGroup
         defaultValue="default"
