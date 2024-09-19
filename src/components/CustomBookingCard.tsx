@@ -1,5 +1,7 @@
 import { IndianRupee } from "lucide-react";
 import { Button } from "./ui/button";
+import { PDFDownloadLink } from "@react-pdf/renderer";
+import ReceiptDocument from "./ReceiptDocument";
 // import {
 //   DropdownMenu,
 //   DropdownMenuContent,
@@ -54,7 +56,10 @@ const CustomBookingCard = ({ booking }: { booking: Booking }) => {
 
   const cardName = booking.venueName;
   const status = booking.status;
-  const venueName = booking.providerName;
+  const venueName =
+    localStorage.getItem("auth") != "provider"
+      ? "Provider : " + booking.providerName
+      : "Booked by : " + booking.customerName;
   const amount = booking.amount;
   const formattedDate = formatDate(booking.date);
   const startTime = booking.start;
@@ -73,12 +78,10 @@ const CustomBookingCard = ({ booking }: { booking: Booking }) => {
         </div>
       </div>
       <div className="flex flex-col justify-center ml-auto col-span-2">
-        {/* <div className="">
+        <div className="">
           <span className="mr-4 font-semibold text-gray-800">Booking Id:</span>
-          <span className="mr-4 text-black font-semibold">
-            {"B9934hib7bkkgj"}
-          </span>
-        </div> */}
+          <span className="mr-4 text-black font-semibold">{booking.id}</span>
+        </div>
         <div className="">
           <span className="mr-4 font-semibold text-gray-800">Status:</span>
           <span className="mr-4 text-black font-semibold">{status}</span>
@@ -94,6 +97,20 @@ const CustomBookingCard = ({ booking }: { booking: Booking }) => {
               Cancel
             </Button>
           )}
+
+          <PDFDownloadLink
+            document={<ReceiptDocument booking={booking} />}
+            fileName="Receipt.pdf"
+            className="py-2 mr-4 border border-primary hover:text-white hover:bg-primary rounded-md px-4"
+          >
+            {({ blob, url, loading, error }) =>
+              loading ? "Loading document..." : "Download Receipt"
+            }
+          </PDFDownloadLink>
+
+          {/* <Button className="bg-white text-primary border border-primary hover:text-white">
+            Download Receipt
+          </Button> */}
           {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">Rate</Button>

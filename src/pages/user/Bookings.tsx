@@ -36,7 +36,7 @@ const Bookings = () => {
       });
     setTimeout(() => {
       setPageLoading(false);
-    }, 5000);
+    }, 2000);
   }, [navigate]);
 
   if (pageLoading) {
@@ -65,13 +65,15 @@ const Bookings = () => {
 
   return (
     <div className="mx-40 my-10 flex flex-col">
-      {bookings.length == 0 && (
+      {bookings.length == 0 ? (
         <div className="mx-auto my-auto">
           <h1 className="text-3xl font-semibold">You have no Bookings..</h1>
           <Button variant={"link"} className="text-md font-semibold mt-2 ml-20">
             explore venues
           </Button>
         </div>
+      ) : (
+        <h1 className="mb-5 text-3xl ">Your Bookings : </h1>
       )}
       {bookings.map((booking, id) => (
         <CustomBookingCard key={id} booking={booking} />

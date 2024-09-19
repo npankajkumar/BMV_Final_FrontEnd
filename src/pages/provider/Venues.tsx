@@ -5,6 +5,9 @@ import { venueCardsData } from "@/db";
 import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { Plus } from "lucide-react";
 
 const Venues = ({ provider }: { provider: any }) => {
   const [pageLoading, setPageLoading] = useState(false);
@@ -19,7 +22,15 @@ const Venues = ({ provider }: { provider: any }) => {
     );
   return (
     <div className="p-4">
-      <h3 className="text-2xl font-semibold my-4">Your Venues</h3>
+      <div className="flex items-center justify-between">
+        <h3 className="text-2xl font-semibold my-4">Your Venues</h3>
+        <Link to={"/venues/new"}>
+          <Button variant={"outline"} className="mr-2">
+            <Plus />
+            Add Venue
+          </Button>
+        </Link>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mx-auto">
         {provider.venues.map((venue: any) => (
           <div key={venue.id}>

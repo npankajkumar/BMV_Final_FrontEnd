@@ -61,12 +61,10 @@ const Bookings = ({ provider }: { provider: any }) => {
     );
   }
   return (
-    <div className="mx-40 my-10">
-      {bookings.length == 0 && (
-        <div className="mx-auto my-auto">
-          <h1 className="text-3xl font-semibold">No Bookings Made..</h1>
-        </div>
-      )}
+    <div className="mx-40 my-5">
+      <h1 className="text-3xl font-semibold mb-5">
+        {bookings.length == 0 ? "No Bookings Made .." : "All Bookings : "}
+      </h1>
       {bookings.map((booking, id) => (
         <CustomBookingCard key={id} booking={booking} />
       ))}
