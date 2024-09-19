@@ -2,7 +2,13 @@ import MemberProfilePage from "@/components/MemberProfilePage";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useEffect, useState } from "react";
 
-const Profile = ({ provider }: { provider: any }) => {
+const Profile = ({
+  provider,
+  updateProvider,
+}: {
+  provider: any;
+  updateProvider: any;
+}) => {
   const [pageLoading, setPageLoading] = useState(true);
   const [name, setName] = useState(provider.name);
   const [email] = useState(provider.email);
@@ -19,6 +25,7 @@ const Profile = ({ provider }: { provider: any }) => {
   }) => {
     setName(updatedData.name);
     setMobile(updatedData.mobile);
+    updateProvider();
   };
 
   if (pageLoading)

@@ -53,7 +53,13 @@ import LoadingButton from "@/components/LoadingButton";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
-const Venue = ({ provider }: { provider: any }) => {
+const Venue = ({
+  provider,
+  updateProvider,
+}: {
+  provider: any;
+  updateProvider: any;
+}) => {
   const [venueSaveLoading, setVenueSaveLoading] = useState<boolean>(false);
   let { id } = useParams();
   const venue = provider.venues.find((v: any) => v.id == id);
@@ -144,7 +150,7 @@ const Venue = ({ provider }: { provider: any }) => {
       .then(() => {
         toast({ title: "Edited" });
         setVenueSaveLoading(false);
-        navigate(`/venues/${id}`);
+        updateProvider();
       })
       .catch(() => {
         toast({ title: "Error occured" });

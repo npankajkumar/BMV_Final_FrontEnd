@@ -14,6 +14,25 @@ import { toast } from "@/hooks/use-toast";
 const Index = () => {
   const [provider, setProvider] = useState<any>();
   const [loading, setLoading] = useState(true);
+
+  const updateProvider = () => {
+    axios
+      .get("http://localhost:5059/api/Providers", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      })
+      .then((response) => {
+        setProvider(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        toast({ title: "Error occured" });
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
     axios
       .get("http://localhost:5059/api/Providers", {
@@ -39,8 +58,13 @@ const Index = () => {
       <NavBar clientType="provider" />
       <Routes>
         <Route path="/" element={<Home provider={provider} />} />
-        <Route path="/profile" element={<Profile provider={provider} />} />
-        <Route path="/bookings" element={<Bookings provider={provider} />} />
+        <Route
+          path="/profile"
+          element={
+            <Profile provider={provider} updateProvider={updateProvider} />
+          }
+        />
+        <Route path="/bookings" element={<Bookings />} />
         <Route
           path="/venues"
           element={
@@ -49,8 +73,18 @@ const Index = () => {
             </div>
           }
         />
-        <Route path="/venues/new" element={<AddVenue provider={provider} />} />
-        <Route path="/venues/:id" element={<Venue provider={provider} />} />
+        <Route
+          path="/venues/new"
+          element={
+            <AddVenue provider={provider} updateProvider={updateProvider} />
+          }
+        />
+        <Route
+          path="/venues/:id"
+          element={
+            <Venue provider={provider} updateProvider={updateProvider} />
+          }
+        />
         <Route path="*" element={<div>Provider Not Found</div>} />
       </Routes>
     </div>
