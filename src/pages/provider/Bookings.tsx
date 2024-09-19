@@ -1,11 +1,10 @@
-import BookingCard from "@/components/BookingCard";
-
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import CustomBookingCard from "@/components/CustomBookingCard";
 
 const Bookings = ({ provider }: { provider: any }) => {
   const [pageLoading, setPageLoading] = useState(true);
@@ -26,7 +25,7 @@ const Bookings = ({ provider }: { provider: any }) => {
       })
       .then((response) => {
         setBookings(response.data);
-        console.log(response.data);
+        // console.log(response.data);
         setPageLoading(false);
       })
       .catch((error) => {
@@ -63,7 +62,14 @@ const Bookings = ({ provider }: { provider: any }) => {
   }
   return (
     <div className="mx-40 my-10">
-      <BookingCard />
+      {bookings.length == 0 && (
+        <div className="mx-auto my-auto">
+          <h1 className="text-3xl font-semibold">No Bookings Made..</h1>
+        </div>
+      )}
+      {bookings.map((booking, id) => (
+        <CustomBookingCard key={id} booking={booking} />
+      ))}
     </div>
   );
 };

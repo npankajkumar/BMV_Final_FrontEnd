@@ -1,19 +1,12 @@
 import DashboardCard from "@/components/DashboardCard";
-import DashboardCardGrid from "@/components/DashboardCardGrid";
 import RecentBookings from "@/components/RecentBookings";
-import {
-  BarChartComponent,
-  EarningsChart,
-} from "@/components/line-chart/LineChart";
+import { BarChartComponent } from "@/components/line-chart/LineChart";
 import { Button } from "@/components/ui/button";
-import { Card, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { chartData } from "@/db";
 import axios from "axios";
-import { format } from "date-fns";
 import { Box, IndianRupee, Plus, Star } from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 const Home = ({ provider }: { provider: any }) => {

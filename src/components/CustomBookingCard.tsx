@@ -1,80 +1,84 @@
-import { IndianRupee, Star } from "lucide-react";
+import { IndianRupee } from "lucide-react";
 import { Button } from "./ui/button";
-import { format } from "date-fns";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { useState } from "react";
-
-type Slot = {
-  id: number;
-  startTime: Date;
-  endTime: Date;
-};
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuRadioGroup,
+//   DropdownMenuRadioItem,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
+// import { useState } from "react";
 
 type Booking = {
   id: number;
-  venue: string;
-  provider: string;
-  slotDate: Date;
+  createdAt: string;
   status: string;
-  slots: Slot[];
+  customerId: number;
+  providerId: number;
+  venueId: number;
+  amount: number;
+  date: string;
+  start: string;
+  end: string;
+  bookedSlots: [];
+  customerName: string;
+  providerName: string;
+  venueName: string;
 };
-const CustomBookingCard = () => {
-  const handleRatingChange = async (value: string) => {
-    setPosition(value);
-    try {
-      const response = await fetch("http://localhost:5100/api/rating", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ rating: value }),
-      });
-      if (!response.ok) {
-        throw new Error("Failed to submit rating");
-      }
-      console.log("Rating submitted successfully");
-    } catch (error) {
-      console.error("Error submitting rating:", error);
-    }
+
+const CustomBookingCard = ({ booking }: { booking: Booking }) => {
+  // const handleRatingChange = async (value: string) => {
+  //   setPosition(value);
+  //   try {
+  //     const response = await fetch("http://localhost:5100/api/rating", {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({ rating: value }),
+  //     });
+  //     if (!response.ok) {
+  //       throw new Error("Failed to submit rating");
+  //     }
+  //     console.log("Rating submitted successfully");
+  //   } catch (error) {
+  //     console.error("Error submitting rating:", error);
+  //   }
+  // };
+  // const [position, setPosition] = useState("fiveStar");
+
+  const formatDate = (dateStr: string): string => {
+    const [year, month, day] = dateStr.split("-");
+    return `${day}-${month}-${year}`;
   };
 
-  const [position, setPosition] = useState("fiveStar");
-  const cardName = "Box Cricket";
-  const status = "UpComing";
-  const venueName = "Eagle Academy";
-  const amount = 3000;
-  const today = new Date();
-  const formattedDate = format(today, "dd/MM/yyyy");
-  const startTime = "12:30 pm";
-  const endTime = "02:30pm";
+  const cardName = booking.venueName;
+  const status = booking.status;
+  const venueName = booking.providerName;
+  const amount = booking.amount;
+  const formattedDate = formatDate(booking.date);
+  const startTime = booking.start;
+  const endTime = booking.end;
   return (
-    <div className="w-full border grid grid-cols-6  p-4 rounded-lg">
+    <div className="w-full border grid grid-cols-6  p-4 rounded-lg mb-3">
       <div className="col-span-4">
         <h1 className="text-2xl font-bold">{cardName}</h1>
         <h1 className="text-lg   mb-2">{venueName}</h1>
         <div className="mt-2  font-medium">{formattedDate}</div>
         <div className=" ">
-          <span className="font-semibold">Slots: </span>
+          <span className="font-semibold">Slot Timing : </span>
           <span className="">{startTime} </span>{" "}
           <span className="font-semibold">- </span>{" "}
           <span className="">{endTime} </span>
         </div>
       </div>
       <div className="flex flex-col justify-center ml-auto col-span-2">
-        <div className="">
+        {/* <div className="">
           <span className="mr-4 font-semibold text-gray-800">Booking Id:</span>
           <span className="mr-4 text-black font-semibold">
             {"B9934hib7bkkgj"}
           </span>
-        </div>
+        </div> */}
         <div className="">
           <span className="mr-4 font-semibold text-gray-800">Status:</span>
           <span className="mr-4 text-black font-semibold">{status}</span>
@@ -90,7 +94,7 @@ const CustomBookingCard = () => {
               Cancel
             </Button>
           )}
-          <DropdownMenu>
+          {/* <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">Rate</Button>
             </DropdownMenuTrigger>
@@ -116,7 +120,7 @@ const CustomBookingCard = () => {
                 </DropdownMenuRadioItem>
               </DropdownMenuRadioGroup>
             </DropdownMenuContent>
-          </DropdownMenu>
+          </DropdownMenu> */}
         </div>
       </div>
     </div>
