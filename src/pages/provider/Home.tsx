@@ -56,7 +56,7 @@ const Home = ({ provider }: { provider: any }) => {
     );
   }
 
-  return (
+  return dashboard ? (
     <div className="w-vw p-4">
       <div className="flex items-center justify-between gap-4">
         <CardTitle>Dashboard</CardTitle>
@@ -99,6 +99,8 @@ const Home = ({ provider }: { provider: any }) => {
         <RecentBookings bookings={dashboard.recentBookings} />
       </div>
     </div>
+  ) : (
+    <div>Error occured</div>
   );
 };
 

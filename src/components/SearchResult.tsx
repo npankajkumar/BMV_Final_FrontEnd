@@ -6,14 +6,10 @@ interface SearchResultProps {
 }
 
 type venue = {
-  venueId: number;
   venueName: string;
   venueDescription: string;
   venueCategory: string;
-  providerName: string;
   city: string;
-  latitude: number;
-  longitude: number;
 };
 
 const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
@@ -24,8 +20,7 @@ const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
           {result.venueName}
         </div>
         <div className="col-span-1 text-right">
-          <div className="font-light">{result.providerName}</div>
-          <div className="text-xs">{result.venueCategory}</div>
+          <div className="text">{result.venueCategory}</div>
         </div>
       </Link>
     </div>

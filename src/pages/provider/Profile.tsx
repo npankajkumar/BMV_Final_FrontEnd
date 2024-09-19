@@ -10,13 +10,12 @@ const Profile = ({ provider }: { provider: any }) => {
   useEffect(() => {
     setTimeout(() => {
       setPageLoading(false);
-    }, 5000);
+    }, 1000);
   }, []);
 
   const handleProfileUpdate = (updatedData: {
     name: string;
     mobile: string;
-   
   }) => {
     setName(updatedData.name);
     setMobile(updatedData.mobile);

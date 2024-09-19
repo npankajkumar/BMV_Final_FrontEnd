@@ -57,6 +57,18 @@ const Venue = ({ provider }: { provider: any }) => {
   const [venueSaveLoading, setVenueSaveLoading] = useState<boolean>(false);
   let { id } = useParams();
   const venue = provider.venues.find((v: any) => v.id == id);
+  const slots = venue
+    ? venue.slots.map((s: any) => {
+        return {
+          id: s.id,
+          weekdayPrice: s.weekdayPrice,
+          weekendPrice: s.weekendPrice,
+          status: s.isBlocked ? "blocked" : "available",
+          from: s.start,
+          to: s.end,
+        };
+      })
+    : [];
   const navigate = useNavigate();
   const route = useLocation().pathname;
   const [category, setCategory] = useState();
@@ -155,7 +167,7 @@ const Venue = ({ provider }: { provider: any }) => {
       }
     );
   }
-  return (
+  return venue ? (
     <div className="p-4">
       <div className=" grid grid-cols-2 space-y-0.5">
         <div className="flex flex-col gap-2 justify-center">
@@ -410,9 +422,11 @@ const Venue = ({ provider }: { provider: any }) => {
       </div>
       <Separator className="my-6" />
       <div className="">
-        <DataTable columns={columns} data={availableSlots} />
+        <DataTable columns={columns} data={slots} />
       </div>
     </div>
+  ) : (
+    <div>Error occured</div>
   );
 };
 

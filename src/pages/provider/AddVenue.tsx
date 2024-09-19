@@ -128,7 +128,6 @@ const AddVenue = ({ provider }: { provider: any }) => {
         weekendPrice: parseFloat(data.weekendPrice),
       },
     };
-    console.log(resData);
     axios
       .post("http://localhost:5059/api/Venues", resData, {
         headers: {
@@ -146,6 +145,17 @@ const AddVenue = ({ provider }: { provider: any }) => {
         toast({ title: "Error occured" });
         setAddLoading(false);
       });
+    axios
+      .post("http://localhost:5143/api/Search", {
+        venueName: resData.name,
+        venueDescription: resData.description,
+        venueCategory: resData.category,
+        city: resData.city,
+      })
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((e) => console.log());
     toast({
       title: "You submitted the following values:",
       description: (

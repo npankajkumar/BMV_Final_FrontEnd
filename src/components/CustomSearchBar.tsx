@@ -3,7 +3,6 @@ import SearchBarBox from "./SearchBarBox";
 import SearchResultsList from "./SearchResultsList";
 
 type venue = {
-  venueId: number;
   venueName: string;
   venueDescription: string;
   venueCategory: string;

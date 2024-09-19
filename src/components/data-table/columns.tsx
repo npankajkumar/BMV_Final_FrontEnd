@@ -12,10 +12,16 @@ export type Slot = {
   weekdayPrice: number;
   weekendPrice: number;
   status: "available" | "blocked";
-  from: Date;
-  to: Date;
-  duration: number;
+  from: string;
+  to: string;
 };
+
+function convertTime(time: string): string {
+  const [hours, minutes, seconds] = time.split(":").map(Number);
+  const period = hours >= 12 ? "P.M." : "A.M.";
+  const adjustedHours = hours % 12 || 12; // Convert 0 to 12 for 12 A.M.
+  return `${adjustedHours}:${minutes.toString().padStart(2, "0")} ${period}`;
+}
 
 export const columns: ColumnDef<Slot>[] = [
   {
@@ -23,15 +29,7 @@ export const columns: ColumnDef<Slot>[] = [
     header: "Start Time",
     cell: ({ row }) => {
       const from = row.original.from;
-      return (
-        <div className="text-center">
-          {(from.getHours() > 12 ? from.getHours() - 12 : from.getHours()) +
-            ":" +
-            (from.getMinutes() > 0 ? from.getMinutes() : "00") +
-            " " +
-            (from.getHours() > 12 ? "A.M" : "P.M")}
-        </div>
-      );
+      return <div className="text-center">{convertTime(from)}</div>;
     },
   },
   {
@@ -39,33 +37,8 @@ export const columns: ColumnDef<Slot>[] = [
     header: "End Time",
     cell: ({ row }) => {
       const to = row.original.to;
-      return (
-        <div className="text-center">
-          {(to.getHours() > 12 ? to.getHours() - 12 : to.getHours()) +
-            ":" +
-            (to.getMinutes() > 0 ? to.getMinutes() : "00") +
-            " " +
-            (to.getHours() > 12 ? "A.M" : "P.M")}
-        </div>
-      );
+      return <div className="text-center">{convertTime(to)}</div>;
     },
-  },
-  {
-    accessorKey: "duration",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Duration
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
-    cell: ({ row }) => (
-      <div className="text-center">{row.getValue("duration") + " hours"}</div>
-    ),
   },
   {
     accessorKey: "weekdayPrice",

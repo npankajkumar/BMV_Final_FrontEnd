@@ -22,7 +22,6 @@ const Index = () => {
         },
       })
       .then((response) => {
-        console.log(response.data);
         setProvider(response.data);
         setLoading(false);
       })
