@@ -6,6 +6,7 @@ interface SearchResultsListProps {
 }
 
 type venue = {
+  venueId: number;
   venueName: string;
   venueDescription: string;
   venueCategory: string;

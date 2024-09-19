@@ -3,13 +3,11 @@ import SearchBarBox from "./SearchBarBox";
 import SearchResultsList from "./SearchResultsList";
 
 type venue = {
+  venueId: number;
   venueName: string;
   venueDescription: string;
   venueCategory: string;
-  providerName: string;
   city: string;
-  latitude: number;
-  longitude: number;
 };
 
 const CustomSearchBar: React.FC = () => {

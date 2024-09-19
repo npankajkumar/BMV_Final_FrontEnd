@@ -139,23 +139,25 @@ const AddVenue = ({ provider }: { provider: any }) => {
         console.log(b);
         toast({ title: "Venue Created" });
         setAddLoading(false);
+        axios
+          .post("http://localhost:5143/api/Search", {
+            venueId: b.data.id,
+            venueName: resData.name,
+            venueDescription: resData.description,
+            venueCategory: resData.category,
+            city: resData.city,
+          })
+          .then((res) => {
+            console.log(res);
+          })
+          .catch((e) => console.log());
       })
       .catch((e) => {
         console.log(e);
         toast({ title: "Error occured" });
         setAddLoading(false);
       });
-    axios
-      .post("http://localhost:5143/api/Search", {
-        venueName: resData.name,
-        venueDescription: resData.description,
-        venueCategory: resData.category,
-        city: resData.city,
-      })
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((e) => console.log());
+
     toast({
       title: "You submitted the following values:",
       description: (

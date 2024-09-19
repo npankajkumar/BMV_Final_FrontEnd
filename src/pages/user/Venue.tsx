@@ -233,7 +233,7 @@ const Venue = () => {
                       end: slot.end,
                       price: isWeekend(date ?? new Date())
                         ? slot.weekendPrice
-                        : slot.weekendPrice,
+                        : slot.weekdayPrice,
                       status: slot.status,
                     }}
                     onClick={handleSlotBoxClick}
