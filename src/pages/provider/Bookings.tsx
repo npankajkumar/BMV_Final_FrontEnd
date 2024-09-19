@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import CustomBookingCard from "@/components/CustomBookingCard";
 
-const Bookings = ({ provider }: { provider: any }) => {
+const Bookings = () => {
   const [pageLoading, setPageLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();

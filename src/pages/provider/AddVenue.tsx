@@ -78,7 +78,13 @@ const FormSchema = z.object({
 
 export function InputForm() {}
 
-const AddVenue = ({ provider }: { provider: any }) => {
+const AddVenue = ({
+  provider,
+  updateProvider,
+}: {
+  provider: any;
+  updateProvider: any;
+}) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -151,6 +157,8 @@ const AddVenue = ({ provider }: { provider: any }) => {
             console.log(res);
           })
           .catch((e) => console.log());
+        updateProvider();
+        navigate("/");
       })
       .catch((e) => {
         console.log(e);
