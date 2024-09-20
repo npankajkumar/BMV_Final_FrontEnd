@@ -42,7 +42,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import LoadingButton from "@/components/LoadingButton";
-import { useEffect, useState } from "react";
+import { ReactHTMLElement, useEffect, useState } from "react";
 import axios from "axios";
 
 const FormSchema = z.object({
@@ -104,6 +104,7 @@ const AddVenue = ({
   });
 
   const [addLoading, setAddLoading] = useState<boolean>(false);
+  const [imageFiles, setImageFiles] = useState([]);
 
   const categoryWatch = form.watch("category");
   const geoLocationWatch = form.watch("geoLocation");
@@ -111,12 +112,12 @@ const AddVenue = ({
 
   const navigate = useNavigate();
 
+  function handleOnChange(event: any) {
+    setImageFiles(event.target.files);
+  }
+
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setAddLoading(true);
-    // setTimeout(() => {
-    //   setAddLoading(false);
-    //   navigate("/");
-    // }, 2000);
 
     const resData = {
       name: data.name,
@@ -125,7 +126,8 @@ const AddVenue = ({
       city: data.city,
       latitude: parseFloat(data.latitude),
       longitude: parseFloat(data.longitude),
-      category: data.category == "others" ? data.otherCategory : data.category,
+      category:
+        data.category == "others" ? data.otherCategory : data.category || "",
       slotDetails: {
         openingTime: data.openingTime,
         closingTime: data.closingTime,
@@ -134,11 +136,43 @@ const AddVenue = ({
         weekendPrice: parseFloat(data.weekendPrice),
       },
     };
+    const formData = new FormData();
+    for (let i = 0; i < imageFiles.length; i++) {
+      formData.append("images", imageFiles[i]);
+    }
+    formData.append("name", resData.name);
+    formData.append("description", resData.description);
+    formData.append("address", resData.address);
+    formData.append("city", resData.city);
+    formData.append("latitude", resData.latitude.toString());
+    formData.append("longitude", resData.longitude.toString());
+    formData.append("category", resData.category);
+    formData.append(
+      "slotDetails[openingTime]",
+      resData.slotDetails.openingTime
+    );
+    formData.append(
+      "slotDetails[closingTime]",
+      resData.slotDetails.closingTime
+    );
+    formData.append(
+      "slotDetails[durationInMinutes]",
+      resData.slotDetails.durationInMinutes.toString()
+    );
+    formData.append(
+      "slotDetails[weekdayPrice]",
+      resData.slotDetails.weekdayPrice.toString()
+    );
+    formData.append(
+      "slotDetails[weekendPrice]",
+      resData.slotDetails.weekendPrice.toString()
+    );
+
     axios
-      .post("http://localhost:5059/api/Venues", resData, {
+      .post("http://localhost:5059/api/Venues", formData, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          "Content-Type": "application/json",
+          "Content-Type": "multipart/form-data",
         },
       })
       .then((b) => {
@@ -534,6 +568,19 @@ const AddVenue = ({
                       <FormMessage />
                     </FormItem>
                   )}
+                />
+              </div>
+              <div className="my-4 mb-2 md:w-1/2 mx-auto">
+                <label htmlFor="files" className="my-2">
+                  Upload Files
+                </label>
+                <input
+                  name="files"
+                  type="file"
+                  multiple
+                  required
+                  className="border p-3 rounded-md"
+                  onChange={handleOnChange}
                 />
               </div>
             </div>

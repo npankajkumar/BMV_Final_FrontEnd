@@ -14,6 +14,7 @@ const Home = () => {
   useEffect(() => {
     getTopRatedVenues().then((res) => {
       setTopRatedVenues(res.topRatedVenues);
+      console.log(res);
       setTopBookedVenues(res.topBookedVenues);
       setPageLoading(false);
     });
@@ -59,7 +60,7 @@ const getTopRatedVenues = async () => {
       name: v.name,
       rating: v.rating,
       city: v.city,
-      imageUrl: v.image1,
+      imageUrl: v.images,
       provider: pName,
       latitude: v.latitude,
       longitude: v.longitude,
@@ -72,7 +73,7 @@ const getTopRatedVenues = async () => {
       name: v.name,
       rating: v.rating,
       city: v.city,
-      imageUrl: v.image1,
+      imageUrl: v.images,
       provider: pName,
       latitude: v.latitude,
       longitude: v.longitude,

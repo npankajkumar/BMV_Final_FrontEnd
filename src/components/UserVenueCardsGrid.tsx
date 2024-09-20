@@ -22,6 +22,7 @@ const UserVenueCardsGrid = ({
   title: string;
   cardDataArray: cardData[];
 }) => {
+  console.log(cardDataArray);
   return (
     <div className={`${className}`}>
       <CardTitle className="mb-4">{title}:</CardTitle>

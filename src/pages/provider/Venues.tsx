@@ -39,7 +39,7 @@ const Venues = ({ provider }: { provider: any }) => {
               title={venue.name}
               city={venue.city}
               rating={venue.rating}
-              imageUrl={venue.imageUrl}
+              imageUrl={venue.images}
               provider={provider.name}
               latitude={venue.latitude}
               longitude={venue.longitude}

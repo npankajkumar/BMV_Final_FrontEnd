@@ -39,6 +39,8 @@ const Venue = () => {
   const [date, setDate] = useState<Date>();
   const [slots, setSlots] = useState<any>([]);
 
+  console.log(venue);
+
   const handleSlotBoxClick = (selectedSlot: slot, selected: boolean) => {
     if (selected) {
       const find = selectedSlots.find((s) => s.id === selectedSlot.id);
@@ -58,6 +60,8 @@ const Venue = () => {
       .get(`http://localhost:5059/api/Venues/${parseInt(params.id ?? "1")}`)
       .then((response) => {
         setVenue(response.data);
+        console.log("venue");
+        console.log(response.data);
         setPageLoading(false);
       })
       .catch((error) => {
@@ -121,10 +125,10 @@ const Venue = () => {
         <div className="grid grid-cols-3 gap-4">
           <ScrollArea className="h-60 w-full whitespace-nowrap rounded-md">
             <div className="flex flex-col gap-4 w-max mx-auto">
-              {[1, 2, 3].map((i) => (
+              {venue.images.map((img, i) => (
                 <div key={i} className=" ">
                   <img
-                    src={imageUrl}
+                    src={img}
                     alt=""
                     className="bg-cover overflow-hidden rounded-lg h-60"
                   />
