@@ -180,7 +180,7 @@ const AddVenue = ({
         toast({ title: "Venue Created" });
         setAddLoading(false);
         axios
-          .post("http://localhost:5143/api/Search", {
+          .post("https://localhost:7038/api/Search", {
             venueId: b.data.id,
             venueName: resData.name,
             venueDescription: resData.description,
@@ -190,7 +190,7 @@ const AddVenue = ({
           .then((res) => {
             console.log(res);
           })
-          .catch((e) => console.log());
+          .catch((e) => console.log(e));
         updateProvider();
         navigate("/");
       })
