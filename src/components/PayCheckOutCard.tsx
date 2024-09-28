@@ -9,8 +9,9 @@ import { Label } from "@radix-ui/react-label";
 import { Button } from "./ui/button";
 import { format } from "date-fns";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
+import { ToastAction } from "./ui/toast";
 
 interface PayCheckOutCardProps {
   amount: number;
@@ -30,17 +31,14 @@ const PayCheckOutCard: React.FC<PayCheckOutCardProps> = ({
   const total = amount + (amount < 1000 ? 10 : 50);
 
   const navigate = useNavigate();
+  const { id } = useParams();
 
   const handleCheckoutClick = () => {
     let authToken = localStorage.getItem("authToken");
     if (!authToken) {
-      toast({ title: "Login to book slots", variant: "destructive" });
+      toast({ title: "Login to book slots", variant: "destructive", action: <ToastAction altText="Try again" onClick={()=>navigate(`/login?redirect=venues/${id}`)}>Login</ToastAction> });
       return;
     }
-    console.log({
-      date: format(date, "dd-MM-yyyy"),
-      slotIds: selectedSlots.map((s) => s.id),
-    });
     axios
       .post(
         "http://localhost:5059/api/booking",

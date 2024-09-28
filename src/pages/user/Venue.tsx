@@ -39,7 +39,6 @@ const Venue = () => {
   const [date, setDate] = useState<Date>();
   const [slots, setSlots] = useState<any>([]);
 
-  console.log(venue);
 
   const handleSlotBoxClick = (selectedSlot: slot, selected: boolean) => {
     if (selected) {
@@ -60,8 +59,6 @@ const Venue = () => {
       .get(`http://localhost:5059/api/Venues/${parseInt(params.id ?? "1")}`)
       .then((response) => {
         setVenue(response.data);
-        console.log("venue");
-        console.log(response.data);
         setPageLoading(false);
       })
       .catch((error) => {
@@ -141,47 +138,18 @@ const Venue = () => {
               <Card x-chunk="dashboard-01-chunk-0">
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-2xl font-medium text-center">
-                    Weekdays
+                    Offers
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold flex gap-1 my-2">
                     <IndianRupee className="h-5 w-5 mt-2" />{" "}
-                    <div className="my-auto">230 </div>
+                    <div className="my-auto">200 </div>
                     <div className="text-sm font-normal my-auto mt-2">
-                      / hour
+                      off on booking over 2000
                     </div>
                   </div>
-                  <div className="text-2xl font-bold flex gap-1 my-2">
-                    <IndianRupee className="h-5 w-5 mt-2" />{" "}
-                    <div className="my-auto">230 </div>
-                    <div className="text-sm font-normal my-auto mt-2">
-                      / day
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              <Card x-chunk="dashboard-01-chunk-0">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-2xl font-medium text-center">
-                    Weekends
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold flex gap-1 my-2">
-                    <IndianRupee className="h-5 w-5 mt-2" />{" "}
-                    <div className="my-auto">290 </div>
-                    <div className="text-sm font-normal my-auto mt-2">
-                      / hour
-                    </div>
-                  </div>
-                  <div className="text-2xl font-bold flex gap-1 my-2">
-                    <IndianRupee className="h-5 w-5 mt-2" />{" "}
-                    <div className="my-auto">1000 </div>
-                    <div className="text-sm font-normal my-auto mt-2">
-                      / day
-                    </div>
-                  </div>
+                  Use BMV200
                 </CardContent>
               </Card>
             </div>

@@ -13,7 +13,7 @@ import { toast } from "@/hooks/use-toast";
 
 const Index = () => {
   const [provider, setProvider] = useState<any>();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const updateProvider = () => {
     axios
@@ -54,7 +54,7 @@ const Index = () => {
     return <div>loading</div>;
   }
   return (
-    <div>
+    provider && <div>
       <NavBar clientType="provider" />
       <Routes>
         <Route path="/" element={<Home provider={provider} />} />
@@ -77,6 +77,7 @@ const Index = () => {
           path="/venues/new"
           element={
             <AddVenue provider={provider} updateProvider={updateProvider} />
+            // <div>new venue</div>
           }
         />
         <Route

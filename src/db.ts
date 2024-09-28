@@ -184,26 +184,27 @@ export function generateTimeSlots(startTimeStr = '00:00:00') {
   const [hours, minutes, seconds] = startTimeStr.split(':').map(Number);
   startTime.setHours(hours, minutes, seconds, 0);
 
-  // Increment the start time by 15 minutes
-  startTime.setMinutes(startTime.getMinutes() + 15);
-
   // Round up to the nearest 15-minute interval
   const remainder = startTime.getMinutes() % 15;
   if (remainder !== 0) {
-      startTime.setMinutes(startTime.getMinutes() + (15 - remainder));
+    startTime.setMinutes(startTime.getMinutes() + (15 - remainder));
   }
 
-  while (startTime.getDay() <= new Date().getDay()) {
-      const label = startTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
-      const value = startTime.toTimeString().split(' ')[0];
+  const endTime = new Date(startTime);
+  endTime.setHours(23, 59, 59); // End of the day
 
-      timeSlots.push({ label, value });
+  while (startTime <= endTime) {
+    const label = startTime.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric', hour12: true });
+    const value = startTime.toTimeString().split(' ')[0];
 
-      startTime.setMinutes(startTime.getMinutes() + 15);
+    timeSlots.push({ label, value });
+
+    startTime.setMinutes(startTime.getMinutes() + 15);
   }
 
   return timeSlots;
 }
+
 
 export function generateDurations(startTimeStr = '00:00:00') {
   const timeSlots = [];
@@ -211,29 +212,38 @@ export function generateDurations(startTimeStr = '00:00:00') {
   const [hours, minutes, seconds] = startTimeStr.split(':').map(Number);
   startTime.setHours(hours, minutes, seconds, 0);
 
-  // Increment the start time by 15 minutes
-  startTime.setMinutes(startTime.getMinutes() + 15);
-
   // Round up to the nearest 15-minute interval
   const remainder = startTime.getMinutes() % 15;
   if (remainder !== 0) {
-      startTime.setMinutes(startTime.getMinutes() + (15 - remainder));
+    startTime.setMinutes(startTime.getMinutes() + (15 - remainder));
   }
 
-  while (startTime.getDay() <= new Date().getDay()) {
-      const hours = startTime.getHours()
-      let label = "";
-      if(hours>0){
-        label = label + hours+" hrs "
-      }
-      if(startTime.getMinutes()>0)
-      label += startTime.getMinutes()+" mins"
-      const value = startTime.toTimeString().split(' ')[0];
+  const endTime = new Date(startTime);
+  endTime.setHours(23, 59, 59); // End of the day or a specific end time
 
-      timeSlots.push({ label, value });
+  let totalMinutes = 0; // To accumulate the total duration in minutes
 
-      startTime.setMinutes(startTime.getMinutes() + 15);
+  while (startTime <= endTime) {
+    const currentMinutes = totalMinutes % 60;
+    const currentHours = Math.floor(totalMinutes / 60);
+
+    let label = "";
+    if (currentHours > 0) {
+      label += `${currentHours} hr${currentHours > 1 ? 's' : ''} `;
+    }
+    if (currentMinutes > 0) {
+      label += `${currentMinutes} min${currentMinutes > 1 ? 's' : ''}`;
+    }
+
+    const value = `${currentHours}:${currentMinutes < 10 ? '0' + currentMinutes : currentMinutes}`;
+
+    timeSlots.push({ label: label.trim(), value });
+
+    // Increment total duration by 15 minutes for the next slot
+    totalMinutes += 15;
+    startTime.setMinutes(startTime.getMinutes() + 15);
   }
 
   return timeSlots;
 }
+

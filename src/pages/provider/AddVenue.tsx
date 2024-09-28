@@ -66,12 +66,12 @@ const FormSchema = z.object({
     .max(200, { message: "Address must be less than 200 characters." }),
   latitude: z.string(),
   longitude: z.string(),
-  category: z.string({ required_error: "Category is required" }),
+  category: z.any(),
   geoLocation: z.boolean().default(false).optional(),
   otherCategory: z.string().optional(),
   openingTime: z.string().time(),
   closingTime: z.string().time(),
-  duration: z.string().time(),
+  duration: z.string(),
   weekdayPrice: z.string(),
   weekendPrice: z.string(),
 });
@@ -136,6 +136,7 @@ const AddVenue = ({
         weekendPrice: parseFloat(data.weekendPrice),
       },
     };
+    console.log(resData);
     const formData = new FormData();
     for (let i = 0; i < imageFiles.length; i++) {
       formData.append("images", imageFiles[i]);
@@ -180,7 +181,7 @@ const AddVenue = ({
         toast({ title: "Venue Created" });
         setAddLoading(false);
         axios
-          .post("https://localhost:7038/api/Search", {
+          .post("http://localhost:5143/api/Search", {
             venueId: b.data.id,
             venueName: resData.name,
             venueDescription: resData.description,
@@ -228,7 +229,7 @@ const AddVenue = ({
 
   return (
     <div className="p-4">
-      <Form {...form}>
+       <Form {...form}>
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="my-2 flex justify-between">
             <h3 className="text-2xl font-semibold">Add Venue</h3>
@@ -455,7 +456,7 @@ const AddVenue = ({
                               <SelectValue placeholder="Select a venue opening time" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent className="h-40">
                             {generateTimeSlots().map((time) => {
                               return (
                                 <SelectItem value={time.value}>
@@ -487,7 +488,7 @@ const AddVenue = ({
                               <SelectValue placeholder="Select a venue closing time" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent>
+                          <SelectContent className="h-40">
                             {generateTimeSlots(openingTimeWatch).map((time) => {
                               return (
                                 <SelectItem value={time.value}>
@@ -586,19 +587,16 @@ const AddVenue = ({
             </div>
           </div>
         </form>
-      </Form>
+      </Form> 
     </div>
   );
 };
 
 function convertToMinutes(timeString: string): number {
   // Split the time string into hours, minutes, and seconds
-  const [hours, minutes, seconds] = timeString.split(":").map(Number);
+  const [hours, minutes] = timeString.split(":").map(Number);
 
-  // Calculate total minutes
-  const totalMinutes = hours * 60 + minutes + seconds / 60;
-
-  return totalMinutes;
+  return (hours * 60) + minutes;
 }
 
 export default AddVenue;

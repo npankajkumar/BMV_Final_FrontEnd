@@ -21,7 +21,6 @@ const VenueCard = ({
   latitude: number;
   longitude: number;
 }) => {
-  console.log(imageUrl[0]);
   return (
     <Card className="p-2 w-80 h-60 shadow-xl">
       <Link to={`/venues/${id}`}>

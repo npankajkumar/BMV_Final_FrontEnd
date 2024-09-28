@@ -14,7 +14,6 @@ const Home = () => {
   useEffect(() => {
     getTopRatedVenues().then((res) => {
       setTopRatedVenues(res.topRatedVenues);
-      console.log(res);
       setTopBookedVenues(res.topBookedVenues);
       setPageLoading(false);
     });
