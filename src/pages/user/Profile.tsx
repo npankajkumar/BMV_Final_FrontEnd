@@ -1,5 +1,6 @@
 import MemberProfilePage from "@/components/MemberProfilePage";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useBmv } from "@/contexts/bmvContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -10,15 +11,10 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
   const navigate = useNavigate();
+
+  const { token } = useBmv();
+
   useEffect(() => {
-    const client = localStorage.getItem("auth");
-    if (!client || client != "user") {
-      navigate("/login?redirect=profile");
-    }
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      navigate("/login?redirect=profile");
-    }
     axios
       .get("http://localhost:5059/api/Customers", {
         headers: { Authorization: `Bearer ${token}` },

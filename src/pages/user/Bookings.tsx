@@ -6,19 +6,17 @@ import { Card } from "@/components/ui/card";
 import CustomBookingCard from "@/components/CustomBookingCard";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useBmv } from "@/contexts/bmvContext";
 
 const Bookings = () => {
   const [pageLoading, setPageLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      navigate("/login?redirect=bookings");
-      return;
-    }
+  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
+    useBmv();
 
+  useEffect(() => {
     axios
       .get("http://localhost:5059/api/Booking", {
         headers: {

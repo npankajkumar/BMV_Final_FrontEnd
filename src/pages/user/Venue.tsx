@@ -39,7 +39,6 @@ const Venue = () => {
   const [date, setDate] = useState<Date>();
   const [slots, setSlots] = useState<any>([]);
 
-
   const handleSlotBoxClick = (selectedSlot: slot, selected: boolean) => {
     if (selected) {
       const find = selectedSlots.find((s) => s.id === selectedSlot.id);
@@ -122,7 +121,7 @@ const Venue = () => {
         <div className="grid grid-cols-3 gap-4">
           <ScrollArea className="h-60 w-full whitespace-nowrap rounded-md">
             <div className="flex flex-col gap-4 w-max mx-auto">
-              {venue.images.map((img, i) => (
+              {venue.images.map((img: any, i: number) => (
                 <div key={i} className=" ">
                   <img
                     src={img}
@@ -184,10 +183,7 @@ const Venue = () => {
                   mode="single"
                   selected={date}
                   onSelect={setDate}
-                  disabled={(date) =>
-                    date > endOfMonth(new Date()) ||
-                    date < startOfDay(new Date())
-                  }
+                  disabled={(date) => date < startOfDay(new Date())}
                   initialFocus
                 />
               </PopoverContent>

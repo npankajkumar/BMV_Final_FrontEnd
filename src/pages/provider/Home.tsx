@@ -4,6 +4,7 @@ import { BarChartComponent } from "@/components/line-chart/LineChart";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useBmv } from "@/contexts/bmvContext";
 import axios from "axios";
 import { Box, IndianRupee, Plus, Star } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -12,12 +13,16 @@ import { Link } from "react-router-dom";
 const Home = ({ provider }: { provider: any }) => {
   const [pageLoading, setPageLoading] = useState(true);
   const [dashboard, setDashboard] = useState<any>();
+
+  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
+    useBmv();
+
   useEffect(() => {
     setPageLoading(true);
     axios
       .get("http://localhost:5059/api/Dashboard", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {

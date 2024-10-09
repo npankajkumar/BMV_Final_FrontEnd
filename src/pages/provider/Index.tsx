@@ -10,6 +10,7 @@ import Venue from "./Venue";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
+import { useBmv } from "@/contexts/bmvContext";
 
 const Index = () => {
   const [provider, setProvider] = useState<any>();
@@ -19,7 +20,7 @@ const Index = () => {
     axios
       .get("http://localhost:5059/api/Providers", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
@@ -33,11 +34,14 @@ const Index = () => {
       });
   };
 
+  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
+    useBmv();
+
   useEffect(() => {
     axios
       .get("http://localhost:5059/api/Providers", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${token}`,
         },
       })
       .then((response) => {
@@ -54,41 +58,44 @@ const Index = () => {
     return <div>loading</div>;
   }
   return (
-    provider && <div>
-      <NavBar clientType="provider" />
-      <Routes>
-        <Route path="/" element={<Home provider={provider} />} />
-        <Route
-          path="/profile"
-          element={
-            <Profile provider={provider} updateProvider={updateProvider} />
-          }
-        />
-        <Route path="/bookings" element={<Bookings />} />
-        <Route
-          path="/venues"
-          element={
-            <div>
-              <Venues provider={provider} />
-            </div>
-          }
-        />
-        <Route
-          path="/venues/new"
-          element={
-            <AddVenue provider={provider} updateProvider={updateProvider} />
-            // <div>new venue</div>
-          }
-        />
-        <Route
-          path="/venues/:id"
-          element={
-            <Venue provider={provider} updateProvider={updateProvider} />
-          }
-        />
-        <Route path="*" element={<div>Provider Not Found</div>} />
-      </Routes>
-    </div>
+    provider && (
+      <div>
+        <NavBar clientType="provider" />
+        <Routes>
+          <Route path="/" element={<Home provider={provider} />} />
+          {/* <Route path="/" element={<div>Provider Home</div>} /> */}
+          <Route
+            path="/profile"
+            element={
+              <Profile provider={provider} updateProvider={updateProvider} />
+            }
+          />
+          <Route path="/bookings" element={<Bookings />} />
+          <Route
+            path="/venues"
+            element={
+              <div>
+                <Venues provider={provider} />
+              </div>
+            }
+          />
+          <Route
+            path="/venues/new"
+            element={
+              <AddVenue provider={provider} updateProvider={updateProvider} />
+              // <div>new venue</div>
+            }
+          />
+          <Route
+            path="/venues/:id"
+            element={
+              <Venue provider={provider} updateProvider={updateProvider} />
+            }
+          />
+          <Route path="*" element={<div>Provider Not Found</div>} />
+        </Routes>
+      </div>
+    )
   );
 };
 

@@ -44,6 +44,7 @@ import { Separator } from "@/components/ui/separator";
 import LoadingButton from "@/components/LoadingButton";
 import { ReactHTMLElement, useEffect, useState } from "react";
 import axios from "axios";
+import { useBmv } from "@/contexts/bmvContext";
 
 const FormSchema = z.object({
   name: z.string({ required_error: "Name is required" }).min(3, {
@@ -85,6 +86,9 @@ const AddVenue = ({
   provider: any;
   updateProvider: any;
 }) => {
+  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
+    useBmv();
+
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -172,7 +176,7 @@ const AddVenue = ({
     axios
       .post("http://localhost:5059/api/Venues", formData, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       })
@@ -229,7 +233,7 @@ const AddVenue = ({
 
   return (
     <div className="p-4">
-       <Form {...form}>
+      <Form {...form}>
         <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
           <div className="my-2 flex justify-between">
             <h3 className="text-2xl font-semibold">Add Venue</h3>
@@ -541,7 +545,7 @@ const AddVenue = ({
                   name="weekdayPrice"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>WeekdayPrice</FormLabel>
+                      <FormLabel>Weekday Price</FormLabel>
                       <FormControl>
                         <Input placeholder="1000" {...field} />
                       </FormControl>
@@ -559,7 +563,7 @@ const AddVenue = ({
                   name="weekendPrice"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>WeekdayPrice</FormLabel>
+                      <FormLabel>Weekend Price</FormLabel>
                       <FormControl>
                         <Input placeholder="1500" {...field} />
                       </FormControl>
@@ -587,7 +591,7 @@ const AddVenue = ({
             </div>
           </div>
         </form>
-      </Form> 
+      </Form>
     </div>
   );
 };
@@ -596,7 +600,7 @@ function convertToMinutes(timeString: string): number {
   // Split the time string into hours, minutes, and seconds
   const [hours, minutes] = timeString.split(":").map(Number);
 
-  return (hours * 60) + minutes;
+  return hours * 60 + minutes;
 }
 
 export default AddVenue;

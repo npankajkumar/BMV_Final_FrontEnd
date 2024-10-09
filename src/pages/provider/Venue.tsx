@@ -52,6 +52,7 @@ import { columns } from "@/components/data-table/columns";
 import LoadingButton from "@/components/LoadingButton";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
+import { useBmv } from "@/contexts/bmvContext";
 
 const Venue = ({
   provider,
@@ -61,6 +62,10 @@ const Venue = ({
   updateProvider: any;
 }) => {
   const [venueSaveLoading, setVenueSaveLoading] = useState<boolean>(false);
+
+  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
+    useBmv();
+
   let { id } = useParams();
   const venue = provider.venues.find((v: any) => v.id == id);
   const slots = venue
@@ -143,7 +148,7 @@ const Venue = ({
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )

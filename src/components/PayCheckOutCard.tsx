@@ -12,6 +12,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import { ToastAction } from "./ui/toast";
+import { useBmv } from "@/contexts/bmvContext";
 
 interface PayCheckOutCardProps {
   amount: number;
@@ -33,10 +34,22 @@ const PayCheckOutCard: React.FC<PayCheckOutCardProps> = ({
   const navigate = useNavigate();
   const { id } = useParams();
 
+  const { token, isLoggedin } = useBmv();
+
   const handleCheckoutClick = () => {
-    let authToken = localStorage.getItem("authToken");
-    if (!authToken) {
-      toast({ title: "Login to book slots", variant: "destructive", action: <ToastAction altText="Try again" onClick={()=>navigate(`/login?redirect=venues/${id}`)}>Login</ToastAction> });
+    if (!isLoggedin) {
+      toast({
+        title: "Login to book slots",
+        variant: "destructive",
+        action: (
+          <ToastAction
+            altText="Try again"
+            onClick={() => navigate(`/login?redirect=venues/${id}`)}
+          >
+            Login
+          </ToastAction>
+        ),
+      });
       return;
     }
     axios
@@ -46,10 +59,11 @@ const PayCheckOutCard: React.FC<PayCheckOutCardProps> = ({
           date: format(date, "dd-MM-yyyy"),
           slotIds: selectedSlots.map((s) => s.id),
         },
-        { headers: { Authorization: `Bearer ${authToken}` } }
+        { headers: { Authorization: `Bearer ${token}` } }
       )
       .then((res) => {
         toast({ title: "Booking done successfully" });
+        navigate("/bookings");
       })
       .catch((e) => {
         console.log(e);

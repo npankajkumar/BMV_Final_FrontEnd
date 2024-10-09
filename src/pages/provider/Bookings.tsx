@@ -5,20 +5,16 @@ import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import { toast } from "@/hooks/use-toast";
 import CustomBookingCard from "@/components/CustomBookingCard";
+import { useBmv } from "@/contexts/bmvContext";
 
 const Bookings = () => {
   const [pageLoading, setPageLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
+  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
+    useBmv();
+
   useEffect(() => {
-    const client = localStorage.getItem("auth");
-    if (!client || client != "provider") {
-      navigate("/login?redirect=bookings");
-    }
-    const token = localStorage.getItem("authToken");
-    if (!token) {
-      navigate("/login?redirect=bookings");
-    }
     axios
       .get("http://localhost:5059/api/Booking", {
         headers: { Authorization: `Bearer ${token}` },

@@ -8,11 +8,7 @@ import NavBar from "@/components/NavBar";
 const Index = () => {
   return (
     <div>
-      {localStorage.getItem("auth") == "user" ? (
-        <NavBar clientType="user" />
-      ) : (
-        <NavBar clientType="other" />
-      )}
+      <NavBar clientType="" />
       <Routes>
         <Route
           path="/"

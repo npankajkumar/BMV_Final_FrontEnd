@@ -27,6 +27,7 @@ import { toast } from "@//hooks/use-toast";
 import { useState } from "react";
 import LoadingButton from "./LoadingButton";
 import axios from "axios";
+import { useBmv } from "@/contexts/bmvContext";
 
 const FormSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
@@ -44,14 +45,14 @@ const MemberProfilePage = ({
   name: string;
   email: string;
   mobile: string;
-  onProfileUpdate: (updatedData: {
-    name: string;
-    mobile: string;
-  }) => void;
+  onProfileUpdate: (updatedData: { name: string; mobile: string }) => void;
 }) => {
   const [profileSaveLoading, setProfileSaveLoading] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [url, setUrl] = useState("");
+
+  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
+    useBmv();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -60,8 +61,6 @@ const MemberProfilePage = ({
       mobile: mobile,
     },
   });
-
-  
 
   const handleDialogOpen = () => {
     setIsDialogOpen(true);
@@ -77,10 +76,10 @@ const MemberProfilePage = ({
       setProfileSaveLoading(false);
     }, 1000);
 
-    if (localStorage.getItem("auth") == "user") {
+    if (role == "customer") {
       setUrl("http://localhost:5059/api/Customers");
     }
-    if (localStorage.getItem("auth") == "provider") {
+    if (role == "provider") {
       setUrl("http://localhost:5059/api/Providers");
     }
     axios
@@ -93,7 +92,7 @@ const MemberProfilePage = ({
         },
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       )
@@ -184,7 +183,7 @@ const MemberProfilePage = ({
                         </FormItem>
                       )}
                     />
-                    
+
                     <FormField
                       control={form.control}
                       name="mobile"
