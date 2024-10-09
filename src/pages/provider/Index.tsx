@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { toast } from "@/hooks/use-toast";
 import { useBmv } from "@/contexts/bmvContext";
+import NotFound from "@/components/NotFound";
 
 const Index = () => {
   const [provider, setProvider] = useState<any>();
@@ -92,7 +93,7 @@ const Index = () => {
               <Venue provider={provider} updateProvider={updateProvider} />
             }
           />
-          <Route path="*" element={<div>Provider Not Found</div>} />
+          <Route path="*" element={<NotFound message="Provider"/>} />
         </Routes>
       </div>
     )

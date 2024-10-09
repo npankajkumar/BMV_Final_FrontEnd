@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useBmv } from "@/contexts/bmvContext";
 import axios from "axios";
 import { LoaderCircle } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const AuthController: React.FC = () => {
   const { setIsLoggedin, setToken, setRole } = useBmv();
@@ -43,6 +44,19 @@ const AuthController: React.FC = () => {
         .catch((error) => {
           console.error("Error during token exchange:", error);
         });
+    }
+    else{
+      setToken("");
+            setRole("customer");
+            setIsLoggedin(false);
+
+            localStorage.setItem("id_token", "");
+            localStorage.setItem("role", "customer");
+            localStorage.setItem("isLoggedIn", "false");
+
+            toast({title:"Unable to login"})
+            // Redirect to the home page
+            navigate("/");
     }
   }, [navigate, setIsLoggedin, setToken, setRole]);
 

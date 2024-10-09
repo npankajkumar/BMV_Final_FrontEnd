@@ -7,6 +7,7 @@ import CustomBookingCard from "@/components/CustomBookingCard";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useBmv } from "@/contexts/bmvContext";
+import { Link } from "lucide-react";
 
 const Bookings = () => {
   const [pageLoading, setPageLoading] = useState(true);
@@ -66,7 +67,8 @@ const Bookings = () => {
       {bookings.length == 0 ? (
         <div className="mx-auto my-auto">
           <h1 className="text-3xl font-semibold">You have no Bookings..</h1>
-          <Button variant={"link"} className="text-md font-semibold mt-2 ml-20">
+          
+          <Button variant={"link"} className="text-md font-semibold mt-2 ml-20" onClick={()=>navigate('/')}>
             explore venues
           </Button>
         </div>

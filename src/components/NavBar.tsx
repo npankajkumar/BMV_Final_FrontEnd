@@ -15,11 +15,14 @@ const NavBar = ({
 
   return (
     <div
-      className={`border-b-2 flex justify-between h-12 items-center w-full font-bold ${className}`}
+      className={`border-b-2 flex justify-between h-12 items-center w-full font-bold p-7 mb-3 ${className}`}
     >
-      <Button className="text-xl ml-4 text-nowrap" variant={"ghost"}>
+      <div className="flex items-center">
+      <img src="/logo.png" alt="" className="h-10 w-13 hover:cursor-pointer" onClick={()=>navigate('/')}/>
+      <Button className="text-xl hover:bg-white  text-nowrap" variant={"ghost"}>
         <Link to={"/"}>Book My Venue</Link>
       </Button>
+      </div>
       <div className="flex gap-4">
         {isLoggedin && (
           <Button
@@ -29,6 +32,7 @@ const NavBar = ({
               } else {
                 setRole("customer");
               }
+              navigate('/');
             }}
           >
             {"Switch to " + (role == "customer" ? "Provider" : "Customer")}
@@ -51,13 +55,13 @@ const NavBar = ({
         >
           {!isLoggedin ? (
             <Link
-              to={`https://bookmyvenue.b2clogin.com/bookmyvenue.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_SignUpSignIn2&client_id=90177501-7d83-4248-9550-1ffc00a439f4&nonce=defaultNonce&redirect_uri=https%3A%2F%2Flocalhost%3A3000&scope=openid&response_type=code&prompt=login`}
+              to={`https://bookmyvenue.b2clogin.com/bookmyvenue.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_SignUpSignIn2&client_id=90177501-7d83-4248-9550-1ffc00a439f4&nonce=defaultNonce&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fauth&scope=openid&response_type=code&prompt=login`}
             >
               Login
             </Link>
           ) : (
             <Link
-              to={"/login"}
+              to={"/"}
               onClick={() => {
                 localStorage.clear();
               }}
@@ -67,6 +71,7 @@ const NavBar = ({
           )}
         </Button>
         {/* <Button variant="outline" className="mr-10 rounded-full hover:bg-slate-300">P</Button> */}
+       {isLoggedin &&
         <Link to={"/profile"}>
           <Avatar className="mr-4 hover:cursor-pointer">
             <AvatarImage
@@ -75,7 +80,7 @@ const NavBar = ({
             />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-        </Link>
+        </Link>}
       </div>
     </div>
   );

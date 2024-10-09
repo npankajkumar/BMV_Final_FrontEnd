@@ -44,7 +44,7 @@ const PayCheckOutCard: React.FC<PayCheckOutCardProps> = ({
         action: (
           <ToastAction
             altText="Try again"
-            onClick={() => navigate(`/login?redirect=venues/${id}`)}
+            onClick={() => window.location.href = `https://bookmyvenue.b2clogin.com/bookmyvenue.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_SignUpSignIn2&client_id=90177501-7d83-4248-9550-1ffc00a439f4&nonce=defaultNonce&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fauth&scope=openid&response_type=code&prompt=login`}
           >
             Login
           </ToastAction>

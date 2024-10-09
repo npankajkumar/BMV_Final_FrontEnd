@@ -4,6 +4,7 @@ import Bookings from "./Bookings";
 import Venue from "./Venue";
 import Home from "./Home";
 import NavBar from "@/components/NavBar";
+import NotFound from "@/components/NotFound";
 
 const Index = () => {
   return (
@@ -28,7 +29,7 @@ const Index = () => {
             </div>
           }
         />
-        <Route path="*" element={<div>User Not Found</div>} />
+        <Route path="*" element={<NotFound message="Page"/>} />
       </Routes>
     </div>
   );

@@ -53,6 +53,7 @@ import LoadingButton from "@/components/LoadingButton";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useBmv } from "@/contexts/bmvContext";
+import NotFound from "@/components/NotFound";
 
 const Venue = ({
   provider,
@@ -68,6 +69,9 @@ const Venue = ({
 
   let { id } = useParams();
   const venue = provider.venues.find((v: any) => v.id == id);
+  if(!venue){
+    return (<NotFound message="Venue"/>)
+  }
   const slots = venue
     ? venue.slots.map((s: any) => {
         return {

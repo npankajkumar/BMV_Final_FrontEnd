@@ -19,6 +19,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import NotFound from "@/components/NotFound";
 
 type venue = {};
 type slot = {
@@ -77,6 +78,11 @@ const Venue = () => {
       .then((res) => setSlots(res.data))
       .catch((e) => console.log(e));
   }, [date, params.id]);
+
+
+  if(!venue){
+    return <NotFound message="Venue"/>
+  }
 
   if (pageLoading)
     return (
