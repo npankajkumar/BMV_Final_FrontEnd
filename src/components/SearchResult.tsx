@@ -15,7 +15,7 @@ type venue = {
 
 const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
   return (
-    <div className="text-start text-md px-4 py-2 m-1 font-semibold hover:bg-gray-100 hover:cursor-pointer hover:rounded-md">
+    <div className="text-start text-md px-4 py-2 m-1 font-semibold hover:bg-gray-100 hover:cursor-pointer hover:rounded-md dark:hover:bg-gray-800">
       <Link to={`venues/${result.venueId}`} className="grid grid-cols-3 gap-2">
         <div className="col-span-2 text-xl font-semibold">
           {result.venueName}

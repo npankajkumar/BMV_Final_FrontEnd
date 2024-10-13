@@ -61,9 +61,9 @@ const AuthController: React.FC = () => {
   }, [navigate, setIsLoggedin, setToken, setRole]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-screen flex items-center justify-center dark:bg-gray-950">
       <div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 dark:text-white">
           Redirecting
           <LoaderCircle className="animate-spin text-primary h-8 w-8 text center" />
         </div>

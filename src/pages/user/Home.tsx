@@ -28,16 +28,15 @@ const Home = () => {
     );
   return (
     <div className="p-5">
-      {/* <SearchBar className="my-10 mx-auto" /> */}
       <CustomSearchBar />
       <UserVenueCardsGrid
         className="my-4"
-        title="Top-Rated"
+        title="Top Rated"
         cardDataArray={topRatedVenues}
       />
       <UserVenueCardsGrid
         className="my-4"
-        title="Top-Booked"
+        title="Top Booked"
         cardDataArray={topBookedVenues}
       />
     </div>

@@ -117,30 +117,30 @@ const MemberProfilePage = ({
   }
 
   return (
-    <div className={"h-full p-6 pt-2 bg-white  rounded-lg" + className}>
-      <h2 className="text-xl font-bold mb-3 text-left text-gray-800">
+    <div className={"h-full p-6 pt-2 bg-white dark:bg-gray-950 dark:text-white  rounded-lg" + className}>
+      <h2 className="text-xl font-bold mb-3 text-left text-gray-800 dark:text-white">
         Your Profile :
       </h2>
       <div className="flex justify-between space-x-6 w-[80%]">
         <div className="flex-1 space-y-3">
-          <div className="p-2 bg-gray-50 rounded-md shadow-sm">
+          <div className="p-3  bg-gray-50 dark:bg-gray-900 rounded-md shadow-sm">
             <span className="block text-sm font-medium mb-1">Name</span>
             <span className="block text-base ">{name}</span>
           </div>
-          <div className="p-2 bg-gray-50 rounded-md shadow-sm">
+          <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-md shadow-sm">
             <span className="block text-sm font-medium  mb-1">Email</span>
             <span className="block text-base ">{email}</span>
           </div>
-          <div className="p-2 bg-gray-50 rounded-md shadow-sm">
+          <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-md shadow-sm">
             <span className="block text-sm font-medium mb-1">mobile</span>
             <span className="block text-base ">{mobile}</span>
           </div>
         </div>
 
         <div className="pl-16 flex flex-col items-start justify-around p-4">
-          <Avatar className="h-24 w-24 rounded-full bg-gray-300 flex items-center justify-center shadow-lg">
-            <AvatarFallback className="text-lg text-gray-700">
-              <Label className="text-3xl font-bold">{name[0]}</Label>
+          <Avatar className="h-24 w-24 rounded-full bg-gray-300 dark:bg-gray-800 dark:shadow-md dark:shadow-gray-500 flex items-center justify-center shadow-lg">
+            <AvatarFallback className="text-lg text-gray-900">
+              <Label className="text-3xl font-bold dark:text-white">{name[0]}</Label>
             </AvatarFallback>
           </Avatar>
           <div className="">

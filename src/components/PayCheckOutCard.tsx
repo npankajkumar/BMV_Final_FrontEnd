@@ -72,28 +72,28 @@ const PayCheckOutCard: React.FC<PayCheckOutCardProps> = ({
   };
 
   return (
-    <Card className=" bg-white shadow-md rounded-lg p-3">
+    <Card className=" bg-white shadow-md rounded-lg p-3 dark:bg-gray-950 dark:text-white">
       <CardHeader>
-        <CardTitle className="text-2xl font-bold text-gray-800">Cart</CardTitle>
+        <CardTitle className="text-2xl font-bold text-gray-800 dark:text-white">Cart</CardTitle>
       </CardHeader>
       <CardContent className="space-y-2">
         <div className="flex justify-between">
-          <Label className="font-medium text-gray-600">Amount:</Label>
-          <span className="text-gray-800">{amount}</span>
+          <Label className="font-medium text-gray-600 dark:text-white">Amount:</Label>
+          <span className="text-gray-800 dark:text-white ">{amount}</span>
         </div>
         <div className="flex justify-between">
-          <Label className="font-medium text-gray-600">Platform Charges:</Label>
-          <span className="text-gray-800">{amount < 1000 ? 10 : 50}</span>
+          <Label className="font-medium text-gray-600 dark:text-white">Platform Charges:</Label>
+          <span className="text-gray-800 dark:text-white">{amount < 1000 ? 10 : 50}</span>
         </div>
         <div className="flex justify-between border-t border-gray-200 pt-2">
-          <Label className="font-semibold text-gray-800">Total:</Label>
-          <span className="text-gray-900 font-bold">{total}</span>
+          <Label className="font-semibold text-gray-800 dark:text-white">Total:</Label>
+          <span className="text-gray-900 font-bold dark:text-white">{total}</span>
         </div>
       </CardContent>
       <CardFooter className="pt-4">
         <Button
           disabled={selectedSlots.length < 1}
-          className="w-full bg-primary text-white font-semibold py-2 rounded-md hover:bg-blue-700 transition"
+          className="w-full bg-primary text-white font-semibold py-2 rounded-md hover:bg-rose-700 transition"
           onClick={handleCheckoutClick}
         >
           Checkout & Pay

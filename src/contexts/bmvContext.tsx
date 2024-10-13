@@ -13,6 +13,9 @@ interface BmvContextType {
   setToken: React.Dispatch<React.SetStateAction<string>>;
   role: string;
   setRole: React.Dispatch<React.SetStateAction<string>>;
+  darkMode:boolean;
+  setDarkMode:React.Dispatch<React.SetStateAction<boolean>>;
+
 }
 
 const BmvContext = createContext<BmvContextType>({
@@ -22,6 +25,8 @@ const BmvContext = createContext<BmvContextType>({
   setToken: () => {},
   role: "customer",
   setRole: () => {},
+  darkMode: false,
+  setDarkMode:()=>{}
 });
 
 export const useBmv = (): BmvContextType => {
@@ -39,10 +44,11 @@ export const BmvContextProvider: React.FC<BmvProviderProps> = ({
   const [isLoggedin, setIsLoggedin] = useState(false);
   const [role, setRole] = useState<string>("customer");
   const [token, setToken] = useState<string>("");
+  const [darkMode, setDarkMode] = useState<boolean>( localStorage.getItem("darkMode") == 'true' || false);
 
   return (
     <BmvContext.Provider
-      value={{ role, setRole, setToken, token, isLoggedin, setIsLoggedin }}
+      value={{ role, setRole, setToken, token, isLoggedin, setIsLoggedin, darkMode,setDarkMode }}
     >
       {children}
     </BmvContext.Provider>

@@ -27,7 +27,7 @@ const SlotBox = ({ slot, onClick }: { slot: slot; onClick: any }) => {
   return (
     <div
       onClick={handleClick}
-      className={`border border-black w-fit rounded-sm text-center ${
+      className={`border border-black w-fit rounded-sm text-center dark:text-black ${
         slot.status == "blocked"
           ? blocked
           : slot.status == "booked"
@@ -62,35 +62,3 @@ function convertTo12HourFormat(time: string): string {
 }
 export default SlotBox;
 
-// const [slots, setSlots] = useState<slot[]>(slotArr);
-//   const [selectedSlots, setSelectedSlots] = useState<slot[]>([]);
-//   const [cartValue, setCartValue] = useState<number>(0);
-
-//   const handleSlotBoxClick = (selectedSlot:slot, selected:boolean)=>{
-//     if(selected){
-//       const find = selectedSlots.find(s=>s.id==selectedSlot.id)
-//       if(find)
-//         return;
-//       setSelectedSlots(c=>[...c,selectedSlot])
-//       setCartValue(c=>c+selectedSlot.price);
-//     }
-//     else{
-//       const find = selectedSlots.find(s=>s.id==selectedSlot.id)
-//       if(!find)
-//         return;
-//       setSelectedSlots(c=>c.filter(s=>s.id!=selectedSlot.id))
-//       setCartValue(c=>c-selectedSlot.price);
-//     }
-//   }
-
-//   return (
-//     <div className="w-full h-svh">
-//       <NavBar />
-//       <ScrollArea className="h-1/2 w-1/2">
-//         <div className="m-5 grid grid-cols-4 gap-4">
-//         {slots.map((slot)=> <SlotBox key={slot.id} slot={slot} onClick={handleSlotBoxClick}/>)}
-//         </div>
-//       </ScrollArea>
-//       {cartValue}
-//     </div>
-//   );

@@ -2,6 +2,10 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Link, useNavigate } from "react-router-dom";
 import { useBmv } from "@/contexts/bmvContext";
+import { Moon } from 'lucide-react';
+import { Sun } from "lucide-react";
+import { useEffect, useState } from "react";
+
 const NavBar = ({
   className,
   clientType,
@@ -10,20 +14,45 @@ const NavBar = ({
   clientType: string;
 }) => {
   const navigate = useNavigate();
-  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
+  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole, darkMode,setDarkMode } =
     useBmv();
+    
+
+    
+  
+    useEffect(() => {
+      localStorage.setItem("darkMode", JSON.stringify(darkMode));
+  
+      if (darkMode) {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
+    }, [darkMode]);
 
   return (
     <div
       className={`border-b-2 flex justify-between h-12 items-center w-full font-bold p-7 mb-3 ${className}`}
     >
-      <div className="flex items-center">
-      <img src="/logo.png" alt="" className="h-10 w-13 hover:cursor-pointer" onClick={()=>navigate('/')}/>
-      <Button className="text-xl hover:bg-white  text-nowrap" variant={"ghost"}>
-        <Link to={"/"}>Book My Venue</Link>
+      <div className="flex items-center ">
+      <img src="/logo.png" alt="" className="h-10 w-13 hover:cursor-pointer dark:invert  " onClick={()=>navigate('/')}/>
+      <Button className="text-xl hover:bg-white dark:hover:bg-black font-semibold hover:cursor-pointer  text-nowrap" variant={"ghost"} >
+        <Link to={"/"}> <p  style={{fontFamily:'Montserrat'}}>
+          Book My Venue
+          </p> 
+          </Link>
       </Button>
       </div>
-      <div className="flex gap-4">
+      <div className="flex gap-4 items-center">
+        {
+          darkMode ? 
+          <Button variant={"outline"} className="p-2 px-3 hover:shadow-sm border-primary" onClick={()=>setDarkMode(!darkMode)}>
+            <Sun className="w-5 h-5 "/>
+          </Button>  :
+          <Button variant={"outline"} className="p-2 px-3  hover:shadow-sm border-primary" onClick={()=>setDarkMode(!darkMode)}>
+            <Moon className="w-5 h-5 "/>
+          </Button> 
+        } 
         {isLoggedin && (
           <Button
             onClick={() => {
@@ -63,7 +92,12 @@ const NavBar = ({
             <Link
               to={"/"}
               onClick={() => {
+
                 localStorage.clear();
+                localStorage.setItem("darkMode",JSON.stringify(darkMode));
+                setIsLoggedin(false);
+                setRole("customer");
+                setToken("");
               }}
             >
               Logout

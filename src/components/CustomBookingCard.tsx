@@ -65,7 +65,7 @@ const CustomBookingCard = ({ booking }: { booking: Booking }) => {
   const startTime = booking.start;
   const endTime = booking.end;
   return (
-    <div className="w-full border grid grid-cols-6  p-4 rounded-lg mb-3">
+    <div className="w-full border grid grid-cols-6  p-4 rounded-lg mb-3 shadow-md shadow-gray-500">
       <div className="col-span-4">
         <h1 className="text-2xl font-bold">{cardName}</h1>
         <h1 className="text-lg   mb-2">{venueName}</h1>
@@ -79,17 +79,17 @@ const CustomBookingCard = ({ booking }: { booking: Booking }) => {
       </div>
       <div className="flex flex-col justify-center ml-auto col-span-2">
         <div className="">
-          <span className="mr-4 font-semibold text-gray-800">Booking Id:</span>
-          <span className="mr-4 text-black font-semibold">{booking.id}</span>
+          <span className="mr-4 font-semibold text-gray-800 dark:text-white ">Booking Id:</span>
+          <span className="mr-4 text-black dark:text-white font-semibold">{booking.id}</span>
         </div>
         <div className="">
-          <span className="mr-4 font-semibold text-gray-800">Status:</span>
-          <span className="mr-4 text-black font-semibold">{status}</span>
+          <span className="mr-4 font-semibold text-gray-800 dark:text-white">Status:</span>
+          <span className="mr-4 text-black dark:text-white font-semibold">{status}</span>
         </div>
         <div className="">
-          <span className="mr-4 font-semibold text-gray-800">Paid:</span>
+          <span className="mr-4 font-semibold text-gray-800 dark:text-white">Paid:</span>
           <IndianRupee className="w-4 h-8 inline" />
-          <span className="mr-4 text-black font-semibold">{amount}</span>
+          <span className="mr-4 text-black dark:text-white font-semibold">{amount}</span>
         </div>
         <div className="flex ">
           {status && (

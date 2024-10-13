@@ -46,7 +46,7 @@ const VenueCard = ({
           target="_blank"
         >
           <p
-            className="decoration-solid decoration-primary underline underline-offset-2
+            className="decoration-solid decoration-primary hover:underline hover:underline-offset-2
 "
           >
             {city}

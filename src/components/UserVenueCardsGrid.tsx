@@ -24,10 +24,11 @@ const UserVenueCardsGrid = ({
 }) => {
   return (
     <div className={`${className}`}>
-      <CardTitle className="mb-4">{title}:</CardTitle>
+      <CardTitle className="mb-4 font-medium">{title}:</CardTitle>
       <ScrollArea className="w-full whitespace-nowrap rounded-md border">
-        <div className="flex w-max space-x-4 p-4">
-          {cardDataArray.map((cardData) => (
+
+        {cardDataArray.length!=0 ? <div className="flex w-max space-x-4 p-4">
+          {(cardDataArray.map((cardData) => (
             <div key={cardData.id}>
               <VenueCard
                 id={cardData.id}
@@ -39,9 +40,10 @@ const UserVenueCardsGrid = ({
                 latitude={cardData.latitude}
                 longitude={cardData.longitude}
               />
-            </div>
+            </div>)
           ))}
-        </div>
+        </div> :<div className="flex justify-center items-center h-[200px]">
+          {title === "Top Rated" ? "No Top Rated Venues as of now..." : "No Top Booked Venues as of now..." }</div>}
         <ScrollBar orientation="horizontal" className="text-primary" />
       </ScrollArea>
     </div>

@@ -55,7 +55,7 @@ const SearchBarBox: React.FC<SearchBarBoxProps> = ({
   };
 
   return (
-    <div className="flex w-[100%] rounded-md h-12 px-4 items-center shadow-md">
+    <div className="flex w-[100%] rounded-md h-12 px-4 items-center shadow-md  dark:shadow-gray-500">
       <Search className="text-primary" />
       <input
         placeholder="Type to search"
