@@ -29,7 +29,7 @@ const Index = () => {
             </div>
           }
         />
-        <Route path="*" element={<NotFound message="Page"/>} />
+        <Route path="*" element={<NotFound message="Page" />} />
       </Routes>
     </div>
   );

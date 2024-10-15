@@ -204,15 +204,6 @@ const AddVenue = ({
         toast({ title: "Error occured" });
         setAddLoading(false);
       });
-
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(resData, null, 2)}</code>
-        </pre>
-      ),
-    });
   }
 
   if (geoLocationWatch) {
@@ -439,7 +430,7 @@ const AddVenue = ({
                 )}
               </div>
             </div>
-            <div className="px-2">
+            <div className="ml-10 border-l-4 dark:border-gray-800 border-gray-200">
               <h3 className="text-xl font-semibold text-center my-4">
                 Slot creation
               </h3>

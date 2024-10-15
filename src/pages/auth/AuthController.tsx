@@ -10,12 +10,9 @@ const AuthController: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Get the 'code' from the URL search params
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get("code");
-
     if (code) {
-      // Call your backend to exchange the code for a token
       axios
         .get(`http://localhost:5059/api/Auth/${code}`, {
           headers: {
@@ -25,7 +22,6 @@ const AuthController: React.FC = () => {
         .then((response) => {
           const data = response.data;
           if (data.id_token) {
-            // Set the token and role in the context
             setToken(data.id_token);
             setRole("customer");
             setIsLoggedin(true);
@@ -34,29 +30,31 @@ const AuthController: React.FC = () => {
             localStorage.setItem("role", "customer");
             localStorage.setItem("isLoggedIn", "true");
 
-            // Redirect to the home page
+          
+            if (data.isForgotPassword) {
+              toast({ title: "Password changed successfully",  });
+            }
+
             navigate("/");
           } else {
-            // Handle any error (e.g., missing token)
             console.error("Failed to retrieve token or role from response");
           }
         })
         .catch((error) => {
           console.error("Error during token exchange:", error);
+          toast({ title: "Error during login"});
         });
-    }
-    else{
+    } else {
       setToken("");
-            setRole("customer");
-            setIsLoggedin(false);
+      setRole("customer");
+      setIsLoggedin(false);
 
-            localStorage.setItem("id_token", "");
-            localStorage.setItem("role", "customer");
-            localStorage.setItem("isLoggedIn", "false");
+      localStorage.setItem("id_token", "");
+      localStorage.setItem("role", "customer");
+      localStorage.setItem("isLoggedIn", "false");
 
-            toast({title:"Unable to login"})
-            // Redirect to the home page
-            navigate("/");
+      toast({ title: "Unable to login", });
+      navigate("/");
     }
   }, [navigate, setIsLoggedin, setToken, setRole]);
 
@@ -65,11 +63,11 @@ const AuthController: React.FC = () => {
       <div>
         <div className="flex gap-4 dark:text-white">
           Redirecting
-          <LoaderCircle className="animate-spin text-primary h-8 w-8 text center" />
+          <LoaderCircle className="animate-spin text-primary h-8 w-8 text-center" />
         </div>
       </div>
     </div>
-  ); // Can add a loader or message here
+  );
 };
 
 export default AuthController;

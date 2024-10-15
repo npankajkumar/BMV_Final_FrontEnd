@@ -7,7 +7,6 @@ import CustomBookingCard from "@/components/CustomBookingCard";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useBmv } from "@/contexts/bmvContext";
-import { Link } from "lucide-react";
 
 const Bookings = () => {
   const [pageLoading, setPageLoading] = useState(true);

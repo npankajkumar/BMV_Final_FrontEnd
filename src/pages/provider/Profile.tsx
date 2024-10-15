@@ -30,12 +30,14 @@ const Profile = ({
 
   if (pageLoading)
     return (
-      <div className="p-4 grid md:grid-cols-5 grid-cols-1 gap-6">
-        <Skeleton className="rounded-full h-56 my-auto" />
-        <div className="col-span-4">
-          {[1, 2, 3, 4].map((i) => {
-            return <Skeleton key={i} className="h-10 my-4" />;
-          })}
+      <div className="h-[90vh] w-[100%] flex flex-col justify-around py-10 px-36">
+        <div className="p-4 grid md:grid-cols-5 grid-cols-1 gap-6">
+          <div className="col-span-4 py-20">
+            {[1, 2, 3, 4].map((i) => {
+              return <Skeleton key={i} className="h-10 my-4" />;
+            })}
+          </div>
+          <Skeleton className="rounded-full h-56 my-auto" />
         </div>
       </div>
     );

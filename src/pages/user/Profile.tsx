@@ -3,14 +3,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useBmv } from "@/contexts/bmvContext";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [pageLoading, setPageLoading] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
-  const navigate = useNavigate();
 
   const { token } = useBmv();
 

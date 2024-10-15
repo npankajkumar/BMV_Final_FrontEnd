@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import UserIndex from "../pages/user/Index";
 import ProviderIndex from "../pages/provider/Index";
-import { BmvContextProvider, useBmv } from "@/contexts/bmvContext";
+import { useBmv } from "@/contexts/bmvContext";
 
 const Index = () => {
   const [rootLoading, setRootLoading] = useState<boolean>(true);
@@ -10,8 +9,6 @@ const Index = () => {
   const authToken = localStorage.getItem("id_token");
   const loggedIn = localStorage.getItem("isLoggedIn");
   const userRole = localStorage.getItem("role");
-
-  const navigate = useNavigate();
 
   const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
     useBmv();

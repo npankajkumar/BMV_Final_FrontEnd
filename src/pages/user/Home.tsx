@@ -1,8 +1,6 @@
 import CustomSearchBar from "@/components/CustomSearchBar";
-// import SearchBar from "@/components/SearchBar";
 import UserVenueCardsGrid from "@/components/UserVenueCardsGrid";
 import { Skeleton } from "@/components/ui/skeleton";
-import { venueCardsData } from "@/db";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
