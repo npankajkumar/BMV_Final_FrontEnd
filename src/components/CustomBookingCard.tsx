@@ -79,24 +79,36 @@ const CustomBookingCard = ({ booking }: { booking: Booking }) => {
       </div>
       <div className="flex flex-col justify-center ml-auto col-span-2">
         <div className="">
-          <span className="mr-4 font-semibold text-gray-800 dark:text-white ">Booking Id:</span>
-          <span className="mr-4 text-black dark:text-white font-semibold">{booking.id}</span>
+          <span className="mr-4 font-semibold text-gray-800 dark:text-white ">
+            Booking Id:
+          </span>
+          <span className="mr-4 text-black dark:text-white font-semibold">
+            {booking.id}
+          </span>
         </div>
         <div className="">
-          <span className="mr-4 font-semibold text-gray-800 dark:text-white">Status:</span>
-          <span className="mr-4 text-black dark:text-white font-semibold">{status}</span>
+          <span className="mr-4 font-semibold text-gray-800 dark:text-white">
+            Status:
+          </span>
+          <span className="mr-4 text-black dark:text-white font-semibold">
+            {status}
+          </span>
         </div>
         <div className="">
-          <span className="mr-4 font-semibold text-gray-800 dark:text-white">Paid:</span>
+          <span className="mr-4 font-semibold text-gray-800 dark:text-white">
+            Paid:
+          </span>
           <IndianRupee className="w-4 h-8 inline" />
-          <span className="mr-4 text-black dark:text-white font-semibold">{amount}</span>
+          <span className="mr-4 text-black dark:text-white font-semibold">
+            {amount}
+          </span>
         </div>
         <div className="flex ">
-          {status && (
+          {/* {status && (
             <Button className="ml-auto hover:shadow-sm bg-primary font-semibold py-2 px-4 mr-3 ">
               Cancel
             </Button>
-          )}
+          )} */}
 
           <PDFDownloadLink
             document={<ReceiptDocument booking={booking} />}

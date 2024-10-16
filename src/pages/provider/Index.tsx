@@ -64,14 +64,13 @@ const Index = () => {
         <NavBar clientType="provider" />
         <Routes>
           <Route path="/" element={<Home provider={provider} />} />
-          {/* <Route path="/" element={<div>Provider Home</div>} /> */}
           <Route
             path="/profile"
             element={
               <Profile provider={provider} updateProvider={updateProvider} />
             }
           />
-          <Route path="/bookings" element={<Bookings />} />
+          <Route path="/bookings" element={<Bookings provider={provider} />} />
           <Route
             path="/venues"
             element={
@@ -84,7 +83,6 @@ const Index = () => {
             path="/venues/new"
             element={
               <AddVenue provider={provider} updateProvider={updateProvider} />
-              // <div>new venue</div>
             }
           />
           <Route
@@ -93,7 +91,7 @@ const Index = () => {
               <Venue provider={provider} updateProvider={updateProvider} />
             }
           />
-          <Route path="*" element={<NotFound message="Provider"/>} />
+          <Route path="*" element={<NotFound message="Provider" />} />
         </Routes>
       </div>
     )

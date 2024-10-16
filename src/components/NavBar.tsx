@@ -9,14 +9,11 @@ import { toast } from "@/hooks/use-toast";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 
 const NavBar = ({
   className,
@@ -121,7 +118,7 @@ const NavBar = ({
           ) : (
             <Dialog>
               <DialogTrigger asChild>
-                <button>Logout</button>
+                <span className="cursor-pointer">Logout</span>
               </DialogTrigger>
 
               <DialogContent className="sm:max-w-[425px] dark:shadow-md dark:shadow-gray-500">

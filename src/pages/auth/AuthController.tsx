@@ -25,14 +25,13 @@ const AuthController: React.FC = () => {
             setToken(data.id_token);
             setRole("customer");
             setIsLoggedin(true);
-
+            localStorage.setItem("email", data.email);
             localStorage.setItem("id_token", data.id_token);
             localStorage.setItem("role", "customer");
             localStorage.setItem("isLoggedIn", "true");
 
-          
             if (data.isForgotPassword) {
-              toast({ title: "Password changed successfully",  });
+              toast({ title: "Password changed successfully" });
             }
 
             navigate("/");
@@ -42,7 +41,7 @@ const AuthController: React.FC = () => {
         })
         .catch((error) => {
           console.error("Error during token exchange:", error);
-          toast({ title: "Error during login"});
+          toast({ title: "Error during login" });
         });
     } else {
       setToken("");
@@ -53,7 +52,7 @@ const AuthController: React.FC = () => {
       localStorage.setItem("role", "customer");
       localStorage.setItem("isLoggedIn", "false");
 
-      toast({ title: "Unable to login", });
+      toast({ title: "Unable to login" });
       navigate("/");
     }
   }, [navigate, setIsLoggedin, setToken, setRole]);

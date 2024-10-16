@@ -10,6 +10,7 @@ const LoadingButton = ({
   type,
   loading,
   children,
+  disabled,
 }: {
   variant?:
     | "default"
@@ -25,6 +26,7 @@ const LoadingButton = ({
   loadingTitle?: string;
   type?: "submit" | "reset" | "button" | undefined;
   loading: boolean;
+  disabled?: boolean;
   children: string | JSX.Element | JSX.Element[];
 }) => {
   //   if (!loadingTitle) loadingTitle = title;
@@ -34,6 +36,7 @@ const LoadingButton = ({
       type={type}
       onClick={onClick}
       variant={variant}
+      disabled={disabled}
     >
       {children}
       {loading && <LoaderCircle className="animate-spin ml-2" />}

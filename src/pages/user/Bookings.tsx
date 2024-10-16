@@ -21,6 +21,7 @@ const Bookings = () => {
       .get("http://localhost:5059/api/Booking", {
         headers: {
           Authorization: `Bearer ${token}`,
+          User: "customer",
         },
       })
       .then((response) => {
@@ -66,8 +67,12 @@ const Bookings = () => {
       {bookings.length == 0 ? (
         <div className="mx-auto my-auto">
           <h1 className="text-3xl font-semibold">You have no Bookings..</h1>
-          
-          <Button variant={"link"} className="text-md font-semibold mt-2 ml-20" onClick={()=>navigate('/')}>
+
+          <Button
+            variant={"link"}
+            className="text-md font-semibold mt-2 ml-20"
+            onClick={() => navigate("/")}
+          >
             explore venues
           </Button>
         </div>

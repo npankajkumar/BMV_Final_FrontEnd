@@ -30,12 +30,12 @@ const VenuePageHeader = ({
     <div className=" grid grid-cols-2 space-y-0.5">
       <div className="flex flex-col gap-2 justify-center">
         <h2 className="text-2xl font-bold tracking-tight">{venue.name}</h2>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
           <h3 className="text-xl tracking-tight mb-1">{pName}</h3>
-          <Separator orientation="vertical" />
+          {/* <Separator orientation="vertical" />
           <p className="flex gap-2 my-auto">
             {venue.rating} <Star className="w-4 h-4 my-auto text-primary" />
-          </p>
+          </p> */}
           <Separator orientation="vertical" />
           <Button className="bg-primary" onClick={onBookClick}>
             {book ? "Cancel" : btnName}

@@ -7,9 +7,9 @@ import { toast } from "@/hooks/use-toast";
 import CustomBookingCard from "@/components/CustomBookingCard";
 import { useBmv } from "@/contexts/bmvContext";
 
-const Bookings = () => {
+const Bookings = ({ provider }: { provider: any }) => {
   const [pageLoading, setPageLoading] = useState(true);
-  const [bookings, setBookings] = useState([]);
+  const [bookings, setBookings] = useState<any[]>([]);
   const navigate = useNavigate();
   const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
     useBmv();
@@ -17,7 +17,7 @@ const Bookings = () => {
   useEffect(() => {
     axios
       .get("http://localhost:5059/api/Booking", {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${token}`, User: "provider" },
       })
       .then((response) => {
         setBookings(response.data);
@@ -61,9 +61,10 @@ const Bookings = () => {
       <h1 className="text-3xl font-semibold mb-5">
         {bookings.length == 0 ? "No Bookings Made .." : "All Bookings : "}
       </h1>
-      {bookings.map((booking, id) => (
-        <CustomBookingCard key={id} booking={booking} />
-      ))}
+      {bookings.map((booking, id) => {
+        if (provider.id == booking.providerId)
+          return <CustomBookingCard key={id} booking={booking} />;
+      })}
     </div>
   );
 };

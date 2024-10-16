@@ -1,4 +1,14 @@
-import { ConditionalDatePicker } from "@/components/ConditionalDatePicker";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import PayCheckOutCard from "@/components/PayCheckOutCard";
 import SlotBox from "@/components/SlotBox";
 import VenuePageHeader from "@/components/VenuePageHeader";
@@ -20,6 +30,7 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import NotFound from "@/components/NotFound";
+import { toast } from "@/hooks/use-toast";
 
 type venue = {};
 type slot = {
@@ -39,6 +50,65 @@ const Venue = () => {
   const [cartValue, setCartValue] = useState<number>(0);
   const [date, setDate] = useState<Date>();
   const [slots, setSlots] = useState<any>([]);
+  const [rating, setRating] = useState<number>(0);
+  const token = localStorage.getItem("id_token");
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  const handleDialogOpen = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleDialogClose = () => {
+    setIsDialogOpen(false);
+  };
+
+  const handleStarClick = (value: number) => {
+    setRating(value);
+  };
+  const renderStars = () => {
+    return [1, 2, 3, 4, 5].map((star) => (
+      <svg
+        key={star}
+        onClick={() => handleStarClick(star)}
+        xmlns="http://www.w3.org/2000/svg"
+        fill={star <= rating ? "gold" : "none"}
+        viewBox="0 0 24 24"
+        stroke="currentColor"
+        strokeWidth={2}
+        className="h-6 w-6 cursor-pointer"
+      >
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+        />
+      </svg>
+    ));
+  };
+
+  const handleRatingClick = () => {
+    axios
+      .put(
+        `http://localhost:5059/api/Venues/${parseInt(params.id ?? "1")}`,
+        { rating: rating },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      )
+      .then((response) => {
+        console.log("Rated the venue successfully");
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error changing the venue rating", error);
+        setPageLoading(false);
+      });
+    handleDialogClose();
+    toast({ title: "Your rating has been submitted successfully" });
+  };
 
   const handleSlotBoxClick = (selectedSlot: slot, selected: boolean) => {
     if (selected) {
@@ -79,9 +149,8 @@ const Venue = () => {
       .catch((e) => console.log(e));
   }, [date, params.id]);
 
-
-  if(!venue){
-    return <NotFound message="Venue"/>
+  if (!venue) {
+    return <NotFound message="Venue" />;
   }
 
   if (pageLoading)
@@ -157,6 +226,31 @@ const Venue = () => {
                   Use BMV200
                 </CardContent>
               </Card>
+              {localStorage.getItem("isLoggedIn") && (
+                <div className="ml-auto">
+                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button>Rate Venue</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-[425px]">
+                      <DialogHeader>
+                        <DialogTitle className="text-center">
+                          Please Rate the Venue
+                        </DialogTitle>
+                      </DialogHeader>
+                      <Separator></Separator>
+                      <div className="flex justify-center space-x-1 py-4">
+                        {renderStars()}
+                      </div>
+                      <DialogFooter>
+                        <Button type="submit" onClick={handleRatingClick}>
+                          Submit
+                        </Button>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              )}
             </div>
             <Separator className="my-4" />
             <div></div>

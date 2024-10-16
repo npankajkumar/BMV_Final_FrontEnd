@@ -21,6 +21,10 @@ const VenueCard = ({
   latitude: number;
   longitude: number;
 }) => {
+  const roundToTwoDigits = (value: number): number => {
+    return parseFloat(value.toFixed(1));
+  };
+
   return (
     <Card className="p-2 w-80 h-60 shadow-xl">
       <Link to={`/venues/${id}`}>
@@ -32,7 +36,7 @@ const VenueCard = ({
         <div className="flex justify-between w-full pt-2 pb-1 px-2">
           <CardTitle className="">{title}</CardTitle>
           <CardContent className="m-0 p-0 text-lg flex gap-1">
-            {rating}
+            {roundToTwoDigits(rating)}
             <Star className="w-4 h-4 my-auto text-yellow-500" />
           </CardContent>
         </div>
