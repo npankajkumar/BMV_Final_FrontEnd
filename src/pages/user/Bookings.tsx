@@ -7,7 +7,14 @@ import CustomBookingCard from "@/components/CustomBookingCard";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useBmv } from "@/contexts/bmvContext";
-import { CalendarX, Search, SortAsc, SortDesc } from "lucide-react";
+import {
+  CalendarX,
+  Search,
+  SortAsc,
+  SortDesc,
+  Calendar as CalendarIcon,
+  X,
+} from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -16,14 +23,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const Bookings = () => {
   const [pageLoading, setPageLoading] = useState(true);
   const [bookings, setBookings] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [dateFilter, setDateFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
   const [sortAscending, setSortAscending] = useState(true);
   const [timeWindow, setTimeWindow] = useState("all");
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const navigate = useNavigate();
 
   const { token } = useBmv();
@@ -55,7 +71,9 @@ const Bookings = () => {
       const venueMatch = booking.venueName
         .toLowerCase()
         .includes(searchTerm.toLowerCase());
-      const dateMatch = dateFilter ? booking.date === dateFilter : true;
+      const dateMatch = dateFilter
+        ? booking.date === format(dateFilter, "yyyy-MM-dd")
+        : true;
 
       let timeWindowMatch = true;
       if (timeWindow !== "all") {
@@ -92,6 +110,16 @@ const Bookings = () => {
   const uniqueVenues = Array.from(
     new Set(filteredAndSortedBookings.map((booking: any) => booking.venueName))
   );
+
+  const handleDateSelect = (date: Date | undefined) => {
+    setDateFilter(date);
+    setIsCalendarOpen(false);
+  };
+
+  const handleDateDeselect = () => {
+    setDateFilter(undefined);
+    setIsCalendarOpen(false);
+  };
 
   if (pageLoading) {
     return (
@@ -146,12 +174,43 @@ const Bookings = () => {
             size={20}
           />
         </div>
-        <Input
-          type="date"
-          value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
-          className="w-full sm:w-auto"
-        />
+        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-[240px] justify-start text-left font-normal",
+                !dateFilter && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {dateFilter ? (
+                format(dateFilter, "PPP")
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={dateFilter}
+              onSelect={handleDateSelect}
+              initialFocus
+            />
+            <div className="flex justify-end p-2 border-t">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDateDeselect}
+                className="text-sm"
+              >
+                <X className="mr-2 h-5 w-5 " />
+                Clear
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
         <Select value={timeWindow} onValueChange={setTimeWindow}>
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Select time window" />

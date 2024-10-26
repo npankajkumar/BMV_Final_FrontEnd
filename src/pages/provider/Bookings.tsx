@@ -15,16 +15,32 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, SortAsc, SortDesc, CalendarX } from "lucide-react";
+import {
+  Search,
+  SortAsc,
+  SortDesc,
+  CalendarX,
+  Calendar as CalendarIcon,
+  X,
+} from "lucide-react";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const Bookings = ({ provider }: { provider: any }) => {
   const [pageLoading, setPageLoading] = useState(true);
   const [bookings, setBookings] = useState<any[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [dateFilter, setDateFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState<Date | undefined>(undefined);
   const [timeWindow, setTimeWindow] = useState("all");
   const [sortAscending, setSortAscending] = useState(true);
+  const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const navigate = useNavigate();
   const { token } = useBmv();
 
@@ -54,7 +70,9 @@ const Bookings = ({ provider }: { provider: any }) => {
         const searchMatch =
           booking.venueName.toLowerCase().includes(searchTerm.toLowerCase()) ||
           booking.customerName.toLowerCase().includes(searchTerm.toLowerCase());
-        const dateMatch = dateFilter ? booking.date === dateFilter : true;
+        const dateMatch = dateFilter
+          ? booking.date === format(dateFilter, "yyyy-MM-dd")
+          : true;
 
         let timeWindowMatch = true;
         if (timeWindow !== "all") {
@@ -103,6 +121,16 @@ const Bookings = ({ provider }: { provider: any }) => {
     provider.id,
   ]);
 
+  const handleDateSelect = (date: Date | undefined) => {
+    setDateFilter(date);
+    setIsCalendarOpen(false);
+  };
+
+  const handleDateDeselect = () => {
+    setDateFilter(undefined);
+    setIsCalendarOpen(false);
+  };
+
   if (pageLoading) {
     return (
       <div className="mx-40 flex flex-col gap-2 ">
@@ -149,12 +177,43 @@ const Bookings = ({ provider }: { provider: any }) => {
             size={20}
           />
         </div>
-        <Input
-          type="date"
-          value={dateFilter}
-          onChange={(e) => setDateFilter(e.target.value)}
-          className="w-full sm:w-auto bg-background text-foreground"
-        />
+        <Popover open={isCalendarOpen} onOpenChange={setIsCalendarOpen}>
+          <PopoverTrigger asChild>
+            <Button
+              variant={"outline"}
+              className={cn(
+                "w-[240px] justify-start text-left font-normal",
+                !dateFilter && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {dateFilter ? (
+                format(dateFilter, "PPP")
+              ) : (
+                <span>Pick a date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={dateFilter}
+              onSelect={handleDateSelect}
+              initialFocus
+            />
+            <div className="flex justify-end p-2 border-t">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleDateDeselect}
+                className="text-sm"
+              >
+                <X className="mr-2 h-5 w-5" />
+                Clear
+              </Button>
+            </div>
+          </PopoverContent>
+        </Popover>
         <Select value={timeWindow} onValueChange={setTimeWindow}>
           <SelectTrigger className="w-full sm:w-[180px]">
             <SelectValue placeholder="Select time window" />
@@ -192,7 +251,7 @@ const Bookings = ({ provider }: { provider: any }) => {
             className="text-md font-semibold"
             onClick={() => {
               setSearchTerm("");
-              setDateFilter("");
+              setDateFilter(undefined);
               setTimeWindow("all");
             }}
             style={{ fontFamily: "Montserrat" }}

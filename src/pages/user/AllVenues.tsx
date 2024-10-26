@@ -88,10 +88,6 @@ const AllVenues: React.FC = () => {
   ]);
 
   const cities = ["all", ...new Set(venues.map((venue) => venue.city))];
-  // const categories = [
-  //   "all",
-  //   ...new Set(venues.map((venue) => venue.categoryId.toString())),
-  // ];
 
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
@@ -106,14 +102,19 @@ const AllVenues: React.FC = () => {
         All Venues
       </h1>
       <div className="mb-8 flex flex-col md:flex-row gap-4">
-        <Search className="h-10 w-10 text-primary" />
-        <Input
-          type="text"
-          placeholder="Search venues..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="flex-grow"
-        />
+        <div className="relative flex-grow">
+          <Input
+            type="text"
+            placeholder="Search by venue"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10"
+          />
+          <Search
+            className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+            size={20}
+          />
+        </div>
         <Select value={selectedCity} onValueChange={setSelectedCity}>
           <SelectTrigger className="w-full md:w-[180px]">
             <SelectValue placeholder="Filter by city" />
@@ -126,18 +127,7 @@ const AllVenues: React.FC = () => {
             ))}
           </SelectContent>
         </Select>
-        {/* <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-full md:w-[180px]">
-            <SelectValue placeholder="Filter by category" />
-          </SelectTrigger>
-          <SelectContent>
-            {categories.map((category) => (
-              <SelectItem key={category} value={category}>
-                {category === "all" ? "All Categories" : `Category ${category}`}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select> */}
+
         <Button
           onClick={toggleSortOrder}
           variant="outline"
