@@ -244,7 +244,9 @@ const AddVenue = ({
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>
+                      Name <span className="text-red-600">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="Name" {...field} />
                     </FormControl>
@@ -260,7 +262,9 @@ const AddVenue = ({
                 name="city"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>City</FormLabel>
+                    <FormLabel>
+                      City <span className="text-red-600">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Input placeholder="Hyderabad" {...field} />
                     </FormControl>
@@ -273,7 +277,9 @@ const AddVenue = ({
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Description</FormLabel>
+                    <FormLabel>
+                      Description <span className="text-red-600">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Textarea placeholder="Description" {...field} />
                     </FormControl>
@@ -286,7 +292,9 @@ const AddVenue = ({
                 name="address"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Address</FormLabel>
+                    <FormLabel>
+                      Address <span className="text-red-600">*</span>
+                    </FormLabel>
                     <FormControl>
                       <Textarea placeholder="Address" {...field} />
                     </FormControl>
@@ -357,7 +365,9 @@ const AddVenue = ({
                   name="category"
                   render={({ field }) => (
                     <FormItem className="flex flex-col ">
-                      <FormLabel className="my-1">Category</FormLabel>
+                      <FormLabel className="my-1">
+                        Category <span className="text-red-600">*</span>
+                      </FormLabel>
                       <Popover>
                         <PopoverTrigger asChild>
                           <FormControl>
@@ -432,7 +442,7 @@ const AddVenue = ({
             </div>
             <div className="ml-10 border-l-4 dark:border-gray-800 border-gray-200">
               <h3 className="text-xl font-semibold text-center my-4">
-                Slot creation
+                Slot Creation
               </h3>
               <div className="flex gap-2 justify-center">
                 <div>
@@ -441,7 +451,10 @@ const AddVenue = ({
                     name="openingTime"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Venue Opening Time</FormLabel>
+                        <FormLabel>
+                          Venue Opening Time{" "}
+                          <span className="text-red-600">*</span>
+                        </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -473,7 +486,10 @@ const AddVenue = ({
                     name="closingTime"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Venue Closing Time</FormLabel>
+                        <FormLabel>
+                          Venue Closing Time{" "}
+                          <span className="text-red-600">*</span>
+                        </FormLabel>
                         <Select
                           onValueChange={field.onChange}
                           defaultValue={field.value}
@@ -505,7 +521,9 @@ const AddVenue = ({
                   name="duration"
                   render={({ field }) => (
                     <FormItem className="md:w-1/2 mx-auto">
-                      <FormLabel>Duration</FormLabel>
+                      <FormLabel>
+                        Duration <span className="text-red-600">*</span>
+                      </FormLabel>
                       <Select
                         onValueChange={field.onChange}
                         defaultValue={field.value}
@@ -536,13 +554,13 @@ const AddVenue = ({
                   name="weekdayPrice"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Weekday Price</FormLabel>
+                      <FormLabel>
+                        Weekday Price <span className="text-red-600">*</span>
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="1000" {...field} />
+                        <Input placeholder="Enter the amount" {...field} />
                       </FormControl>
-                      <FormDescription>
-                        You can change this later
-                      </FormDescription>
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -554,13 +572,13 @@ const AddVenue = ({
                   name="weekendPrice"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Weekend Price</FormLabel>
+                      <FormLabel>
+                        Weekend Price <span className="text-red-600">*</span>
+                      </FormLabel>
                       <FormControl>
-                        <Input placeholder="1500" {...field} />
+                        <Input placeholder="Enter the amount" {...field} />
                       </FormControl>
-                      <FormDescription>
-                        You can change this later
-                      </FormDescription>
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -568,7 +586,7 @@ const AddVenue = ({
               </div>
               <div className="my-4 mb-2 md:w-1/2 mx-auto">
                 <label htmlFor="files" className="my-2">
-                  Upload Files
+                  Upload Files <span className="text-red-600">*</span>
                 </label>
                 <input
                   name="files"

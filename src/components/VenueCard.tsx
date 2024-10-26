@@ -8,17 +8,17 @@ const VenueCard = ({
   rating,
   city,
   imageUrl,
-  provider,
   latitude,
+  provider,
   longitude,
 }: {
   id: number;
   title: string;
   rating: number;
   city: string;
-  imageUrl: string;
-  provider: string;
+  imageUrl: string[];
   latitude: number;
+  provider: string;
   longitude: number;
 }) => {
   const roundToTwoDigits = (value: number): number => {
@@ -26,38 +26,43 @@ const VenueCard = ({
   };
 
   return (
-    <Card className="p-2 w-80 h-60 shadow-xl">
-      <Link to={`/venues/${id}`}>
-        <img
-          src={imageUrl[0]}
-          alt="VenueImage"
-          className="h-4/6 w-full rounded-md"
-        />
-        <div className="flex justify-between w-full pt-2 pb-1 px-2">
-          <CardTitle className="">{title}</CardTitle>
-          <CardContent className="m-0 p-0 text-lg flex gap-1">
-            {roundToTwoDigits(rating)}
-            <Star className="w-4 h-4 my-auto text-yellow-500" />
-          </CardContent>
+    <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
+      <Link to={`/venues/${id}`} className="block">
+        <div className="relative h-48">
+          <img
+            src={imageUrl[0]}
+            alt={title}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute bottom-2 right-2 bg-white px-2 py-1 rounded-full flex items-center gap-1 shadow dark:shadow-md dark:bg-gray-800 dark:text-white">
+            <Star fill="#FDCC0D" className="w-4 h-4" strokeWidth={1} />
+            <span className="text-sm font-medium">
+              {roundToTwoDigits(rating)}
+            </span>
+          </div>
         </div>
+        <CardContent className="p-4">
+          <CardTitle className="text-lg font-semibold mb-2 truncate">
+            {title}
+          </CardTitle>
+          <div className="flex items-center justify-between text-sm text-muted-foreground">
+            <div className="flex items-center gap-1">
+              <MapPin className="w-4 h-4" />
+              <span>{city}</span>
+            </div>
+            <a
+              className="flex items-center gap-1 text-primary hover:underline"
+              href={`https://maps.google.com/?q=${latitude},${longitude}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              View on Map
+              <MoveUpRight className="w-4 h-4" />
+            </a>
+          </div>
+        </CardContent>
       </Link>
-      <div className="flex justify-between w-full px-2 py-1">
-        <CardContent className="p-0">{provider}</CardContent>
-        <MapPin className="w-4 h-4 ml-auto my-auto" />
-        <a
-          className="m-0 p-0 text-lg flex gap-1 my-auto "
-          href={`https://maps.google.com/?q=${latitude},${longitude}`}
-          target="_blank"
-        >
-          <p
-            className="decoration-solid decoration-primary hover:underline hover:underline-offset-2
-"
-          >
-            {city}
-          </p>
-          <MoveUpRight className="w-4 h-4 my-auto text-primary" />
-        </a>
-      </div>
     </Card>
   );
 };

@@ -1,30 +1,24 @@
 import { useState, useEffect, useRef } from "react";
-import SearchBarBox from "./SearchBarBox";
-import SearchResultsList from "./SearchResultsList";
+import { SearchBarBox } from "./SearchBarBox";
+import { SearchResultsList } from "./SearchResultsList";
+import { Venue } from "@/types/venue";
 
-type venue = {
-  venueId: number;
-  venueName: string;
-  venueDescription: string;
-  venueCategory: string;
-  city: string;
-};
-
-const CustomSearchBar: React.FC = () => {
+export function CustomSearchBar() {
   const [showPopover, setShowPopover] = useState(false);
-  const [results, setResults] = useState<venue[]>([]);
+  const [results, setResults] = useState<Venue[]>([]);
+  const [inputValue, setInputValue] = useState("");
   const searchBarRef = useRef<HTMLDivElement>(null);
 
-  const handleDocumentClick = (event: MouseEvent) => {
-    if (
-      searchBarRef.current &&
-      !searchBarRef.current.contains(event.target as Node)
-    ) {
-      setShowPopover(false);
-    }
-  };
-
   useEffect(() => {
+    function handleDocumentClick(event: MouseEvent) {
+      if (
+        searchBarRef.current &&
+        !searchBarRef.current.contains(event.target as Node)
+      ) {
+        setShowPopover(false);
+      }
+    }
+
     document.addEventListener("click", handleDocumentClick);
     return () => {
       document.removeEventListener("click", handleDocumentClick);
@@ -32,14 +26,17 @@ const CustomSearchBar: React.FC = () => {
   }, []);
 
   return (
-    <div
-      ref={searchBarRef}
-      className="w-[40%] flex flex-col items-center min-w-[200px] m-auto relative"
-    >
-      <SearchBarBox setResults={setResults} setShowPopover={setShowPopover} />
-      {showPopover && <SearchResultsList results={results} />}
+    <div ref={searchBarRef} className="relative w-full max-w-2xl mx-auto mb-8">
+      <SearchBarBox
+        setResults={setResults}
+        setShowPopover={setShowPopover}
+        setInputValue={setInputValue}
+      />
+      {showPopover && inputValue.length > 0 && (
+        <div className="absolute w-full z-50">
+          <SearchResultsList results={results} />
+        </div>
+      )}
     </div>
   );
-};
-
-export default CustomSearchBar;
+}

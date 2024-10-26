@@ -1,4 +1,9 @@
-import { Avatar, AvatarFallback } from "@radix-ui/react-avatar";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import axios from "axios";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   Dialog,
   DialogContent,
@@ -18,24 +23,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Button } from "./ui/button";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-
-import { toast } from "@//hooks/use-toast";
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 import LoadingButton from "./LoadingButton";
-import axios from "axios";
 import { useBmv } from "@/contexts/bmvContext";
+import { Card, CardContent } from "@/components/ui/card";
+import { Edit2, Mail, Phone, User, BookUser } from "lucide-react";
 
 const FormSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  mobile: z.string().min(1, { message: "mobile number required" }),
+  mobile: z.string().min(1, { message: "Mobile number required" }),
 });
 
-const MemberProfilePage = ({
-  className,
+export default function MemberProfilePage({
+  className = "",
   name,
   email,
   mobile,
@@ -46,13 +47,10 @@ const MemberProfilePage = ({
   email: string;
   mobile: string;
   onProfileUpdate: (updatedData: { name: string; mobile: string }) => void;
-}) => {
-  const [profileSaveLoading, setProfileSaveLoading] = useState<boolean>(false);
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [url, setUrl] = useState("");
-
-  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
-    useBmv();
+}) {
+  const [profileSaveLoading, setProfileSaveLoading] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { role, token } = useBmv();
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -62,28 +60,18 @@ const MemberProfilePage = ({
     },
   });
 
-  const handleDialogOpen = () => {
-    setIsDialogOpen(true);
-  };
+  const handleDialogOpen = () => setIsDialogOpen(true);
+  const handleDialogClose = () => setIsDialogOpen(false);
 
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-  };
-
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
     setProfileSaveLoading(true);
-    setTimeout(() => {
-      setProfileSaveLoading(false);
-    }, 1000);
+    try {
+      const url =
+        role === "customer"
+          ? "http://localhost:5059/api/Customers"
+          : "http://localhost:5059/api/Providers";
 
-    if (role == "customer") {
-      setUrl("http://localhost:5059/api/Customers");
-    }
-    if (role == "provider") {
-      setUrl("http://localhost:5059/api/Providers");
-    }
-    axios
-      .put(
+      await axios.put(
         url,
         {
           name: data.name,
@@ -95,124 +83,160 @@ const MemberProfilePage = ({
             Authorization: `Bearer ${token}`,
           },
         }
-      )
-      .then(() => {
-        toast({
-          className: "border-2 border-primary",
-          title: "Profile Edited Successfully",
-        });
-        console.log("hi");
-        onProfileUpdate({
-          name: data.name,
-          mobile: data.mobile,
-        });
-        handleDialogClose();
-      })
-      .catch(() => {
-        toast({
-          className: "border-2 border-primary",
-          title: "Couldn't update profile",
-        });
+      );
+
+      toast({
+        className: "border-2 border-primary",
+        title: "Profile Edited Successfully",
       });
+
+      onProfileUpdate({
+        name: data.name,
+        mobile: data.mobile,
+      });
+
+      handleDialogClose();
+    } catch (error) {
+      toast({
+        className: "border-2 border-primary",
+        title: "Couldn't update profile",
+      });
+    } finally {
+      setProfileSaveLoading(false);
+    }
   }
 
   return (
-    <div className={"h-full p-6 pt-2 bg-white dark:bg-gray-950 dark:text-white  rounded-lg" + className}>
-      <h2 className="text-xl font-bold mb-3 text-left text-gray-800 dark:text-white">
-        Your Profile :
-      </h2>
-      <div className="flex justify-between space-x-6 w-[80%]">
-        <div className="flex-1 space-y-3">
-          <div className="p-3  bg-gray-50 dark:bg-gray-900 rounded-md shadow-sm">
-            <span className="block text-sm font-medium mb-1">Name</span>
-            <span className="block text-base ">{name}</span>
-          </div>
-          <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-md shadow-sm">
-            <span className="block text-sm font-medium  mb-1">Email</span>
-            <span className="block text-base ">{email}</span>
-          </div>
-          <div className="p-3 bg-gray-50 dark:bg-gray-900 rounded-md shadow-sm">
-            <span className="block text-sm font-medium mb-1">mobile</span>
-            <span className="block text-base ">{mobile}</span>
-          </div>
-        </div>
-
-        <div className="pl-16 flex flex-col items-start justify-around p-4">
-          <Avatar className="h-24 w-24 rounded-full bg-gray-300 dark:bg-gray-800 dark:shadow-md dark:shadow-gray-500 flex items-center justify-center shadow-lg">
-            <AvatarFallback className="text-lg text-gray-900">
-              <Label className="text-3xl font-bold dark:text-white">{name[0]}</Label>
-            </AvatarFallback>
-          </Avatar>
-          <div className="">
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className="px-4 py-1 h-10 bg-primary text-white font-semibold rounded-lg shadow hover:bg-red-500 hover:text-white transition duration-200"
-                  onClick={handleDialogOpen}
+    <div className={`w-full bg-background text-foreground p-6 ${className}`}>
+      <div className="max-w-7xl mx-auto">
+        <h1
+          className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-slate-100"
+          style={{ fontFamily: "Montserrat" }}
+        >
+          Your Profile
+        </h1>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <Card className="col-span-1">
+            <CardContent className="p-6 flex flex-col items-center space-y-4">
+              <Avatar className="h-40 w-40 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center shadow-lg">
+                <AvatarFallback
+                  className="text-6xl font-bold text-gray-900 dark:text-slate-100"
+                  style={{ fontFamily: "Montserrat" }}
                 >
-                  Edit Details
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-[400px]">
-                <DialogHeader>
-                  <DialogTitle>Edit profile</DialogTitle>
-                  <DialogDescription>
-                    Make changes to your profile here. Click save when you're
-                    done.
-                  </DialogDescription>
-                </DialogHeader>
-                <Form {...form}>
-                  <form
-                    onSubmit={form.handleSubmit(onSubmit)}
-                    className="w-2/3 space-y-6"
-                  >
-                    <FormField
-                      control={form.control}
-                      name="name"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Name</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Enter your name" {...field} />
-                          </FormControl>
-                          <FormDescription>
-                            This is your public display name.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+                  {name[0]}
+                </AvatarFallback>
+              </Avatar>
 
-                    <FormField
-                      control={form.control}
-                      name="mobile"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>mobile Number</FormLabel>
-                          <FormControl>
-                            <Input
-                              placeholder="Enter mobile number"
-                              type="number"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <LoadingButton type="submit" loading={profileSaveLoading}>
-                      Submit
-                    </LoadingButton>
-                  </form>
-                </Form>
-              </DialogContent>
-            </Dialog>
-          </div>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="default"
+                    className="w-full max-w-xs h-12 flex items-center justify-center gap-2 text-base"
+                    onClick={handleDialogOpen}
+                  >
+                    <Edit2 className="w-5 h-5" />
+                    Edit Profile
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Edit profile</DialogTitle>
+                  </DialogHeader>
+                  <Form {...form}>
+                    <form
+                      onSubmit={form.handleSubmit(onSubmit)}
+                      className="space-y-6"
+                    >
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Name <span className="text-red-600">*</span>
+                            </FormLabel>
+                            <FormControl>
+                              <Input placeholder="Enter your name" {...field} />
+                            </FormControl>
+
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="mobile"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>
+                              Mobile Number{" "}
+                              <span className="text-red-600">*</span>
+                            </FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Enter mobile number"
+                                type="tel"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <div className="flex justify-end gap-4">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={handleDialogClose}
+                        >
+                          Cancel
+                        </Button>
+                        <LoadingButton
+                          type="submit"
+                          loading={profileSaveLoading}
+                        >
+                          Save Changes
+                        </LoadingButton>
+                      </div>
+                    </form>
+                  </Form>
+                </DialogContent>
+              </Dialog>
+            </CardContent>
+          </Card>
+          <Card className="col-span-1 md:col-span-2">
+            <CardContent className="p-6 space-y-6">
+              <div className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
+                <User className="w-6 h-6 text-primary" />
+                <div>
+                  <Label className="text-sm font-medium text-muted-foreground">
+                    Name
+                  </Label>
+                  <div className="text-lg font-medium">{name}</div>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
+                <Mail className="w-6 h-6 text-primary" />
+                <div>
+                  <Label className="text-sm font-medium text-muted-foreground">
+                    Email
+                  </Label>
+                  <div className="text-lg font-medium">{email}</div>
+                </div>
+              </div>
+              <div className="flex items-center space-x-4 p-4 bg-muted rounded-lg">
+                <Phone className="w-6 h-6 text-primary" />
+                <div>
+                  <Label className="text-sm font-medium text-muted-foreground">
+                    Mobile
+                  </Label>
+                  <div className="text-lg font-medium">{mobile}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
   );
-};
-
-export default MemberProfilePage;
+}

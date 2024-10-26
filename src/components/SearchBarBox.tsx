@@ -1,71 +1,74 @@
-import { toast } from "@/hooks/use-toast";
+import { useState, useCallback } from "react";
 import axios from "axios";
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Venue } from "@/types/venue";
+import { debounce } from "lodash";
 
 interface SearchBarBoxProps {
-  setResults: (results: venue[]) => void;
+  setResults: (results: Venue[]) => void;
   setShowPopover: (show: boolean) => void;
+  setInputValue: (value: string) => void;
 }
 
-type venue = {
-  venueId: number;
-  venueName: string;
-  venueDescription: string;
-  venueCategory: string;
-  providerName: string;
-  city: string;
-  latitude: number;
-  longitude: number;
-};
-
-const SearchBarBox: React.FC<SearchBarBoxProps> = ({
+export function SearchBarBox({
   setResults,
   setShowPopover,
-}) => {
-  const [input, setInput] = useState<string>("");
+  setInputValue,
+}: SearchBarBoxProps) {
+  const [input, setInput] = useState("");
 
-  const fetchData = (value: string) => {
-    axios
-      .get(`http://localhost:5143/api/Search?q=${value}`)
-      .then((res) => {
-        let venues = res.data.map((venue: venue) => {
-          return {
-            venueId: venue.venueId,
-            venueName: venue.venueName,
-            venueDescription: venue.venueDescription,
-            venueCategory: venue.venueCategory,
-            providerName: venue.providerName,
-            city: venue.city,
-            latitude: venue.latitude,
-            longitude: venue.longitude,
-          };
-        });
-        setResults(venues);
-      })
-      .catch((e) => {
-        console.log(e);
-      });
+  const fetchData = async (value: string) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:5143/api/Search?q=${value}`
+      );
+      const venues: Venue[] = res.data.map((venue: any) => ({
+        venueId: venue.venueId,
+        venueName: venue.venueName,
+        venueDescription: venue.venueDescription,
+        venueCategory: venue.venueCategory,
+        providerName: venue.providerName,
+        city: venue.city,
+        latitude: venue.latitude,
+        longitude: venue.longitude,
+      }));
+      setResults(venues);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+      setResults([]);
+    }
   };
+
+  const debouncedFetchData = useCallback(
+    debounce((value: string) => {
+      if (value.length >= 0) {
+        fetchData(value);
+      } else {
+        setResults([]);
+      }
+    }, 300),
+    []
+  );
 
   const handleChange = (value: string) => {
     setInput(value);
-    fetchData(value);
+    setInputValue(value);
+    debouncedFetchData(value);
     setShowPopover(true);
   };
 
   return (
-    <div className="flex w-[100%] rounded-md h-12 px-4 items-center shadow-md  dark:shadow-gray-500">
-      <Search className="text-primary" />
-      <input
-        placeholder="Type to search"
-        className="bg-transparent border-none h-[80%] text-xl outline-none ml-2"
+    <div className="relative w-[70%] mx-auto">
+      <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-primary" />
+      <Input
+        type="text"
+        placeholder="Search venues..."
+        className="pl-10 pr-4 py-2 w-full"
         value={input}
         onChange={(e) => handleChange(e.target.value)}
         onFocus={() => setShowPopover(true)}
       />
     </div>
   );
-};
-
-export default SearchBarBox;
+}

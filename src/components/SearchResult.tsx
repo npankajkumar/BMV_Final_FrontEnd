@@ -1,31 +1,26 @@
-import React from "react";
 import { Link } from "react-router-dom";
+import { Venue } from "@/types/venue";
+import { MapPin } from "lucide-react";
 
 interface SearchResultProps {
-  result: venue;
+  result: Venue;
 }
 
-type venue = {
-  venueId: number;
-  venueName: string;
-  venueDescription: string;
-  venueCategory: string;
-  city: string;
-};
-
-const SearchResult: React.FC<SearchResultProps> = ({ result }) => {
+export function SearchResult({ result }: SearchResultProps) {
   return (
-    <div className="text-start text-md px-4 py-2 m-1 font-semibold hover:bg-gray-100 hover:cursor-pointer hover:rounded-md dark:hover:bg-gray-800">
-      <Link to={`venues/${result.venueId}`} className="grid grid-cols-3 gap-2">
-        <div className="col-span-2 text-xl font-semibold">
-          {result.venueName}
+    <Link to={`/venues/${result.venueId}`}>
+      <div className="flex items-center justify-between p-4 hover:bg-muted transition-colors">
+        <div>
+          <h3 className="font-semibold">{result.venueName}</h3>
+          <p className="text-sm text-muted-foreground flex items-center mt-1">
+            <MapPin className="w-4 h-4 mr-1" />
+            {result.city}
+          </p>
         </div>
-        <div className="col-span-1 text-right">
-          <div className="text">{result.venueCategory}</div>
+        <div className="text-sm font-medium bg-primary/10 text-primary px-2 py-1 rounded">
+          {result.venueCategory}
         </div>
-      </Link>
-    </div>
+      </div>
+    </Link>
   );
-};
-
-export default SearchResult;
+}

@@ -1,4 +1,3 @@
-import { Star } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";

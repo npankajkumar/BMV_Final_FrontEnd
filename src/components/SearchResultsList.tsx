@@ -1,34 +1,27 @@
-import React from "react";
-import SearchResult from "./SearchResult";
+import { Venue } from "@/types/venue";
+import { SearchResult } from "./SearchResult";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface SearchResultsListProps {
-  results: venue[];
+  results: Venue[];
 }
 
-type venue = {
-  venueId: number;
-  venueName: string;
-  venueDescription: string;
-  venueCategory: string;
-  city: string;
-};
-
-const SearchResultsList: React.FC<SearchResultsListProps> = ({ results }) => {
-  return (
-    <div className="w-[100%] shadow-lg flex flex-col rounded-md bg-white max-h-[150px] overflow-y-auto z-10 absolute mt-14 dark:bg-gray-800 dark:text-white">
-      {results.length == 0 && (
-        <div>
-          <div className="text-start text-md px-4 py-2 m-1 font-semibold ">
-            No Results
-          </div>
+export function SearchResultsList({ results }: SearchResultsListProps) {
+  if (results.length === 0) {
+    return (
+      <div>
+        <div className="w-[70%] mx-auto mt-3 p-4 bg-background border rounded-md shadow-lg max-h-[300px]">
+          No Results
         </div>
-      )}
-      {results.map((res, id) => {
-        console.log(res);
-        return <SearchResult key={id} result={res} />;
-      })}
-    </div>
-  );
-};
+      </div>
+    );
+  }
 
-export default SearchResultsList;
+  return (
+    <ScrollArea className="w-[70%] mx-auto mt-3 bg-background border rounded-md shadow-lg max-h-[300px]">
+      {results.map((result) => (
+        <SearchResult key={result.venueId} result={result} />
+      ))}
+    </ScrollArea>
+  );
+}
