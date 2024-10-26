@@ -68,10 +68,10 @@ export default function Home() {
           <Typewriter
             onInit={(typewriter) => {
               typewriter
-                .typeString("Discover the Best Venues")
+                .typeString("Discover the best venues")
                 .pauseFor(1000)
                 .deleteAll()
-                .typeString("Book Today for Easy Planning...")
+                .typeString("Book today for easy planning...")
                 .start();
             }}
             options={{

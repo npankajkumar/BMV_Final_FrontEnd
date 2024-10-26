@@ -47,9 +47,12 @@ import axios from "axios";
 import { useBmv } from "@/contexts/bmvContext";
 
 const FormSchema = z.object({
-  name: z.string({ required_error: "Name is required" }).min(3, {
-    message: "Name must be at least 3 characters.",
-  }),
+  name: z
+    .string({ required_error: "Name is required" })
+    .min(3, {
+      message: "Name must be at least 3 characters.",
+    })
+    .max(60, { message: "Name must be less than 40 characters." }),
   city: z.string({ required_error: "Name is reuired" }).min(2, {
     message: "City must be at least 2 characters.",
   }),
@@ -65,16 +68,36 @@ const FormSchema = z.object({
       message: "Address must be at least 10 characters.",
     })
     .max(200, { message: "Address must be less than 200 characters." }),
-  latitude: z.string(),
-  longitude: z.string(),
+  latitude: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .refine((val) => val >= -90 && val <= 90, {
+      message: "Latitude must be between -90 and 90.",
+    }),
+  longitude: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .refine((val) => val >= -90 && val <= 90, {
+      message: "Longitude must be between -90 and 90.",
+    }),
   category: z.any(),
   geoLocation: z.boolean().default(false).optional(),
   otherCategory: z.string().optional(),
   openingTime: z.string().time(),
   closingTime: z.string().time(),
   duration: z.string(),
-  weekdayPrice: z.string(),
-  weekendPrice: z.string(),
+  weekdayPrice: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .refine((val) => val >= 0 && val <= 999999999, {
+      message: "Weekday price must be between 0 and 999999999.",
+    }),
+  weekendPrice: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .refine((val) => val >= 0 && val <= 999999999, {
+      message: "Weekend price must be between 0 and 999999999.",
+    }),
 });
 
 export function InputForm() {}
@@ -96,8 +119,8 @@ const AddVenue = ({
       city: "",
       description: "",
       address: "",
-      latitude: "",
-      longitude: "",
+      latitude: 0,
+      longitude: 0,
       category: "",
       geoLocation: false,
       otherCategory: "",
@@ -128,16 +151,16 @@ const AddVenue = ({
       description: data.description,
       address: data.address,
       city: data.city,
-      latitude: parseFloat(data.latitude),
-      longitude: parseFloat(data.longitude),
+      latitude: data.latitude,
+      longitude: data.longitude,
       category:
         data.category == "others" ? data.otherCategory : data.category || "",
       slotDetails: {
         openingTime: data.openingTime,
         closingTime: data.closingTime,
         durationInMinutes: convertToMinutes(data.duration),
-        weekdayPrice: parseFloat(data.weekdayPrice),
-        weekendPrice: parseFloat(data.weekendPrice),
+        weekdayPrice: data.weekdayPrice,
+        weekendPrice: data.weekendPrice,
       },
     };
     console.log(resData);
@@ -210,9 +233,9 @@ const AddVenue = ({
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        form.setValue("latitude", latitude.toString());
+        form.setValue("latitude", latitude);
         form.reset;
-        form.setValue("longitude", longitude.toString());
+        form.setValue("longitude", longitude);
       },
       (error) => {
         form.resetField("geoLocation");
@@ -309,7 +332,9 @@ const AddVenue = ({
                     name="latitude"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Latitude</FormLabel>
+                        <FormLabel>
+                          Latitude <span className="text-red-600">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Input
                             disabled={geoLocationWatch}
@@ -327,7 +352,9 @@ const AddVenue = ({
                     name="longitude"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Longitude</FormLabel>
+                        <FormLabel>
+                          Longitude <span className="text-red-600">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Input
                             disabled={geoLocationWatch}
@@ -440,7 +467,7 @@ const AddVenue = ({
                 )}
               </div>
             </div>
-            <div className="ml-10 border-l-4 dark:border-gray-800 border-gray-200">
+            <div className="lg:mx-10 lg:border-l-4 dark:border-gray-800 border-gray-200">
               <h3 className="text-xl font-semibold text-center my-4">
                 Slot Creation
               </h3>
@@ -558,7 +585,11 @@ const AddVenue = ({
                         Weekday Price <span className="text-red-600">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter the amount" {...field} />
+                        <Input
+                          placeholder="Enter the amount"
+                          {...field}
+                          type="number"
+                        />
                       </FormControl>
 
                       <FormMessage />
@@ -576,7 +607,11 @@ const AddVenue = ({
                         Weekend Price <span className="text-red-600">*</span>
                       </FormLabel>
                       <FormControl>
-                        <Input placeholder="Enter the amount" {...field} />
+                        <Input
+                          placeholder="Enter the amount"
+                          {...field}
+                          type="number"
+                        />
                       </FormControl>
 
                       <FormMessage />
@@ -585,15 +620,15 @@ const AddVenue = ({
                 />
               </div>
               <div className="my-4 mb-2 md:w-1/2 mx-auto">
-                <label htmlFor="files" className="my-2">
-                  Upload Files <span className="text-red-600">*</span>
-                </label>
-                <input
+                <FormLabel>
+                  Upload Images <span className="text-red-600">*</span>
+                </FormLabel>
+                <Input
+                  className="mt-2"
                   name="files"
                   type="file"
                   multiple
                   required
-                  className="border p-3 rounded-md"
                   onChange={handleOnChange}
                 />
               </div>

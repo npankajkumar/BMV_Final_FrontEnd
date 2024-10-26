@@ -32,7 +32,9 @@ import { Edit2, Mail, Phone, User, BookUser } from "lucide-react";
 
 const FormSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
-  mobile: z.string().min(1, { message: "Mobile number required" }),
+  mobile: z
+    .string()
+    .regex(/^[9876]\d{9}$/, { message: "Invalid mobile number" }),
 });
 
 export default function MemberProfilePage({
@@ -117,7 +119,7 @@ export default function MemberProfilePage({
         </h1>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <Card className="col-span-1">
-            <CardContent className="p-6 flex flex-col items-center space-y-4">
+            <CardContent className="p-6 flex flex-col items-center justify-between space-y-4 h-full">
               <Avatar className="h-40 w-40 rounded-full bg-primary/10 dark:bg-primary/20 flex items-center justify-center shadow-lg">
                 <AvatarFallback
                   className="text-6xl font-bold text-gray-900 dark:text-slate-100"
