@@ -1,15 +1,22 @@
-import { IndianRupee } from "lucide-react";
-import { Button } from "./ui/button";
+import React from "react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import {
+  CalendarIcon,
+  ClockIcon,
+  IndianRupee,
+  User,
+  Download,
+  Hash,
+} from "lucide-react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import ReceiptDocument from "./ReceiptDocument";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuRadioGroup,
-//   DropdownMenuRadioItem,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
-// import { useState } from "react";
 
 type Booking = {
   id: number;
@@ -28,131 +35,86 @@ type Booking = {
   venueName: string;
 };
 
-const CustomBookingCard = ({ booking }: { booking: Booking }) => {
-  // const handleRatingChange = async (value: string) => {
-  //   setPosition(value);
-  //   try {
-  //     const response = await fetch("http://localhost:5100/api/rating", {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({ rating: value }),
-  //     });
-  //     if (!response.ok) {
-  //       throw new Error("Failed to submit rating");
-  //     }
-  //     console.log("Rating submitted successfully");
-  //   } catch (error) {
-  //     console.error("Error submitting rating:", error);
-  //   }
-  // };
-  // const [position, setPosition] = useState("fiveStar");
+interface CustomBookingCardProps {
+  booking: Booking;
+}
 
+const CustomBookingCard: React.FC<CustomBookingCardProps> = ({ booking }) => {
   const formatDate = (dateStr: string): string => {
     const [year, month, day] = dateStr.split("-");
     return `${day}-${month}-${year}`;
   };
 
-  const cardName = booking.venueName;
-  const status = booking.status;
-  const venueName =
-    localStorage.getItem("auth") != "provider"
-      ? "Provider : " + booking.providerName
-      : "Booked by : " + booking.customerName;
-  const amount = booking.amount;
+  const formatTime = (time: string): string => {
+    const [hours, minutes] = time.split(":");
+    const formattedHours = parseInt(hours) % 12 || 12;
+    const ampm = parseInt(hours) >= 12 ? "PM" : "AM";
+    return `${formattedHours}:${minutes} ${ampm}`;
+  };
+
+  const isProvider = localStorage.getItem("auth") === "provider";
   const formattedDate = formatDate(booking.date);
-  const startTime = booking.start;
-  const endTime = booking.end;
+  const formattedStartTime = formatTime(booking.start);
+  const formattedEndTime = formatTime(booking.end);
+
   return (
-    <div className="w-full border grid grid-cols-6  p-4 rounded-lg mb-3 shadow-md shadow-gray-500">
-      <div className="col-span-4">
-        <h1 className="text-2xl font-bold">{cardName}</h1>
-        <h1 className="text-lg   mb-2">{venueName}</h1>
-        <div className="mt-2  font-medium">{formattedDate}</div>
-        <div className=" ">
-          <span className="font-semibold">Slot Timing : </span>
-          <span className="">{startTime} </span>{" "}
-          <span className="font-semibold">- </span>{" "}
-          <span className="">{endTime} </span>
+    <Card className="w-full overflow-hidden transition-all duration-300 hover:shadow-lg dark:bg-gray-800 dark:border-gray-700 hover:scale-[1.02] mb-4">
+      <CardHeader className="pb-2 bg-[#e11c48] dark:bg-primary">
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-xl font-bold text-white dark:text-primary-foreground">
+            {booking.venueName}
+          </CardTitle>
         </div>
-      </div>
-      <div className="flex flex-col justify-center ml-auto col-span-2">
-        <div className="">
-          <span className="mr-4 font-semibold text-gray-800 dark:text-white ">
-            Booking Id:
-          </span>
-          <span className="mr-4 text-black dark:text-white font-semibold">
-            {booking.id}
-          </span>
+      </CardHeader>
+      <CardContent className="pt-4 pb-2">
+        <div className="grid grid-cols-2 gap-4">
+          <div className="flex items-center">
+            <User className="w-5 h-5 mr-3 text-primary" />
+            <span className="text-sm font-medium">
+              {isProvider ? booking.customerName : booking.providerName}
+            </span>
+          </div>
+          <div className="flex items-center">
+            <Hash className="w-5 h-5 mr-3 text-primary" />
+            <span className="text-sm font-medium">
+              Booking ID: {booking.id}
+            </span>
+          </div>
+          <div className="flex items-center">
+            <CalendarIcon className="w-5 h-5 mr-3 text-primary" />
+            <span className="text-sm font-medium">{formattedDate}</span>
+          </div>
+          <div className="flex items-center">
+            <ClockIcon className="w-5 h-5 mr-3 text-primary" />
+            <span className="text-sm font-medium">
+              {formattedStartTime} - {formattedEndTime}
+            </span>
+          </div>
         </div>
-        <div className="">
-          <span className="mr-4 font-semibold text-gray-800 dark:text-white">
-            Status:
-          </span>
-          <span className="mr-4 text-black dark:text-white font-semibold">
-            {status}
-          </span>
+      </CardContent>
+      <CardFooter className="flex justify-between items-center pt-4 border-t dark:border-gray-700">
+        <div className="flex items-center">
+          <IndianRupee className="w-5 h-5 mr-2 text-primary" />
+          <span className="font-semibold text-lg">{booking.amount}</span>
         </div>
-        <div className="">
-          <span className="mr-4 font-semibold text-gray-800 dark:text-white">
-            Paid:
-          </span>
-          <IndianRupee className="w-4 h-8 inline" />
-          <span className="mr-4 text-black dark:text-white font-semibold">
-            {amount}
-          </span>
-        </div>
-        <div className="flex ">
-          {/* {status && (
-            <Button className="ml-auto hover:shadow-sm bg-primary font-semibold py-2 px-4 mr-3 ">
-              Cancel
+        <PDFDownloadLink
+          document={<ReceiptDocument booking={booking} />}
+          fileName="Receipt.pdf"
+        >
+          {({ loading }) => (
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={loading}
+              className="hover:bg-primary hover:text-primary-foreground p-5 rounded-sm"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              {loading ? "Loading..." : "Receipt"}
             </Button>
-          )} */}
-
-          <PDFDownloadLink
-            document={<ReceiptDocument booking={booking} />}
-            fileName="Receipt.pdf"
-            className="py-2 mr-4 border border-primary hover:text-white hover:bg-primary rounded-md px-4"
-          >
-            {({ blob, url, loading, error }) =>
-              loading ? "Loading document..." : "Download Receipt"
-            }
-          </PDFDownloadLink>
-
-          {/* <Button className="bg-white text-primary border border-primary hover:text-white">
-            Download Receipt
-          </Button> */}
-          {/* <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">Rate</Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-8">
-              <DropdownMenuRadioGroup
-                value={position}
-                onValueChange={handleRatingChange}
-              >
-                <DropdownMenuRadioItem value="oneStar">
-                  <Star /> &nbsp; 1
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="twoStar">
-                  <Star /> &nbsp; 2
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="threeStar">
-                  <Star /> &nbsp; 3
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="fourStar">
-                  <Star /> &nbsp; 4
-                </DropdownMenuRadioItem>
-                <DropdownMenuRadioItem value="fiveStar">
-                  <Star /> &nbsp; 5
-                </DropdownMenuRadioItem>
-              </DropdownMenuRadioGroup>
-            </DropdownMenuContent>
-          </DropdownMenu> */}
-        </div>
-      </div>
-    </div>
+          )}
+        </PDFDownloadLink>
+      </CardFooter>
+    </Card>
   );
 };
 
