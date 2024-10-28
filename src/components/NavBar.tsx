@@ -158,7 +158,7 @@ const NavBar = ({ className }: { className?: string; clientType: string }) => {
         <img
           src="/logo.png"
           alt="Book My Venue Logo"
-          className="h-8 w-auto hover:cursor-pointer dark:invert"
+          className="h-8 w-auto hover:cursor-pointer"
           onClick={() => navigate("/")}
         />
         <Button

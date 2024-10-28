@@ -8,14 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import {
-  ArrowDown,
-  ArrowDown01,
-  ArrowDown10,
-  ArrowUp,
-  ArrowUpDown,
-  Search,
-} from "lucide-react";
+import { ArrowDown, ArrowUp, Search } from "lucide-react";
 import VenueCard from "@/components/VenueCard";
 
 interface Venue {
@@ -31,6 +24,11 @@ interface Venue {
   categoryId: number;
 }
 
+interface Category {
+  id: number;
+  name: string;
+}
+
 const AllVenues: React.FC = () => {
   const [venues, setVenues] = useState<Venue[]>([]);
   const [filteredVenues, setFilteredVenues] = useState<Venue[]>([]);
@@ -39,11 +37,12 @@ const AllVenues: React.FC = () => {
   const [selectedRating, setSelectedRating] = useState("all");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [categories, setCategories] = useState<Category[]>([]);
 
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const response = await fetch("http://localhost:5059/api/Venues/all");
+        const response = await fetch("http://localhost:5059/api/Venues");
         const data = await response.json();
         setVenues(data);
         setFilteredVenues(data);
@@ -53,6 +52,20 @@ const AllVenues: React.FC = () => {
     };
 
     fetchVenues();
+  }, []);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("http://localhost:5059/api/Category/all");
+        const data = await response.json();
+        setCategories(data); // Setting the fetched categories
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    };
+
+    fetchCategories();
   }, []);
 
   useEffect(() => {
@@ -88,7 +101,6 @@ const AllVenues: React.FC = () => {
   ]);
 
   const cities = ["all", ...new Set(venues.map((venue) => venue.city))];
-
   const toggleSortOrder = () => {
     setSortOrder(sortOrder === "asc" ? "desc" : "asc");
   };
@@ -115,6 +127,19 @@ const AllVenues: React.FC = () => {
             size={20}
           />
         </div>
+        <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+          <SelectTrigger className="w-full md:w-[180px]">
+            <SelectValue placeholder="Filter by category" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All categories</SelectItem>
+            {categories.map((category) => (
+              <SelectItem key={category.id} value={category.id.toString()}>
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <Select value={selectedCity} onValueChange={setSelectedCity}>
           <SelectTrigger className="w-full md:w-[180px]">
             <SelectValue placeholder="Filter by city" />
@@ -122,23 +147,19 @@ const AllVenues: React.FC = () => {
           <SelectContent>
             {cities.map((city) => (
               <SelectItem key={city} value={city}>
-                {city === "all" ? "All Cities" : city}
+                {city === "all" ? "All cities" : city}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-
         <Button
           onClick={toggleSortOrder}
           variant="outline"
           className="w-full md:w-auto"
         >
-          Sort by Rating{" "}
+          Sort by rating{" "}
           {sortOrder === "asc" ? (
-            <ArrowDown
-              className="ml-2 h-5 w-5 text-primary 
-            "
-            />
+            <ArrowDown className="ml-2 h-5 w-5 text-primary" />
           ) : (
             <ArrowUp className="ml-2 h-5 w-5 text-primary" />
           )}

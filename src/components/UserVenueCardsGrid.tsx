@@ -1,3 +1,4 @@
+import { CircleAlert } from "lucide-react";
 import { CardTitle } from "./ui/card";
 import VenueCard from "./VenueCard";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
@@ -41,9 +42,17 @@ const UserVenueCardsGrid = ({
           </div>
         ) : (
           <div className="flex justify-center items-center h-[200px] text-muted-foreground">
-            {title === "Top Rated Venues"
-              ? "No Top Rated Venues."
-              : "No Top Booked Venues."}
+            {title === "Top Rated Venues" ? (
+              <div className="flex items-center">
+                <CircleAlert className="mr-2 w-5 h-5" />
+                No Top Rated Venues.
+              </div>
+            ) : (
+              <div className="flex items-center">
+                <CircleAlert className="mr-2 w-5 h-5" />
+                No Top Booked Venues.
+              </div>
+            )}
           </div>
         )}
         <ScrollBar orientation="horizontal" className="text-primary" />

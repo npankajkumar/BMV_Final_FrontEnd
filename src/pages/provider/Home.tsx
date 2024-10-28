@@ -68,7 +68,7 @@ const Home = ({ provider }: { provider: any }) => {
         <Link to={"/venues/new"}>
           <Button
             variant={"outline"}
-            className="rounded-full shadow-primary hover:shadow-none shadow-sm p-4 hover:bg-primary hover:text-white hover:scale-95 transition ease-in-out"
+            className="rounded shadow-primary hover:shadow-none shadow-sm p-4 hover:bg-primary hover:text-white hover:scale-95 transition ease-in-out"
           >
             <Plus className="w-5 h-5 mr-2" />
             Add Venue

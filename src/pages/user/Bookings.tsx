@@ -53,6 +53,7 @@ const Bookings = () => {
         },
       })
       .then((response) => {
+        console.log(response.data);
         setBookings(response.data);
       })
       .catch((error) => {

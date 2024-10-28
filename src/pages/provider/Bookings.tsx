@@ -50,6 +50,7 @@ const Bookings = ({ provider }: { provider: any }) => {
         headers: { Authorization: `Bearer ${token}`, User: "provider" },
       })
       .then((response) => {
+        console.log(response.data);
         setBookings(response.data);
         setFilteredBookings(response.data);
         setPageLoading(false);
