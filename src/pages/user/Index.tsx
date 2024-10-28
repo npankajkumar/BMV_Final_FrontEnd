@@ -5,6 +5,7 @@ import Venue from "./Venue";
 import Home from "./Home";
 import NavBar from "@/components/NavBar";
 import NotFound from "@/components/NotFound";
+import AllVenues from "./AllVenues";
 
 const Index = () => {
   return (
@@ -21,6 +22,7 @@ const Index = () => {
         />
         <Route path="/profile" element={<Profile />} />
         <Route path="/bookings" element={<Bookings />} />
+        <Route path="/all-venues" element={<AllVenues />} />
         <Route
           path="/venues/:id"
           element={

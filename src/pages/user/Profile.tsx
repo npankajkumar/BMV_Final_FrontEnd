@@ -1,9 +1,12 @@
 import MemberProfilePage from "@/components/MemberProfilePage";
+import NotFound from "@/components/NotFound";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBmv } from "@/contexts/bmvContext";
+import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [pageLoading, setPageLoading] = useState(true);
@@ -11,7 +14,7 @@ const Profile = () => {
   const [email, setEmail] = useState("");
   const [mobile, setMobile] = useState("");
 
-  const { token } = useBmv();
+  const { token, isLoggedin } = useBmv();
 
   useEffect(() => {
     axios
@@ -30,6 +33,7 @@ const Profile = () => {
       });
   }, []);
 
+  const navigate = useNavigate();
   const handleProfileUpdate = (updatedData: {
     name: string;
     mobile: string;
@@ -70,6 +74,14 @@ const Profile = () => {
         </div>
       </div>
     );
+
+  if (!isLoggedin) {
+    navigate("/");
+    toast({
+      title: "Please Login to view your profile",
+      className: "border-2 border-primary",
+    });
+  }
 
   return (
     <div className="py-10 px-36">

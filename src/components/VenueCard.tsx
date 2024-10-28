@@ -26,7 +26,7 @@ const VenueCard = ({
   };
 
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
+    <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg dark:hover:shadow-slate-700 dark:hover:shadow-lg">
       <Link to={`/venues/${id}`} className="block">
         <div className="relative h-48">
           <img

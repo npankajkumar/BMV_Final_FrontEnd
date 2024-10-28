@@ -3,6 +3,8 @@ import axios from "axios";
 import { Skeleton } from "@/components/ui/skeleton";
 import Typewriter from "typewriter-effect";
 import UserVenueCardsGrid from "@/components/UserVenueCardsGrid";
+import { CircleChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface Venue {
   id: number;
@@ -57,9 +59,9 @@ export default function Home() {
     <div className="p-5">
       <div className="mb-8 text-center">
         <div
-          className="text-4xl font-bold bg-gradient-to-r from-[#bb4848] to-[#982842] bg-clip-text text-transparent"
+          className="text-4xl font-bold bg-gradient-to-r from-[#e11c48] to-[#e11c48] bg-clip-text text-transparent"
           style={{
-            fontFamily: "Montserrat, sans-serif", // Ensure fallback font is included
+            fontFamily: "Montserrat, sans-serif",
             WebkitBackgroundClip: "text",
             color: "transparent",
             display: "inline-block",
@@ -71,7 +73,7 @@ export default function Home() {
                 .typeString("Discover the best venues")
                 .pauseFor(1000)
                 .deleteAll()
-                .typeString("Book today for easy planning...")
+                .typeString("Book Today for easy planning...")
                 .start();
             }}
             options={{
@@ -84,7 +86,7 @@ export default function Home() {
           {`
             .Typewriter__cursor {
               font-size: 2.25rem; 
-              color: #a01535; 
+              color: #e11c48; 
               font-family: 'Montserrat', sans-serif; 
               width: 10px; 
               display: inline-block; 
@@ -98,9 +100,26 @@ export default function Home() {
         >
           Find the perfect venue for your next event! From stunning banquet
           halls to cozy meeting spaces, we offer a wide selection of venues
-          tailored to fit every occasion.
+          tailored to fit every occasion.{" "}
+          <div className="items-center inline-block">
+            <Link to="/all-venues">
+              <span
+                className="font-bold text-md text-primary underline hover:cursor-pointer"
+                style={{ fontFamily: "Montserrat" }}
+              >
+                Explore all the venues
+              </span>
+              <CircleChevronRight
+                className="ml-1 inline-block hover:cursor-pointer"
+                stroke="#e11c48"
+                strokeWidth={2}
+                size={"18px"}
+              />
+            </Link>
+          </div>
         </p>
       </div>
+
       <UserVenueCardsGrid
         className="my-7"
         title="Top Rated Venues"

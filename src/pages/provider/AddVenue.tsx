@@ -273,9 +273,6 @@ const AddVenue = ({
                     <FormControl>
                       <Input placeholder="Name" {...field} />
                     </FormControl>
-                    <FormDescription>
-                      This is your venue public display name.
-                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -443,9 +440,6 @@ const AddVenue = ({
                           </Command>
                         </PopoverContent>
                       </Popover>
-                      <FormDescription>
-                        This is used for search reults
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
