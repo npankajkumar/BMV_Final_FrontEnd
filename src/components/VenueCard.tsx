@@ -57,7 +57,7 @@ const VenueCard = ({
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
             >
-              View on Map
+              View on maps
               <MoveUpRight className="w-4 h-4" />
             </a>
           </div>

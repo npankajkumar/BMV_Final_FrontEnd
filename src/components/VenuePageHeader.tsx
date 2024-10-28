@@ -17,6 +17,7 @@ const VenuePageHeader = ({
 }) => {
   const [pName, setPName] = useState<any>();
   const [cName, setCName] = useState<any>();
+  console.log(venue);
   useEffect(() => {
     getProviderById(venue.providerId)
       .then((p) => setPName(p.name))
@@ -53,7 +54,7 @@ const VenuePageHeader = ({
   );
 };
 
-const getProviderById = async (id: number) => {
+export const getProviderById = async (id: number) => {
   const res = await axios.get(`http://localhost:5059/api/Providers/${id}`);
   return res.data;
 };

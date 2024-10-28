@@ -11,15 +11,27 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import PayCheckOutCard from "@/components/PayCheckOutCard";
 import SlotBox from "@/components/SlotBox";
-import VenuePageHeader from "@/components/VenuePageHeader";
+import VenuePageHeader, { getProviderById } from "@/components/VenuePageHeader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { endOfMonth, format, isWeekend, startOfDay } from "date-fns";
-import { CalendarIcon, IndianRupee } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  CalendarIcon,
+  IndianRupee,
+  Info,
+  Mail,
+  MapPin,
+  MoveUpRight,
+  Pencil,
+  Phone,
+  Star,
+  Ticket,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
+import Autoplay from "embla-carousel-autoplay";
 import {
   Popover,
   PopoverContent,
@@ -31,6 +43,16 @@ import axios from "axios";
 import { useParams } from "react-router-dom";
 import NotFound from "@/components/NotFound";
 import { toast } from "@/hooks/use-toast";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import DashboardCard from "@/components/DashboardCard";
+import { useBmv } from "@/contexts/bmvContext";
+import { ToastAction } from "@/components/ui/toast";
 
 type venue = {};
 type slot = {
@@ -53,6 +75,10 @@ const Venue = () => {
   const [rating, setRating] = useState<number>(0);
   const token = localStorage.getItem("id_token");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const { isLoggedin } = useBmv();
+  const plugin = useRef(Autoplay({ delay: 2000, stopOnInteraction: true }));
+  const [mobile, setMobile] = useState();
+  const [email, setEmail] = useState();
 
   const handleDialogOpen = () => {
     setIsDialogOpen(true);
@@ -63,7 +89,25 @@ const Venue = () => {
   };
 
   const handleStarClick = (value: number) => {
+    if (!isLoggedin) {
+      toast({
+        title: "Login to rate venue",
+        variant: "destructive",
+        action: (
+          <ToastAction
+            altText="Try again"
+            onClick={() =>
+              (window.location.href = `https://bookmyvenue.b2clogin.com/bookmyvenue.onmicrosoft.com/oauth2/v2.0/authorize?p=B2C_1_SignUpSignIn2&client_id=90177501-7d83-4248-9550-1ffc00a439f4&nonce=defaultNonce&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fauth&scope=openid&response_type=code&prompt=login`)
+            }
+          >
+            Login
+          </ToastAction>
+        ),
+      });
+      return;
+    }
     setRating(value);
+    handleRatingClick(value);
   };
   const renderStars = () => {
     return [1, 2, 3, 4, 5].map((star) => (
@@ -86,11 +130,11 @@ const Venue = () => {
     ));
   };
 
-  const handleRatingClick = () => {
+  const handleRatingClick = (value: number) => {
     axios
       .put(
         `http://localhost:5059/api/Venues/${parseInt(params.id ?? "1")}`,
-        { rating: rating },
+        { rating: value },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -122,22 +166,37 @@ const Venue = () => {
       setSelectedSlots((c) => c.filter((s) => s.id !== selectedSlot.id));
       setCartValue((c) => c - selectedSlot.price);
     }
+    // const find = selectedSlots.find((s) => s.id === selectedSlot.id);
+    // if (find) {
+    //   setSelectedSlots((c) => c.filter((s) => s.id !== selectedSlot.id));
+    //   setCartValue((c) => c - selectedSlot.price);
+    // } else {
+    //   setSelectedSlots((c) => [...c, selectedSlot]);
+    //   setCartValue((c) => c + selectedSlot.price);
+    // }
   };
 
   useEffect(() => {
+    setDate(new Date());
+
     axios
       .get(`http://localhost:5059/api/Venues/${parseInt(params.id ?? "1")}`)
       .then((response) => {
         setVenue(response.data);
-        setPageLoading(false);
+        getProviderById(response.data.providerId).then((p) => {
+          setMobile(p.mobile);
+          setEmail(p.email);
+          setPageLoading(false);
+        });
       })
       .catch((error) => {
         console.error("Error fetching data:", error);
         setPageLoading(false);
       });
-  }, [params.id]);
+  }, [params.id, rating]);
 
   useEffect(() => {
+    console.log(date);
     axios
       .get(
         `http://localhost:5059/api/Slot?date=${format(
@@ -193,101 +252,137 @@ const Venue = () => {
       />
       <Separator className="my-6" />
       {!book ? (
-        <div className="grid grid-cols-3 gap-4">
-          <ScrollArea className="h-60 w-full whitespace-nowrap rounded-md">
-            <div className="flex flex-col gap-4 w-max mx-auto">
+        <div className="grid grid-cols-2 mx-10">
+          <Carousel
+            className="w-full"
+            plugins={[plugin.current]}
+            onMouseEnter={plugin.current.stop}
+            onMouseLeave={plugin.current.reset}
+          >
+            <CarouselContent>
               {venue.images.map((img: any, i: number) => (
-                <div key={i} className=" ">
-                  <img
-                    src={img}
-                    alt=""
-                    className="bg-cover overflow-hidden rounded-lg h-60"
-                  />
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
-          <div className="col-span-2">
-            <div className="grid grid-cols-2 gap-8">
-              <Card x-chunk="dashboard-01-chunk-0">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-2xl font-medium text-center">
-                    Offers
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="text-2xl font-bold flex gap-1 my-2">
-                    <IndianRupee className="h-5 w-5 mt-2" />{" "}
-                    <div className="my-auto">200 </div>
-                    <div className="text-sm font-normal my-auto mt-2">
-                      off on booking over 2000
-                    </div>
+                <CarouselItem key={i}>
+                  <div className="p-1">
+                    <img
+                      src={img}
+                      alt=""
+                      className="bg-cover overflow-hidden rounded-lg h-[360px] w-full"
+                    />
                   </div>
-                  Use BMV200
-                </CardContent>
-              </Card>
-              {localStorage.getItem("isLoggedIn") && (
-                <div className="ml-auto">
-                  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                    <DialogTrigger asChild>
-                      <Button>Rate Venue</Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px]">
-                      <DialogHeader>
-                        <DialogTitle className="text-center">
-                          Please Rate the Venue
-                        </DialogTitle>
-                      </DialogHeader>
-                      <Separator></Separator>
-                      <div className="flex justify-center space-x-1 py-4">
-                        {renderStars()}
-                      </div>
-                      <DialogFooter>
-                        <Button type="submit" onClick={handleRatingClick}>
-                          Submit
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious />
+            <CarouselNext />
+          </Carousel>
+          <div className="lg:ml-20">
+            <div className={`grid grid-cols-3 p-0`}>
+              <DashboardCard
+                classname="w-36 border-0 border-r-2 shadow-none rounded-none"
+                cardHeader="Bookings"
+                customMessage=""
+                value={venue.bookings.length}
+                icon={<Ticket />}
+              />
+              <DashboardCard
+                classname="w-36 border-0 border-r-2 shadow-none rounded-none"
+                cardHeader="Rating"
+                customMessage=""
+                value={Math.round(venue.rating * 10) / 10}
+                icon={<Star />}
+              />
+
+              <div className="p-6">
+                <div className="tracking-tight text-sm flex gap-4 font-medium">
+                  Rate Venue
+                  <Pencil width={20} height={20} />
                 </div>
-              )}
+                <div className="flex justify-center space-x-1 py-4">
+                  {renderStars()}
+                </div>
+              </div>
             </div>
-            <Separator className="my-4" />
-            <div></div>
-            <div className="text-2xl font-bold flex gap-1 my-2 mx-2">
-              Exclusive:
-              <IndianRupee className="h-5 w-5 mt-2" />{" "}
-              <div className="my-auto">230 </div>
-              <div className="text-sm font-normal my-auto mt-2">/ week</div>
+            <div className="my-6">
+              <div className="tracking-tight text-xl font-medium flex items-center gap-3 my-4">
+                Contact Info <Info />
+              </div>
+              <div className="flex flex-col gap-4 my-2 text-lg">
+                <div className="tracking-tight flex items-center gap-3">
+                  <Phone /> {mobile}
+                </div>
+                <div className="tracking-tight flex items-center gap-3">
+                  <Mail /> {email}
+                </div>
+                <div className="tracking-tight flex items-center gap-3">
+                  <MapPin /> {venue.address}
+                </div>
+                <a
+                  className="flex items-center gap-1 text-primary hover:underline"
+                  href={`https://maps.google.com/?q=${venue.latitude},${venue.longitude}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  View on maps
+                  <MoveUpRight className="w-4 h-4" />
+                </a>
+              </div>
             </div>
           </div>
         </div>
       ) : (
         <div className="grid grid-cols-4 gap-4">
           <ScrollArea className="col-span-3 h-76">
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant={"outline"}
-                  className={cn(
-                    "w-[280px] justify-start text-left font-normal",
-                    !date && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {date ? format(date, "PPP") : <span>Pick a date</span>}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={date}
-                  onSelect={setDate}
-                  disabled={(date) => date < startOfDay(new Date())}
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <div className="flex w-full justify-between">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant={"outline"}
+                    className={cn(
+                      "w-[280px] justify-start text-left font-normal",
+                      !date && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {date ? format(date, "PPP") : <span>Pick a date</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    disabled={(date) => date < startOfDay(new Date())}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+              <div className="flex space-x-4 p-4">
+                {/* Blocked Legend */}
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-gray-100 cursor-not-allowed rounded border border-black"></div>
+                  <span className="text-sm">Blocked</span>
+                </div>
+
+                {/* Booked Legend */}
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-red-100 cursor-not-allowed rounded border border-black"></div>
+                  <span className="text-sm">Booked</span>
+                </div>
+
+                {/* Available Legend */}
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-green-100 cursor-pointer rounded border border-black"></div>
+                  <span className="text-sm">Available</span>
+                </div>
+
+                {/* Selected Legend */}
+                <div className="flex items-center space-x-2">
+                  <div className="w-4 h-4 bg-primary cursor-pointer rounded border border-black"></div>
+                  <span className="text-sm">Selected</span>
+                </div>
+              </div>
+            </div>
             <div className="m-5 grid grid-cols-4 gap-4">
               {slots.length < 1 ? (
                 <div className="text-lg font-semibold">No slots</div>

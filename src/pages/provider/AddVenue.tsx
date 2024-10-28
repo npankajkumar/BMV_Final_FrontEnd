@@ -557,7 +557,7 @@ export default function AddVenue({
                         htmlFor="dropzone-file"
                         className="flex p-5 items-center justify-start w-full  border-2 border-dashed rounded-lg cursor-pointer hover:bg-slate-100  dark:bg-black dark:hover:bg-gray-900 "
                       >
-                        <Upload className="w-8 h-8 mr-4 text-primary" />
+                        <Upload className="w-6 h-6 mr-4 text-primary" />
                         <input
                           id="dropzone-file"
                           type="file"
