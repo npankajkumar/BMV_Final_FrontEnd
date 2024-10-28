@@ -6,7 +6,7 @@ import { CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBmv } from "@/contexts/bmvContext";
 import axios from "axios";
-import { Box, IndianRupee, Plus, Star } from "lucide-react";
+import { Ticket, IndianRupee, Plus, Star } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -66,8 +66,11 @@ const Home = ({ provider }: { provider: any }) => {
       <div className="flex items-center justify-between gap-4">
         <CardTitle>Dashboard</CardTitle>
         <Link to={"/venues/new"}>
-          <Button variant={"outline"}>
-            <Plus />
+          <Button
+            variant={"outline"}
+            className="rounded-full shadow-primary hover:shadow-none shadow-sm p-4 hover:bg-primary hover:text-white hover:scale-95 transition ease-in-out"
+          >
+            <Plus className="w-5 h-5 mr-2" />
             Add Venue
           </Button>
         </Link>
@@ -84,7 +87,7 @@ const Home = ({ provider }: { provider: any }) => {
             cardHeader="Total Bookings"
             customMessage=""
             value={dashboard.totalBookings}
-            icon={<Box />}
+            icon={<Ticket />}
           />
           <DashboardCard
             cardHeader="Overall Rating"

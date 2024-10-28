@@ -41,9 +41,9 @@ const UserVenueCardsGrid = ({
           </div>
         ) : (
           <div className="flex justify-center items-center h-[200px] text-muted-foreground">
-            {title === "Top Rated"
-              ? "No Top Rated Venues as of now..."
-              : "No Top Booked Venues as of now..."}
+            {title === "Top Rated Venues"
+              ? "No Top Rated Venues."
+              : "No Top Booked Venues."}
           </div>
         )}
         <ScrollBar orientation="horizontal" className="text-primary" />

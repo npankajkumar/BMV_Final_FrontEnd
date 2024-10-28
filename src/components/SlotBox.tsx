@@ -55,10 +55,9 @@ const SlotBox = ({ slot, onClick }: { slot: slot; onClick: any }) => {
 };
 
 function convertTo12HourFormat(time: string): string {
-  const [hours, minutes, seconds] = time.split(":").map(Number);
+  const [hours, minutes] = time.split(":").map(Number);
   const period = hours >= 12 ? "PM" : "AM";
-  const adjustedHours = hours % 12 || 12; // Convert 0 to 12 for midnight
+  const adjustedHours = hours % 12 || 12;
   return `${adjustedHours}:${minutes.toString().padStart(2, "0")} ${period}`;
 }
 export default SlotBox;
-

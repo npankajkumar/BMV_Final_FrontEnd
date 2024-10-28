@@ -73,7 +73,7 @@ export default function Home() {
                 .typeString("Discover the best venues")
                 .pauseFor(1000)
                 .deleteAll()
-                .typeString("Book Today for easy planning...")
+                .typeString("Book today for easy planning...")
                 .start();
             }}
             options={{
@@ -107,7 +107,7 @@ export default function Home() {
                 className="font-bold text-md text-primary underline hover:cursor-pointer"
                 style={{ fontFamily: "Montserrat" }}
               >
-                Explore all the venues
+                Explore all venues
               </span>
               <CircleChevronRight
                 className="ml-1 inline-block hover:cursor-pointer"

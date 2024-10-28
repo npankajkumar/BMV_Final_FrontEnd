@@ -42,10 +42,13 @@ const Venues = ({ provider }: { provider: any }) => {
   return (
     <div className="p-6 max-w-7xl mx-auto">
       <div className="flex items-center justify-between mb-8">
-        <h3 className="text-3xl font-semibold">Your Venues</h3>
+        <h3 className="text-2xl font-semibold">Your Venues</h3>
         <Link to="/venues/new">
-          <Button variant="outline" className="flex items-center gap-2">
-            <Plus className="w-4 h-4" />
+          <Button
+            variant={"outline"}
+            className="rounded-full shadow-primary hover:shadow-none shadow-sm p-4 hover:bg-primary hover:text-white hover:scale-95 transition ease-in-out"
+          >
+            <Plus className="w-5 h-5 mr-2" />
             Add Venue
           </Button>
         </Link>
@@ -94,7 +97,7 @@ const Venues = ({ provider }: { provider: any }) => {
 
       {filteredAndSortedVenues.length === 0 && (
         <p className="text-center text-muted-foreground mt-8">
-          No venues found matching your criteria.
+          You have no venues...
         </p>
       )}
     </div>

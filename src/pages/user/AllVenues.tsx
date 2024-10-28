@@ -135,7 +135,10 @@ const AllVenues: React.FC = () => {
         >
           Sort by Rating{" "}
           {sortOrder === "asc" ? (
-            <ArrowDown className="ml-2 h-5 w-5 text-primary" />
+            <ArrowDown
+              className="ml-2 h-5 w-5 text-primary 
+            "
+            />
           ) : (
             <ArrowUp className="ml-2 h-5 w-5 text-primary" />
           )}

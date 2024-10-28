@@ -170,12 +170,13 @@ export const slots:slot[] = [
 ];
 
 export const categories = [
-  "turf",
-  "box cricket",
-  "ground",
-  "shed",
-  "playarea",
-  "others"
+  "Turf",
+  "Box cricket",
+  "Ground",
+  "Marriage Hall",
+  "Shed",
+  "Playarea",
+  "Others"
 ]
 
 export function generateTimeSlots(startTimeStr = '00:00:00') {

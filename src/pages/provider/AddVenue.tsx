@@ -1,13 +1,16 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm, useWatch } from "react-hook-form";
-import { string, z } from "zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { useState } from "react";
+import axios from "axios";
+import { Link, useNavigate } from "react-router-dom";
+import { Check, ChevronsUpDown, Upload } from "lucide-react";
 
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -27,10 +30,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
-import { Link, useNavigate } from "react-router-dom";
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Check, ChevronsUpDown } from "lucide-react";
 import { categories, generateDurations, generateTimeSlots } from "@/db";
 import { cn } from "@/lib/utils";
 import {
@@ -42,76 +43,38 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import LoadingButton from "@/components/LoadingButton";
-import { ReactHTMLElement, useEffect, useState } from "react";
-import axios from "axios";
-import { useBmv } from "@/contexts/bmvContext";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 const FormSchema = z.object({
-  name: z
-    .string({ required_error: "Name is required" })
-    .min(3, {
-      message: "Name must be at least 3 characters.",
-    })
-    .max(60, { message: "Name must be less than 40 characters." }),
-  city: z.string({ required_error: "Name is reuired" }).min(2, {
-    message: "City must be at least 2 characters.",
-  }),
-  description: z
-    .string({ required_error: "Description is required" })
-    .min(10, {
-      message: "Description must be at least 10 characters.",
-    })
-    .max(200, { message: "Description must be less than 200 characters." }),
-  address: z
-    .string({ required_error: "Address is required" })
-    .min(10, {
-      message: "Address must be at least 10 characters.",
-    })
-    .max(200, { message: "Address must be less than 200 characters." }),
-  latitude: z
-    .string()
-    .transform((val) => parseFloat(val))
-    .refine((val) => val >= -90 && val <= 90, {
-      message: "Latitude must be between -90 and 90.",
-    }),
-  longitude: z
-    .string()
-    .transform((val) => parseFloat(val))
-    .refine((val) => val >= -90 && val <= 90, {
-      message: "Longitude must be between -90 and 90.",
-    }),
-  category: z.any(),
-  geoLocation: z.boolean().default(false).optional(),
+  name: z.string().min(3).max(60),
+  city: z.string().min(2),
+  description: z.string().min(10).max(200),
+  address: z.string().min(10).max(200),
+  latitude: z.string(),
+  longitude: z.string(),
+  category: z.string(),
+  geoLocation: z.boolean().default(false),
   otherCategory: z.string().optional(),
-  openingTime: z.string().time(),
-  closingTime: z.string().time(),
+  openingTime: z.string(),
+  closingTime: z.string(),
   duration: z.string(),
-  weekdayPrice: z
-    .string()
-    .transform((val) => parseFloat(val))
-    .refine((val) => val >= 0 && val <= 999999999, {
-      message: "Weekday price must be between 0 and 999999999.",
-    }),
-  weekendPrice: z
-    .string()
-    .transform((val) => parseFloat(val))
-    .refine((val) => val >= 0 && val <= 999999999, {
-      message: "Weekend price must be between 0 and 999999999.",
-    }),
+  weekdayPrice: z.string().transform((val) => parseFloat(val)),
+  weekendPrice: z.string().transform((val) => parseFloat(val)),
 });
 
-export function InputForm() {}
-
-const AddVenue = ({
+export default function AddVenue({
   provider,
   updateProvider,
 }: {
   provider: any;
   updateProvider: any;
-}) => {
-  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
-    useBmv();
-
+}) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -119,8 +82,8 @@ const AddVenue = ({
       city: "",
       description: "",
       address: "",
-      latitude: 0,
-      longitude: 0,
+      latitude: "",
+      longitude: "",
       category: "",
       geoLocation: false,
       otherCategory: "",
@@ -130,7 +93,7 @@ const AddVenue = ({
     },
   });
 
-  const [addLoading, setAddLoading] = useState<boolean>(false);
+  const [addLoading, setAddLoading] = useState(false);
   const [imageFiles, setImageFiles] = useState([]);
 
   const categoryWatch = form.watch("category");
@@ -154,7 +117,7 @@ const AddVenue = ({
       latitude: data.latitude,
       longitude: data.longitude,
       category:
-        data.category == "others" ? data.otherCategory : data.category || "",
+        data.category === "Others" ? data.otherCategory : data.category || "",
       slotDetails: {
         openingTime: data.openingTime,
         closingTime: data.closingTime,
@@ -163,53 +126,35 @@ const AddVenue = ({
         weekendPrice: data.weekendPrice,
       },
     };
-    console.log(resData);
+
     const formData = new FormData();
     for (let i = 0; i < imageFiles.length; i++) {
       formData.append("images", imageFiles[i]);
     }
-    formData.append("name", resData.name);
-    formData.append("description", resData.description);
-    formData.append("address", resData.address);
-    formData.append("city", resData.city);
-    formData.append("latitude", resData.latitude.toString());
-    formData.append("longitude", resData.longitude.toString());
-    formData.append("category", resData.category);
-    formData.append(
-      "slotDetails[openingTime]",
-      resData.slotDetails.openingTime
-    );
-    formData.append(
-      "slotDetails[closingTime]",
-      resData.slotDetails.closingTime
-    );
-    formData.append(
-      "slotDetails[durationInMinutes]",
-      resData.slotDetails.durationInMinutes.toString()
-    );
-    formData.append(
-      "slotDetails[weekdayPrice]",
-      resData.slotDetails.weekdayPrice.toString()
-    );
-    formData.append(
-      "slotDetails[weekendPrice]",
-      resData.slotDetails.weekendPrice.toString()
-    );
+    Object.entries(resData).forEach(([key, value]) => {
+      if (typeof value === "object") {
+        Object.entries(value).forEach(([subKey, subValue]) => {
+          formData.append(`${key}[${subKey}]`, subValue?.toString() ?? "");
+        });
+      } else {
+        formData.append(key, value?.toString() ?? "");
+      }
+    });
 
     axios
       .post("http://localhost:5059/api/Venues", formData, {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${localStorage.getItem("id_token")}`,
           "Content-Type": "multipart/form-data",
         },
       })
-      .then((b) => {
-        console.log(b);
+      .then((response) => {
+        console.log(response);
         toast({ title: "Venue Created" });
         setAddLoading(false);
         axios
           .post("http://localhost:5143/api/Search", {
-            venueId: b.data.id,
+            venueId: response.data.id,
             venueName: resData.name,
             venueDescription: resData.description,
             venueCategory: resData.category,
@@ -222,9 +167,9 @@ const AddVenue = ({
         updateProvider();
         navigate("/");
       })
-      .catch((e) => {
-        console.log(e);
-        toast({ title: "Error occured" });
+      .catch((error) => {
+        console.log(error);
+        toast({ title: "Error occurred" });
         setAddLoading(false);
       });
   }
@@ -233,9 +178,8 @@ const AddVenue = ({
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const { latitude, longitude } = position.coords;
-        form.setValue("latitude", latitude);
-        form.reset;
-        form.setValue("longitude", longitude);
+        form.setValue("latitude", latitude.toString());
+        form.setValue("longitude", longitude.toString());
       },
       (error) => {
         form.resetField("geoLocation");
@@ -246,97 +190,30 @@ const AddVenue = ({
   }
 
   return (
-    <div className="p-4">
-      <Form {...form}>
-        <form className="space-y-4" onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="my-2 flex justify-between">
-            <h3 className="text-2xl font-semibold">Add Venue</h3>
-            <div className="flex gap-2">
-              <Link to={"/"}>
-                <Button variant={"outline"}>Cancel</Button>
-              </Link>
-              <LoadingButton type="submit" loading={addLoading}>
-                Add
-              </LoadingButton>
-            </div>
-          </div>
-          <div className="my-2 grid grid-cols-1 lg:grid-cols-2">
-            <div className="px-2">
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Name <span className="text-red-600">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="Name" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="city"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      City <span className="text-red-600">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Input placeholder="Hyderabad" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="description"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Description <span className="text-red-600">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Description" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="address"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Address <span className="text-red-600">*</span>
-                    </FormLabel>
-                    <FormControl>
-                      <Textarea placeholder="Address" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {
-                <div className="flex justify-around min-w-full">
+    <div className="container mx-auto p-4 max-w-4xl">
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-2xl font-semibold">Add Venue</CardTitle>
+          <CardDescription>
+            Fill in the details to add a new venue
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
                   <FormField
                     control={form.control}
-                    name="latitude"
+                    name="name"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          Latitude <span className="text-red-600">*</span>
+                          Name <span className="text-primary">*</span>
                         </FormLabel>
                         <FormControl>
                           <Input
-                            disabled={geoLocationWatch}
-                            type="number"
-                            placeholder="7328.8932"
+                            placeholder="Enter your venue name"
                             {...field}
                           />
                         </FormControl>
@@ -346,17 +223,51 @@ const AddVenue = ({
                   />
                   <FormField
                     control={form.control}
-                    name="longitude"
+                    name="city"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel>
-                          Longitude <span className="text-red-600">*</span>
+                          City <span className="text-primary">*</span>
                         </FormLabel>
                         <FormControl>
                           <Input
-                            disabled={geoLocationWatch}
-                            type="number"
-                            placeholder="7328.8932"
+                            placeholder="Enter the venue city"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="description"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Description <span className="text-primary">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Let the users know something about your venue"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="address"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Address <span className="text-primary">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Textarea
+                            placeholder="Enter the complete address of your venue"
                             {...field}
                           />
                         </FormControl>
@@ -365,108 +276,147 @@ const AddVenue = ({
                     )}
                   />
                 </div>
-              }
-              <FormField
-                control={form.control}
-                name="geoLocation"
-                render={({ field }) => (
-                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 my-4">
-                    <FormControl>
-                      <Checkbox
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                      />
-                    </FormControl>
-                    <div className="space-y-1 leading-none">
-                      <FormLabel>Use current location</FormLabel>
-                    </div>
-                  </FormItem>
-                )}
-              />
-              <div className="flex gap-2">
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col ">
-                      <FormLabel className="my-1">
-                        Category <span className="text-red-600">*</span>
-                      </FormLabel>
-                      <Popover>
-                        <PopoverTrigger asChild>
+                <div className="space-y-4">
+                  <div className="flex gap-4">
+                    <FormField
+                      control={form.control}
+                      name="latitude"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>
+                            Latitude <span className="text-primary">*</span>
+                          </FormLabel>
                           <FormControl>
-                            <Button
-                              variant="outline"
-                              role="combobox"
-                              className={cn(
-                                "w-[200px] justify-between",
-                                !field.value && "text-muted-foreground"
-                              )}
-                            >
-                              {field.value
-                                ? categories.find((c) => c === field.value)
-                                : "Select category"}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
+                            <Input
+                              type="number"
+                              placeholder="7328.8932"
+                              {...field}
+                              disabled={geoLocationWatch}
+                            />
                           </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="p-0 w-[200px]">
-                          <Command>
-                            <CommandInput placeholder="Search categories..." />
-                            <CommandList>
-                              <CommandEmpty>No categry found.</CommandEmpty>
-                              <CommandGroup>
-                                {categories.map((c) => (
-                                  <CommandItem
-                                    value={c}
-                                    key={c}
-                                    onSelect={() => {
-                                      form.setValue("category", c);
-                                    }}
-                                  >
-                                    <Check
-                                      className={cn(
-                                        "mr-2 h-4 w-4",
-                                        c === field.value
-                                          ? "opacity-100"
-                                          : "opacity-0"
-                                      )}
-                                    />
-                                    {c}
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </CommandList>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                {categoryWatch == "others" && (
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="longitude"
+                      render={({ field }) => (
+                        <FormItem className="flex-1">
+                          <FormLabel>
+                            Longitude <span className="text-primary">*</span>
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              placeholder="7328.8932"
+                              {...field}
+                              disabled={geoLocationWatch}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
                   <FormField
                     control={form.control}
-                    name="otherCategory"
+                    name="geoLocation"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Other Category</FormLabel>
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
                         <FormControl>
-                          <Input placeholder="Custom Category" {...field} />
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
                         </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>Use current location</FormLabel>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="category"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col ">
+                        <FormLabel className="my-1">
+                          Category <span className="text-red-600">*</span>
+                        </FormLabel>
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant="outline"
+                                role="combobox"
+                                className={cn(
+                                  "w-[200px] justify-between",
+                                  !field.value && "text-muted-foreground"
+                                )}
+                              >
+                                {field.value
+                                  ? categories.find((c) => c === field.value)
+                                  : "Select category"}
+                                <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="p-0 w-[200px]">
+                            <Command>
+                              <CommandInput placeholder="Search categories..." />
+                              <CommandList>
+                                <CommandEmpty>No categry found.</CommandEmpty>
+                                <CommandGroup>
+                                  {categories.map((c) => (
+                                    <CommandItem
+                                      value={c}
+                                      key={c}
+                                      onSelect={() => {
+                                        form.setValue("category", c);
+                                      }}
+                                    >
+                                      <Check
+                                        className={cn(
+                                          "mr-2 h-4 w-4",
+                                          c === field.value
+                                            ? "opacity-100"
+                                            : "opacity-0"
+                                        )}
+                                      />
+                                      {c}
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </CommandList>
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                )}
+                  {categoryWatch == "Others" && (
+                    <FormField
+                      control={form.control}
+                      name="otherCategory"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Other Category</FormLabel>
+                          <FormControl>
+                            <Input placeholder="Custom Category" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  )}
+                </div>
               </div>
-            </div>
-            <div className="lg:mx-10 lg:border-l-4 dark:border-gray-800 border-gray-200">
-              <h3 className="text-xl font-semibold text-center my-4">
-                Slot Creation
-              </h3>
-              <div className="flex gap-2 justify-center">
-                <div>
+              <Separator />
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Slot Creation</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField
                     control={form.control}
                     name="openingTime"
@@ -474,7 +424,7 @@ const AddVenue = ({
                       <FormItem>
                         <FormLabel>
                           Venue Opening Time{" "}
-                          <span className="text-red-600">*</span>
+                          <span className="text-primary">*</span>
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
@@ -485,23 +435,18 @@ const AddVenue = ({
                               <SelectValue placeholder="Select a venue opening time" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="h-40">
-                            {generateTimeSlots().map((time) => {
-                              return (
-                                <SelectItem value={time.value}>
-                                  {time.label}
-                                </SelectItem>
-                              );
-                            })}
+                          <SelectContent>
+                            {generateTimeSlots().map((time) => (
+                              <SelectItem key={time.value} value={time.value}>
+                                {time.label}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
                       </FormItem>
                     )}
                   />
-                </div>
-                <Separator orientation="vertical" className="h-20" />
-                <div>
                   <FormField
                     control={form.control}
                     name="closingTime"
@@ -509,7 +454,7 @@ const AddVenue = ({
                       <FormItem>
                         <FormLabel>
                           Venue Closing Time{" "}
-                          <span className="text-red-600">*</span>
+                          <span className="text-primary">*</span>
                         </FormLabel>
                         <Select
                           onValueChange={field.onChange}
@@ -520,14 +465,12 @@ const AddVenue = ({
                               <SelectValue placeholder="Select a venue closing time" />
                             </SelectTrigger>
                           </FormControl>
-                          <SelectContent className="h-40">
-                            {generateTimeSlots(openingTimeWatch).map((time) => {
-                              return (
-                                <SelectItem value={time.value}>
-                                  {time.label}
-                                </SelectItem>
-                              );
-                            })}
+                          <SelectContent>
+                            {generateTimeSlots(openingTimeWatch).map((time) => (
+                              <SelectItem key={time.value} value={time.value}>
+                                {time.label}
+                              </SelectItem>
+                            ))}
                           </SelectContent>
                         </Select>
                         <FormMessage />
@@ -535,15 +478,13 @@ const AddVenue = ({
                     )}
                   />
                 </div>
-              </div>
-              <div className="my-4">
                 <FormField
                   control={form.control}
                   name="duration"
                   render={({ field }) => (
-                    <FormItem className="md:w-1/2 mx-auto">
+                    <FormItem>
                       <FormLabel>
-                        Duration <span className="text-red-600">*</span>
+                        Duration <span className="text-primary">*</span>
                       </FormLabel>
                       <Select
                         onValueChange={field.onChange}
@@ -554,91 +495,99 @@ const AddVenue = ({
                             <SelectValue placeholder="Select duration" />
                           </SelectTrigger>
                         </FormControl>
-                        <SelectContent className="h-40">
-                          {generateDurations().map((time) => {
-                            return (
-                              <SelectItem value={time.value}>
-                                {time.label}
-                              </SelectItem>
-                            );
-                          })}
+                        <SelectContent>
+                          {generateDurations().map((time) => (
+                            <SelectItem key={time.value} value={time.value}>
+                              {time.label}
+                            </SelectItem>
+                          ))}
                         </SelectContent>
                       </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-              </div>
-              <div className="my-4 md:w-1/2 mx-auto">
-                <FormField
-                  control={form.control}
-                  name="weekdayPrice"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Weekday Price <span className="text-red-600">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter the amount"
-                          {...field}
-                          type="number"
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="weekdayPrice"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Weekday Price <span className="text-primary">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your weekday price"
+                            type="number"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <FormField
+                    control={form.control}
+                    name="weekendPrice"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>
+                          Weekend Price <span className="text-primary">*</span>
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            placeholder="Enter your weekend price"
+                            type="number"
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                <FormItem>
+                  <FormLabel>
+                    Upload Images <span className="text-primary">*</span>
+                  </FormLabel>
+                  <FormControl>
+                    <div className="flex items-center justify-center w-full">
+                      <label
+                        htmlFor="dropzone-file"
+                        className="flex p-5 items-center justify-start w-full  border-2 border-dashed rounded-lg cursor-pointer hover:bg-slate-100  dark:bg-black dark:hover:bg-gray-900 "
+                      >
+                        <Upload className="w-8 h-8 mr-4 text-primary" />
+                        <input
+                          id="dropzone-file"
+                          type="file"
+                          className=""
+                          multiple
+                          onChange={handleOnChange}
                         />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      </label>
+                    </div>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               </div>
-              <div className="my-4 md:w-1/2 mx-auto">
-                <FormField
-                  control={form.control}
-                  name="weekendPrice"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>
-                        Weekend Price <span className="text-red-600">*</span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="Enter the amount"
-                          {...field}
-                          type="number"
-                        />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+              <div className="flex justify-end space-x-4">
+                <Link to="/">
+                  <Button variant="outline">Cancel</Button>
+                </Link>
+                <LoadingButton type="submit" loading={addLoading}>
+                  Add Venue
+                </LoadingButton>
               </div>
-              <div className="my-4 mb-2 md:w-1/2 mx-auto">
-                <FormLabel>
-                  Upload Images <span className="text-red-600">*</span>
-                </FormLabel>
-                <Input
-                  className="mt-2"
-                  name="files"
-                  type="file"
-                  multiple
-                  required
-                  onChange={handleOnChange}
-                />
-              </div>
-            </div>
-          </div>
-        </form>
-      </Form>
+            </form>
+          </Form>
+        </CardContent>
+      </Card>
     </div>
   );
-};
-
-function convertToMinutes(timeString: string): number {
-  // Split the time string into hours, minutes, and seconds
-  const [hours, minutes] = timeString.split(":").map(Number);
-
-  return hours * 60 + minutes;
 }
 
-export default AddVenue;
+function convertToMinutes(timeString: string): number {
+  const [hours, minutes] = timeString.split(":").map(Number);
+  return hours * 60 + minutes;
+}
