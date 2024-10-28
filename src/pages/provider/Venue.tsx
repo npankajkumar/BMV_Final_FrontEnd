@@ -48,7 +48,6 @@ import { cn } from "@/lib/utils";
 import { availableSlots, categories } from "@/db";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DataTable } from "@/components/data-table/DataTable";
-import { columns } from "@/components/data-table/columns";
 import LoadingButton from "@/components/LoadingButton";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
@@ -69,8 +68,8 @@ const Venue = ({
 
   let { id } = useParams();
   const venue = provider.venues.find((v: any) => v.id == id);
-  if(!venue){
-    return (<NotFound message="Venue"/>)
+  if (!venue) {
+    return <NotFound message="Venue" />;
   }
   const slots = venue
     ? venue.slots.map((s: any) => {
@@ -437,7 +436,7 @@ const Venue = ({
       </div>
       <Separator className="my-6" />
       <div className="">
-        <DataTable columns={columns} data={slots} />
+        <DataTable data={slots} updateProvider={updateProvider} />
       </div>
     </div>
   ) : (
