@@ -387,14 +387,14 @@ const FormSchema = z.object({
   weekdayPrice: z
     .string()
     .transform((val) => parseFloat(val))
-    .refine((val) => val >= 0 && val <= 999999999, {
-      message: "Weekday price must be between 0 and 999999999.",
+    .refine((val) => val >= 0 && val <= 9999999, {
+      message: "Weekday price must be between 0 and 9999999.",
     }),
   weekendPrice: z
     .string()
     .transform((val) => parseFloat(val))
-    .refine((val) => val >= 0 && val <= 999999999, {
-      message: "Weekend price must be between 0 and 999999999.",
+    .refine((val) => val >= 0 && val <= 9999999, {
+      message: "Weekend price must be between 0 and 99999999.",
     }),
 });
 const EditButton = ({
@@ -439,29 +439,20 @@ const EditButton = ({
         toast({ title: "Error occurred", description: err });
         setSlotEditLoading(false);
       });
-    // toast({
-    //   title: "You submitted the following values:",
-    //   description: (
-    //     <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-    //       <code className="text-white">
-    //         {JSON.stringify(data, null, 2)}
-    //         <div>{data.status == "blocked" ? "true" : "false"}</div>
-    //       </code>
-    //     </pre>
-    //   ),
-    // });
   }
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="outline">Edit Slot</Button>
+        <Button
+          variant="outline"
+          className="border-primary border hover:bg-primary hover:text-white"
+        >
+          Edit Slot
+        </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md ">
         <DialogHeader>
-          <DialogTitle>Edit Venue</DialogTitle>
-          <DialogDescription>
-            Make changes to slot here. Click save when you're done.
-          </DialogDescription>
+          <DialogTitle>Edit Slot</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">

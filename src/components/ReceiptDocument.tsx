@@ -47,8 +47,7 @@ const styles = StyleSheet.create({
     transform: "rotate(-15deg)",
     border: 4,
     borderColor: "#008000",
-    backgroundColor: "#008000",
-    color: "white",
+    color: "#008000",
     padding: 10,
   },
   footer: {
@@ -104,9 +103,9 @@ const formatTime = (timeString: string) => {
 };
 
 const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("en-IN", {
     style: "currency",
-    currency: "USD",
+    currency: "INR",
   }).format(amount);
 };
 
@@ -145,7 +144,7 @@ const ReceiptDocument = ({ booking }: { booking: Booking }) => (
       <View style={styles.box}>
         <View style={styles.row}>
           <Text style={styles.label}>Amount:</Text>
-          <Text style={styles.value}>{formatCurrency(booking.amount)}</Text>
+          <Text style={styles.value}>{booking.amount} Rupees</Text>
         </View>
         <View style={[styles.row, styles.alternateRow]}>
           <Text style={styles.label}>Date:</Text>

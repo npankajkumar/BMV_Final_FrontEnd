@@ -8,11 +8,13 @@ const VenuePageHeader = ({
   venue,
   btnName = "Book",
   book,
+  showButton,
   onBookClick,
 }: {
   venue: any;
   btnName: string;
   book: boolean;
+  showButton: boolean;
   onBookClick: () => void;
 }) => {
   const [pName, setPName] = useState<any>();
@@ -27,19 +29,17 @@ const VenuePageHeader = ({
   }, []);
 
   return (
-    <div className=" grid grid-cols-2 space-y-0.5">
+    <div className=" grid md:grid-cols-2 grid-cols-1 space-y-0.5">
       <div className="flex flex-col gap-2 justify-center">
         <h2 className="text-2xl font-bold tracking-tight">{venue.name}</h2>
         <div className="flex gap-2 items-center">
           <h3 className="text-xl tracking-tight mb-1">{pName}</h3>
-          {/* <Separator orientation="vertical" />
-          <p className="flex gap-2 my-auto">
-            {venue.rating} <Star className="w-4 h-4 my-auto text-primary" />
-          </p> */}
-          <Separator orientation="vertical" />
-          <Button className="bg-primary" onClick={onBookClick}>
-            {book ? "Cancel" : btnName}
-          </Button>
+          {showButton && <Separator orientation="vertical" />}
+          {showButton && (
+            <Button className="bg-primary" onClick={onBookClick}>
+              {book ? "Cancel" : btnName}
+            </Button>
+          )}
         </div>
       </div>
       <div className="flex flex-col gap-2">

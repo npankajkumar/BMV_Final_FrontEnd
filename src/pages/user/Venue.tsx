@@ -240,19 +240,21 @@ const Venue = () => {
     );
 
   const imageUrl = "https://media.hudle.in/photos/49940";
+
   return (
     <div className="p-6">
       <VenuePageHeader
         venue={venue}
         btnName="Book"
         book={book}
+        showButton={isLoggedin ? email !== localStorage.getItem("email") : true}
         onBookClick={() => {
           setBooking((c) => !c);
         }}
       />
       <Separator className="my-6" />
       {!book ? (
-        <div className="grid grid-cols-2 mx-10">
+        <div className="grid md:grid-cols-2 grid-cols-1 mx-10">
           <Carousel
             className="w-full"
             plugins={[plugin.current]}
@@ -278,22 +280,22 @@ const Venue = () => {
           <div className="lg:ml-20">
             <div className={`grid grid-cols-3 p-0`}>
               <DashboardCard
-                classname="w-36 border-0 border-r-2 shadow-none rounded-none dark:bg-black"
+                classname="w-36 "
                 cardHeader="Bookings"
                 customMessage=""
                 value={venue?.bookings?.length ?? 0}
                 icon={<Ticket />}
               />
               <DashboardCard
-                classname="w-36 border-0 border-r-2 shadow-none rounded-none dark:bg-black"
+                classname="w-36"
                 cardHeader="Rating"
                 customMessage=""
                 value={venue ? Math.round(venue.rating * 10) / 10 : 0}
                 icon={<Star />}
               />
 
-              <div className="p-6">
-                <div className="tracking-tight text-sm flex gap-4 font-medium">
+              <div className="p-6 rounded-xl border bg-card text-card-foreground shadow">
+                <div className="tracking-tight text-sm flex gap-4 font-medium ">
                   Rate Venue
                   <Pencil width={20} height={20} />
                 </div>

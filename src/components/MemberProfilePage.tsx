@@ -31,7 +31,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Edit2, Mail, Phone, User, BookUser } from "lucide-react";
 
 const FormSchema = z.object({
-  name: z.string().min(1, { message: "Name is required" }),
+  name: z
+    .string()
+    .min(1, { message: "Name is required" })
+    .max(30, { message: "Name must be less than 30 characters" }),
   mobile: z
     .string()
     .regex(/^[9876]\d{9}$/, { message: "Invalid mobile number" }),

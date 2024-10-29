@@ -53,6 +53,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useBmv } from "@/contexts/bmvContext";
 import NotFound from "@/components/NotFound";
+import { description } from "@/components/line-chart/LineChart";
 
 const Venue = ({
   provider,
@@ -115,7 +116,13 @@ const Venue = ({
       .min(10, {
         message: "Address must be at least 10 characters.",
       })
-      .max(100, { message: "Address must be less than 100 characters." }),
+      .max(200, { message: "Address must be less than 200 characters." }),
+    description: z
+      .string({ required_error: "Description is required" })
+      .min(10, {
+        message: "Description must be atleast 10 characters.",
+      })
+      .max(200, { message: "Description must be less than 200 characters." }),
     latitude: z.string().regex(/^(-?(?:[1-8]?\d(?:\.\d+)?|90(?:\.0+)?))$/, {
       message: "Latitude must be between -90 and 90.",
     }),
@@ -135,6 +142,7 @@ const Venue = ({
       name: venue.name,
       city: venue.city,
       address: venue.address,
+      description: venue.description,
       latitude: venue.latitude.toString(),
       longitude: venue.longitude.toString(),
       category: category,
@@ -150,6 +158,7 @@ const Venue = ({
         {
           name: data.name,
           address: data.address,
+          description: data.description,
           city: data.city,
           latitude: parseFloat(data.latitude),
           longitude: parseFloat(data.longitude),
@@ -163,12 +172,13 @@ const Venue = ({
         }
       )
       .then(() => {
-        toast({ title: "Edited" });
+        toast({ title: "Venue Edited" });
         setVenueSaveLoading(false);
         updateProvider();
       })
-      .catch(() => {
-        toast({ title: "Error occured" });
+      .catch((error) => {
+        toast({ title: "Error occured", description: error.message });
+        setVenueSaveLoading(false);
       });
   }
   const categoryWatch = form.watch("category");
@@ -211,15 +221,11 @@ const Venue = ({
                   Edit Details
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[400px]">
+              <DialogContent className="md:w-[800px] w-[400px]">
                 <DialogHeader>
                   <DialogTitle>Edit Venue</DialogTitle>
-                  <DialogDescription>
-                    Make changes to your venue here. Click save when you're
-                    done.
-                  </DialogDescription>
                 </DialogHeader>
-                <ScrollArea className="h-80">
+                <ScrollArea className="h-96">
                   <Form {...form}>
                     <form
                       className="space-y-2"
@@ -251,6 +257,22 @@ const Venue = ({
                                 <FormLabel>City</FormLabel>
                                 <FormControl>
                                   <Input placeholder="Hyderabad" {...field} />
+                                </FormControl>
+                                <FormMessage />
+                              </FormItem>
+                            )}
+                          />
+                          <FormField
+                            control={form.control}
+                            name="description"
+                            render={({ field }) => (
+                              <FormItem>
+                                <FormLabel>Description</FormLabel>
+                                <FormControl>
+                                  <Textarea
+                                    placeholder="Description"
+                                    {...field}
+                                  />
                                 </FormControl>
                                 <FormMessage />
                               </FormItem>
@@ -388,9 +410,7 @@ const Venue = ({
                                       </Command>
                                     </PopoverContent>
                                   </Popover>
-                                  <FormDescription>
-                                    This is used for search reults
-                                  </FormDescription>
+
                                   <FormMessage />
                                 </FormItem>
                               )}
@@ -416,10 +436,10 @@ const Venue = ({
                           </div>
                         </div>
                       </div>
-                      <div className="flex gap-2 justify-around">
+                      <div className="flex gap-2 pt-4 justify-around">
                         <DialogClose asChild>
                           <Button type="button" variant="secondary">
-                            Close
+                            Cancel
                           </Button>
                         </DialogClose>
                         <LoadingButton type="submit" loading={venueSaveLoading}>

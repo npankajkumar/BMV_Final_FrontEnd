@@ -57,10 +57,13 @@ const FormSchema = z.object({
     .min(3, {
       message: "Name must be at least 3 characters.",
     })
-    .max(60, { message: "Name must be less than 40 characters." }),
-  city: z.string({ required_error: "Name is reuired" }).min(2, {
-    message: "City must be at least 2 characters.",
-  }),
+    .max(30, { message: "Name must be less than 30 characters." }),
+  city: z
+    .string({ required_error: "City is required" })
+    .min(2, {
+      message: "City must be at least 2 characters.",
+    })
+    .max(30, { message: "City must be less than 30 characters" }),
   description: z
     .string({ required_error: "Description is required" })
     .min(10, {
@@ -84,21 +87,25 @@ const FormSchema = z.object({
     }),
   category: z.any(),
   geoLocation: z.boolean().default(false).optional(),
-  otherCategory: z.string().optional(),
+  otherCategory: z
+    .string({ required_error: "Category required" })
+    .min(3, { message: "Category must be atleast 3 characters" })
+    .max(20, { message: "Category must be less than 20 characters" })
+    .optional(),
   openingTime: z.string().time({ message: "Choose opening time" }),
   closingTime: z.string().time({ message: "Choose closing time" }),
   duration: z.string().min(1, { message: "Choose slot duration" }),
   weekdayPrice: z
     .string()
     .transform((val) => parseFloat(val))
-    .refine((val) => val >= 0 && val <= 999999999, {
-      message: "Weekday price must be between 0 and 999999999.",
+    .refine((val) => val >= 0 && val <= 9999999, {
+      message: "Weekday price must be between 0 and 9999999.",
     }),
   weekendPrice: z
     .string()
     .transform((val) => parseFloat(val))
-    .refine((val) => val >= 0 && val <= 999999999, {
-      message: "Weekend price must be between 0 and 999999999.",
+    .refine((val) => val >= 0 && val <= 9999999, {
+      message: "Weekend price must be between 0 and 9999999.",
     }),
 });
 
@@ -596,6 +603,7 @@ export default function AddVenue({
                           id="dropzone-file"
                           type="file"
                           className=""
+                          required
                           multiple
                           onChange={handleOnChange}
                         />
