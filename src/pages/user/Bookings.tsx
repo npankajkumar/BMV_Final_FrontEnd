@@ -42,9 +42,13 @@ const Bookings = () => {
   const [isCalendarOpen, setIsCalendarOpen] = useState(false);
   const navigate = useNavigate();
 
-  const { token } = useBmv();
+  const { token, isLoggedin } = useBmv();
 
   useEffect(() => {
+    if (!isLoggedin) {
+      navigate("/");
+      return;
+    }
     axios
       .get("http://localhost:5059/api/Booking", {
         headers: {
@@ -55,16 +59,15 @@ const Bookings = () => {
       .then((response) => {
         console.log(response.data);
         setBookings(response.data);
+        setPageLoading(false);
       })
       .catch((error) => {
         toast({
           title: "Error loading your bookings page",
           description: error.message,
         });
+        setPageLoading(false);
       });
-    setTimeout(() => {
-      setPageLoading(false);
-    }, 2000);
   }, [navigate, token]);
 
   const filteredAndSortedBookings = bookings
@@ -125,10 +128,7 @@ const Bookings = () => {
   if (pageLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <h1
-          className="text-3xl font-bold mb-8 text-primary dark:text-primary-foreground"
-          style={{ fontFamily: "Montserrat" }}
-        >
+        <h1 className="text-3xl font-semibold mb-5 text-black dark:text-primary-foreground">
           Your Bookings
         </h1>
         <div className="grid gap-6">
@@ -156,7 +156,7 @@ const Bookings = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1
-        className="text-3xl font-bold mb-8 text-black dark:text-primary-foreground"
+        className="text-3xl font-semibold mb-5 text-black dark:text-primary-foreground"
         style={{ fontFamily: "Montserrat" }}
       >
         Your Bookings
@@ -180,7 +180,7 @@ const Bookings = () => {
             <Button
               variant={"outline"}
               className={cn(
-                "w-[240px] justify-start text-left font-normal",
+                "md:w-[240px] w-full justify-start text-left font-normal",
                 !dateFilter && "text-muted-foreground"
               )}
             >

@@ -95,7 +95,7 @@ export default function Home() {
         </style>
 
         <p
-          className="mt-2 text-md text-gray-700 w-[50%] mx-auto font-semibold dark:text-slate-200"
+          className="mt-2 text-md text-gray-700 w-1/2 mx-auto font-semibold dark:text-slate-200"
           style={{ fontFamily: "Montserrat, sans-serif" }}
         >
           Find the perfect venue for your next event! From stunning banquet

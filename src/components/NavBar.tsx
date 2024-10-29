@@ -64,9 +64,16 @@ const NavBar = ({ className }: { className?: string; clientType: string }) => {
         variant="ghost"
         size="sm"
         onClick={() => setDarkMode(!darkMode)}
-        className="px-2 dark:text-white text-gray-900 shadow-primary shadow-sm rounded hover:text-primary-foreground hover:bg-primary"
+        className={`px-2 dark:text-white text-gray-900 shadow-primary shadow-sm rounded hover:text-primary-foreground hover:bg-primary ${
+          isMobile ? "flex items-center justify-center" : ""
+        }`}
       >
         {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+        {isMobile ? (
+          <div className="ml-2">{darkMode ? "Light" : "Dark"}</div>
+        ) : (
+          <></>
+        )}
       </Button>
       {isLoggedin && (
         <Button
@@ -142,8 +149,21 @@ const NavBar = ({ className }: { className?: string; clientType: string }) => {
       </Button>
       {isLoggedin && (
         <Link to="/profile">
-          <div className="rounded-full shadow-primary shadow-sm p-2 hover:bg-primary hover:text-white">
+          <div
+            className={` shadow-primary shadow-sm p-2 hover:bg-primary hover:text-white ${
+              isMobile
+                ? "rounded flex items-center justify-center"
+                : "rounded-full"
+            } `}
+          >
             <User className="h-5 w-5 font-bold" strokeWidth={2} />
+            {isMobile ? (
+              <div className="ml-2 text-sm font-semibold hover:text-white">
+                Profile
+              </div>
+            ) : (
+              <div></div>
+            )}
           </div>
         </Link>
       )}
@@ -182,13 +202,15 @@ const NavBar = ({ className }: { className?: string; clientType: string }) => {
             <Button
               variant="ghost"
               size="icon"
-              className="text-white hover:text-primary-foreground hover:bg-primary"
+              className="text-black dark:text-white hover:text-primary-foreground hover:bg-primary"
             >
               <Menu className="h-5 w-5" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <NavItems />
+            <div className="flex flex-col p-3 gap-3">
+              <NavItems />
+            </div>
           </DropdownMenuContent>
         </DropdownMenu>
       ) : (

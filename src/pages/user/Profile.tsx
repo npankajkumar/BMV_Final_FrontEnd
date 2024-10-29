@@ -1,12 +1,10 @@
 import MemberProfilePage from "@/components/MemberProfilePage";
-import NotFound from "@/components/NotFound";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBmv } from "@/contexts/bmvContext";
-import { toast } from "@/hooks/use-toast";
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Profile = () => {
   const [pageLoading, setPageLoading] = useState(true);
@@ -15,8 +13,13 @@ const Profile = () => {
   const [mobile, setMobile] = useState("");
 
   const { token, isLoggedin } = useBmv();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
+    if (!isLoggedin) {
+      navigate("/");
+      return;
+    }
     axios
       .get("http://localhost:5059/api/Customers", {
         headers: { Authorization: `Bearer ${token}` },
@@ -31,6 +34,9 @@ const Profile = () => {
         console.error("Error fetching data : ", error);
         setPageLoading(false);
       });
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const navigate = useNavigate();
@@ -46,7 +52,12 @@ const Profile = () => {
     return (
       <div className="w-[80%] bg-background text-foreground p-6 ml-24 mt-6">
         <div className="max-w-7xl mx-auto">
-          <Skeleton className="h-12 w-64 mx-auto mb-8" />
+          <h1
+            className="text-4xl font-semibold mb-8 mt-4 ml-9 text-center text-gray-900 dark:text-slate-100"
+            style={{ fontFamily: "Montserrat" }}
+          >
+            Your Profile
+          </h1>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="col-span-1">
               <CardContent className="p-6 flex flex-col items-center space-y-4">
@@ -75,16 +86,8 @@ const Profile = () => {
       </div>
     );
 
-  if (!isLoggedin) {
-    navigate("/");
-    toast({
-      title: "Please Login to view your profile",
-      className: "border-2 border-primary",
-    });
-  }
-
   return (
-    <div className="py-10 px-36">
+    <div className={`py-10 ${isMobile ? "px-0" : "px-36"}`}>
       <MemberProfilePage
         className="w-2/3 "
         name={name.charAt(0).toUpperCase() + name.slice(1)}

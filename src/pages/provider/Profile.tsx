@@ -10,14 +10,16 @@ const Profile = ({
   provider: any;
   updateProvider: any;
 }) => {
-  const [pageLoading, setPageLoading] = useState(true);
+  const [pageLoading, setPageLoading] = useState(false);
   const [name, setName] = useState(provider.name);
   const [email] = useState(provider.email);
   const [mobile, setMobile] = useState(provider.mobile);
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   useEffect(() => {
-    setTimeout(() => {
-      setPageLoading(false);
-    }, 1000);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
   const handleProfileUpdate = (updatedData: {
@@ -33,7 +35,12 @@ const Profile = ({
     return (
       <div className="w-[80%] bg-background text-foreground p-6 ml-24 mt-6">
         <div className="max-w-7xl mx-auto">
-          <Skeleton className="h-12 w-64 mx-auto mb-8" />
+          <h1
+            className="text-4xl font-semibold mb-8 mt-4 ml-9 text-center text-gray-900 dark:text-slate-100"
+            style={{ fontFamily: "Montserrat" }}
+          >
+            Your Profile
+          </h1>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="col-span-1">
               <CardContent className="p-6 flex flex-col items-center space-y-4">
@@ -63,7 +70,7 @@ const Profile = ({
       </div>
     );
   return (
-    <div className="py-10 px-36">
+    <div className={`py-10 ${isMobile ? "px-0" : "px-36"}`}>
       <MemberProfilePage
         className=""
         name={name}

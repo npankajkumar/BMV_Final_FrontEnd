@@ -112,7 +112,7 @@ export default function MemberProfilePage({
     <div className={`w-full bg-background text-foreground p-6 ${className}`}>
       <div className="max-w-7xl mx-auto">
         <h1
-          className="text-4xl font-bold mb-8 text-center text-gray-900 dark:text-slate-100"
+          className="text-4xl font-semibold mb-8 text-center text-gray-900 dark:text-slate-100"
           style={{ fontFamily: "Montserrat" }}
         >
           Your Profile

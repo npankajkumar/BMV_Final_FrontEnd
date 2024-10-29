@@ -157,7 +157,7 @@ const Bookings = ({ provider }: { provider: any }) => {
   }
 
   return (
-    <div className="mx-40 my-5">
+    <div className="container mx-auto px-4 py-8">
       <h1
         className="text-3xl font-semibold mb-5 text-black dark:text-primary-foreground"
         style={{ fontFamily: "Montserrat" }}
@@ -183,7 +183,7 @@ const Bookings = ({ provider }: { provider: any }) => {
             <Button
               variant={"outline"}
               className={cn(
-                "w-[240px] justify-start text-left font-normal",
+                "md:w-[240px] w-full justify-start text-left font-normal",
                 !dateFilter && "text-muted-foreground"
               )}
             >

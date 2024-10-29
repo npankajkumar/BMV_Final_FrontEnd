@@ -52,20 +52,54 @@ import {
 } from "@/components/ui/card";
 
 const FormSchema = z.object({
-  name: z.string().min(3).max(60),
-  city: z.string().min(2),
-  description: z.string().min(10).max(200),
-  address: z.string().min(10).max(200),
-  latitude: z.string(),
-  longitude: z.string(),
-  category: z.string(),
-  geoLocation: z.boolean().default(false),
+  name: z
+    .string({ required_error: "Name is required" })
+    .min(3, {
+      message: "Name must be at least 3 characters.",
+    })
+    .max(60, { message: "Name must be less than 40 characters." }),
+  city: z.string({ required_error: "Name is reuired" }).min(2, {
+    message: "City must be at least 2 characters.",
+  }),
+  description: z
+    .string({ required_error: "Description is required" })
+    .min(10, {
+      message: "Description must be at least 10 characters.",
+    })
+    .max(200, { message: "Description must be less than 200 characters." }),
+  address: z
+    .string({ required_error: "Address is required" })
+    .min(10, {
+      message: "Address must be at least 10 characters.",
+    })
+    .max(200, { message: "Address must be less than 200 characters." }),
+  latitude: z.string().regex(/^(-?(?:[1-8]?\d(?:\.\d+)?|90(?:\.0+)?))$/, {
+    message: "Latitude must be between -90 and 90.",
+  }),
+
+  longitude: z
+    .string()
+    .regex(/^(-?(?:[1-9]?\d(?:\.\d+)?|1[0-7]\d(?:\.\d+)?|180(?:\.0+)?))$/, {
+      message: "Longitude must be between -180 and 180.",
+    }),
+  category: z.any(),
+  geoLocation: z.boolean().default(false).optional(),
   otherCategory: z.string().optional(),
-  openingTime: z.string(),
-  closingTime: z.string(),
-  duration: z.string(),
-  weekdayPrice: z.string().transform((val) => parseFloat(val)),
-  weekendPrice: z.string().transform((val) => parseFloat(val)),
+  openingTime: z.string().time({ message: "Choose opening time" }),
+  closingTime: z.string().time({ message: "Choose closing time" }),
+  duration: z.string().min(1, { message: "Choose slot duration" }),
+  weekdayPrice: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .refine((val) => val >= 0 && val <= 999999999, {
+      message: "Weekday price must be between 0 and 999999999.",
+    }),
+  weekendPrice: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .refine((val) => val >= 0 && val <= 999999999, {
+      message: "Weekend price must be between 0 and 999999999.",
+    }),
 });
 
 export default function AddVenue({

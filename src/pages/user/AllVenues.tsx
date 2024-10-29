@@ -8,7 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, ArrowUp, Search } from "lucide-react";
+import { ArrowDown, ArrowUp, Search, SortAsc, SortDesc } from "lucide-react";
 import VenueCard from "@/components/VenueCard";
 
 interface Venue {
@@ -158,11 +158,7 @@ const AllVenues: React.FC = () => {
           className="w-full md:w-auto"
         >
           Sort by rating{" "}
-          {sortOrder === "asc" ? (
-            <ArrowDown className="ml-2 h-5 w-5 text-primary" />
-          ) : (
-            <ArrowUp className="ml-2 h-5 w-5 text-primary" />
-          )}
+          {sortOrder === "asc" ? <SortAsc size={20} /> : <SortDesc size={20} />}
         </Button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

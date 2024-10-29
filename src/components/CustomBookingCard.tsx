@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -59,11 +59,17 @@ const CustomBookingCard: React.FC<CustomBookingCardProps> = ({ booking }) => {
     return `${formattedHours}:${minutes} ${ampm}`;
   };
 
-  const isProvider = localStorage.getItem("auth") === "provider";
   const formattedDate = formatDate(booking.date);
   const formattedStartTime = formatTime(booking.start);
   const formattedEndTime = formatTime(booking.end);
   const { role } = useBmv();
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
     <Card className="w-full overflow-hidden transition-all duration-300 hover:shadow-lg dark:bg-gray-800 dark:border-gray-700 hover:scale-[1.02] mb-4">
@@ -76,7 +82,9 @@ const CustomBookingCard: React.FC<CustomBookingCardProps> = ({ booking }) => {
         </div>
       </CardHeader>
       <CardContent className="pt-4 pb-2">
-        <div className="grid grid-cols-3 gap-4">
+        <div
+          className={`grid gap-4 ${isMobile ? "grid-cols-1" : "grid-cols-3"}`}
+        >
           <div className="flex items-center">
             <User className="w-5 h-5 mr-3 text-primary" />
             <span className="text-sm font-medium">

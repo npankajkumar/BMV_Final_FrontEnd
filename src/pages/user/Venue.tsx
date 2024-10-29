@@ -65,7 +65,7 @@ type slot = {
 
 const Venue = () => {
   const params = useParams();
-  const [venue, setVenue] = useState<any>();
+  const [venue, setVenue] = useState<any>(null);
   const [pageLoading, setPageLoading] = useState(true);
   const [book, setBooking] = useState(false);
   const [selectedSlots, setSelectedSlots] = useState<slot[]>([]);
@@ -278,17 +278,17 @@ const Venue = () => {
           <div className="lg:ml-20">
             <div className={`grid grid-cols-3 p-0`}>
               <DashboardCard
-                classname="w-36 border-0 border-r-2 shadow-none rounded-none"
+                classname="w-36 border-0 border-r-2 shadow-none rounded-none dark:bg-black"
                 cardHeader="Bookings"
                 customMessage=""
-                value={venue.bookings.length}
+                value={venue?.bookings?.length ?? 0}
                 icon={<Ticket />}
               />
               <DashboardCard
-                classname="w-36 border-0 border-r-2 shadow-none rounded-none"
+                classname="w-36 border-0 border-r-2 shadow-none rounded-none dark:bg-black"
                 cardHeader="Rating"
                 customMessage=""
-                value={Math.round(venue.rating * 10) / 10}
+                value={venue ? Math.round(venue.rating * 10) / 10 : 0}
                 icon={<Star />}
               />
 
@@ -313,8 +313,9 @@ const Venue = () => {
                 <div className="tracking-tight flex items-center gap-3">
                   <Mail /> {email}
                 </div>
-                <div className="tracking-tight flex items-center gap-3">
-                  <MapPin /> {venue.address}
+                <div className="tracking-tight flex gap-3">
+                  <MapPin className="shrink-0 w-6 h-6" />
+                  <div className="leading-tight">{venue.address}</div>
                 </div>
                 <a
                   className="flex items-center gap-1 text-primary hover:underline"

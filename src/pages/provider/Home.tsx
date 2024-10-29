@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 const Home = ({ provider }: { provider: any }) => {
   const [pageLoading, setPageLoading] = useState(true);
   const [dashboard, setDashboard] = useState<any>();
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
     useBmv();
@@ -33,6 +34,10 @@ const Home = ({ provider }: { provider: any }) => {
         console.log(e);
         setPageLoading(false);
       });
+
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, []);
   let chartd: any[] = [];
   if (dashboard) {
@@ -75,8 +80,12 @@ const Home = ({ provider }: { provider: any }) => {
           </Button>
         </Link>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 my-5">
-        <div className={`col-span-3 grid grid-cols-1 gap-4 md:grid-cols-3`}>
+      <div className={`grid grid-cols-1 lg:grid-cols-4 gap-4 my-5`}>
+        <div
+          className={`col-span-3 grid grid-cols-1 gap-4 md:grid-cols-3 ${
+            isMobile ? "mx-auto" : ""
+          }`}
+        >
           <DashboardCard
             cardHeader="Total Earnings"
             customMessage=""
@@ -92,7 +101,7 @@ const Home = ({ provider }: { provider: any }) => {
           <DashboardCard
             cardHeader="Overall Rating"
             customMessage=""
-            value={dashboard.overallRating}
+            value={Math.round(dashboard.overallRating * 10) / 10}
             icon={<Star />}
           />
         </div>
