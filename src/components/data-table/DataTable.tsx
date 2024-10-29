@@ -384,8 +384,18 @@ export function DataTable<Slot>({ updateProvider, data }: DataTableProps) {
 }
 const FormSchema = z.object({
   status: z.string(),
-  weekdayPrice: z.any(),
-  weekendPrice: z.any(),
+  weekdayPrice: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .refine((val) => val >= 0 && val <= 999999999, {
+      message: "Weekday price must be between 0 and 999999999.",
+    }),
+  weekendPrice: z
+    .string()
+    .transform((val) => parseFloat(val))
+    .refine((val) => val >= 0 && val <= 999999999, {
+      message: "Weekend price must be between 0 and 999999999.",
+    }),
 });
 const EditButton = ({
   updateProvider,
@@ -404,8 +414,8 @@ const EditButton = ({
     resolver: zodResolver(FormSchema),
     defaultValues: {
       status: status,
-      weekdayPrice: weekdayPrice,
-      weekendPrice: weekendPrice,
+      weekdayPrice: weekdayPrice.toString(),
+      weekendPrice: weekendPrice.toString(),
     },
   });
 
@@ -447,6 +457,12 @@ const EditButton = ({
         <Button variant="outline">Edit Slot</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md ">
+        <DialogHeader>
+          <DialogTitle>Edit Venue</DialogTitle>
+          <DialogDescription>
+            Make changes to slot here. Click save when you're done.
+          </DialogDescription>
+        </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             <FormField
@@ -456,7 +472,7 @@ const EditButton = ({
                 <FormItem>
                   <FormLabel>Weekday Price</FormLabel>
                   <FormControl>
-                    <Input placeholder="1000" {...field} />
+                    <Input type="number" placeholder="1000" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -469,7 +485,7 @@ const EditButton = ({
                 <FormItem>
                   <FormLabel>Weekend Price</FormLabel>
                   <FormControl>
-                    <Input placeholder="1000" {...field} />
+                    <Input type="number" placeholder="1000" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

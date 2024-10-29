@@ -116,8 +116,15 @@ const Venue = ({
         message: "Address must be at least 10 characters.",
       })
       .max(100, { message: "Address must be less than 100 characters." }),
-    latitude: z.string(),
-    longitude: z.string(),
+    latitude: z.string().regex(/^(-?(?:[1-8]?\d(?:\.\d+)?|90(?:\.0+)?))$/, {
+      message: "Latitude must be between -90 and 90.",
+    }),
+
+    longitude: z
+      .string()
+      .regex(/^(-?(?:[1-9]?\d(?:\.\d+)?|1[0-7]\d(?:\.\d+)?|180(?:\.0+)?))$/, {
+        message: "Longitude must be between -180 and 180.",
+      }),
     category: z.string({ required_error: "Category is required" }),
     geoLocation: z.boolean().default(false).optional(),
     otherCategory: z.string().optional(),
@@ -128,8 +135,8 @@ const Venue = ({
       name: venue.name,
       city: venue.city,
       address: venue.address,
-      latitude: venue.latitude,
-      longitude: venue.longitude,
+      latitude: venue.latitude.toString(),
+      longitude: venue.longitude.toString(),
       category: category,
       geoLocation: false,
       otherCategory: "",
@@ -187,9 +194,11 @@ const Venue = ({
         <div className="flex flex-col gap-2 justify-center">
           <h2 className="text-2xl font-bold tracking-tight">{venue.name}</h2>
           <div className="flex gap-2">
-            <h3 className="text-xl tracking-tight mb-1">{provider.name}</h3>
+            <h3 className="flex items-center text-xl tracking-tight mb-1">
+              {provider.name}
+            </h3>
             <Separator orientation="vertical" />
-            <p className="flex gap-2 my-auto">
+            <p className="flex items-center gap-2 my-auto">
               {venue.rating} <Star className="w-4 h-4 my-auto text-primary" />
             </p>
             <Separator orientation="vertical" />
@@ -213,11 +222,10 @@ const Venue = ({
                 <ScrollArea className="h-80">
                   <Form {...form}>
                     <form
-                      className="space-y-4"
+                      className="space-y-2"
                       onSubmit={form.handleSubmit(onSubmit)}
                     >
-                      <div className="my-2 flex justify-between"></div>
-                      <div className="my-2 grid grid-cols-1 min-h-full">
+                      <div className="mb-2 grid grid-cols-1 min-h-full">
                         <div className="px-2">
                           <FormField
                             control={form.control}
@@ -334,7 +342,7 @@ const Venue = ({
                                           variant="outline"
                                           role="combobox"
                                           className={cn(
-                                            "w-[200px] justify-between",
+                                            "w-[160px] justify-between",
                                             !field.value &&
                                               "text-muted-foreground"
                                           )}
@@ -348,7 +356,7 @@ const Venue = ({
                                         </Button>
                                       </FormControl>
                                     </PopoverTrigger>
-                                    <PopoverContent className="p-0 w-[200px]">
+                                    <PopoverContent className="p-0 w-[160px]">
                                       <Command>
                                         <CommandInput placeholder="Search categories..." />
                                         <CommandList>
@@ -387,7 +395,7 @@ const Venue = ({
                                 </FormItem>
                               )}
                             />
-                            {categoryWatch == "others" && (
+                            {categoryWatch == "Others" && (
                               <FormField
                                 control={form.control}
                                 name="otherCategory"

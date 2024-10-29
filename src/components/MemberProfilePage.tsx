@@ -177,7 +177,7 @@ export default function MemberProfilePage({
                             <FormControl>
                               <Input
                                 placeholder="Enter mobile number"
-                                type="tel"
+                                type="number"
                                 {...field}
                               />
                             </FormControl>
