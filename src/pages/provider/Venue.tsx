@@ -1,16 +1,13 @@
-import VenuePageHeader from "@/components/VenuePageHeader";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Check, ChevronsUpDown, Star } from "lucide-react";
 import { z } from "zod";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -37,7 +34,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -45,7 +41,7 @@ import { toast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
-import { availableSlots, categories } from "@/db";
+import { categories } from "@/db";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { DataTable } from "@/components/data-table/DataTable";
 import LoadingButton from "@/components/LoadingButton";
@@ -53,7 +49,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { useBmv } from "@/contexts/bmvContext";
 import NotFound from "@/components/NotFound";
-import { description } from "@/components/line-chart/LineChart";
 
 const Venue = ({
   provider,
@@ -63,9 +58,11 @@ const Venue = ({
   updateProvider: any;
 }) => {
   const [venueSaveLoading, setVenueSaveLoading] = useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const handleDialogOpen = () => setIsDialogOpen(true);
+  const handleDialogClose = () => setIsDialogOpen(false);
 
-  const { isLoggedin, token, role, setIsLoggedin, setToken, setRole } =
-    useBmv();
+  const { token } = useBmv();
 
   let { id } = useParams();
   const venue = provider.venues.find((v: any) => v.id == id);
@@ -84,25 +81,11 @@ const Venue = ({
         };
       })
     : [];
-  const navigate = useNavigate();
-  const route = useLocation().pathname;
   const [category, setCategory] = useState();
 
   useEffect(() => {
     getCategoryById(venue.categoryId).then((c) => setCategory(c.name));
   }, []);
-
-  const handleVenueSaveClick = (data: any) => {
-    const reqData = {
-      name: data.name,
-      description: data.description,
-      address: data.address,
-      city: data.city,
-      latitude: parseFloat(data.latitude),
-      longitude: parseFloat(data.longitude),
-      category: data.category == "others" ? data.otherCategory : data.category,
-    };
-  };
 
   const FormSchema = z.object({
     name: z.string({ required_error: "Name is required" }).min(3, {
@@ -175,6 +158,7 @@ const Venue = ({
         toast({ title: "Venue Edited" });
         setVenueSaveLoading(false);
         updateProvider();
+        handleDialogClose();
       })
       .catch((error) => {
         toast({ title: "Error occured", description: error.message });
@@ -195,6 +179,7 @@ const Venue = ({
         form.resetField("geoLocation");
         form.resetField("latitude");
         form.resetField("longitude");
+        console.log(error);
       }
     );
   }
@@ -209,23 +194,25 @@ const Venue = ({
             </h3>
             <Separator orientation="vertical" />
             <p className="flex items-center gap-2 my-auto">
-              {venue.rating} <Star className="w-4 h-4 my-auto text-primary" />
+              {Math.round(venue.rating * 10) / 10}
+              <Star className="w-4 h-4 my-auto text-primary" fill="#e11c48" />
             </p>
             <Separator orientation="vertical" />
-            <Dialog>
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button
                   variant={"outline"}
                   className="px-4 py-1 h-10 bg-primary text-white font-semibold rounded-lg shadow hover:bg-red-500 hover:text-white transition duration-200"
+                  onClick={handleDialogOpen}
                 >
                   Edit Details
                 </Button>
               </DialogTrigger>
               <DialogContent className="md:w-[800px] w-[400px]">
                 <DialogHeader>
-                  <DialogTitle>Edit Venue</DialogTitle>
+                  <DialogTitle className="ml-3">Edit Venue</DialogTitle>
                 </DialogHeader>
-                <ScrollArea className="h-96">
+                <ScrollArea className="h-96 p-2 pr-3">
                   <Form {...form}>
                     <form
                       className="space-y-2"
@@ -238,9 +225,15 @@ const Venue = ({
                             name="name"
                             render={({ field }) => (
                               <FormItem>
-                                <FormLabel>Name</FormLabel>
+                                <FormLabel>
+                                  Name
+                                  <span className="text-red-600 ml-1">*</span>
+                                </FormLabel>
                                 <FormControl>
-                                  <Input placeholder="Name" {...field} />
+                                  <Input
+                                    placeholder="Enter your venue name"
+                                    {...field}
+                                  />
                                 </FormControl>
                                 <FormDescription>
                                   This is your venue public display name.
@@ -249,56 +242,85 @@ const Venue = ({
                               </FormItem>
                             )}
                           />
-                          <FormField
-                            control={form.control}
-                            name="city"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>City</FormLabel>
-                                <FormControl>
-                                  <Input placeholder="Hyderabad" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="description"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Description</FormLabel>
-                                <FormControl>
-                                  <Textarea
-                                    placeholder="Description"
-                                    {...field}
-                                  />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
-                          <FormField
-                            control={form.control}
-                            name="address"
-                            render={({ field }) => (
-                              <FormItem>
-                                <FormLabel>Address</FormLabel>
-                                <FormControl>
-                                  <Textarea placeholder="Address" {...field} />
-                                </FormControl>
-                                <FormMessage />
-                              </FormItem>
-                            )}
-                          />
+                          <div className="mt-2">
+                            <FormField
+                              control={form.control}
+                              name="city"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>
+                                    City
+                                    <span className="text-red-600 ml-1 ">
+                                      *
+                                    </span>
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Input
+                                      placeholder="Enter venue city"
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          <div className="mt-2">
+                            <FormField
+                              control={form.control}
+                              name="description"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>
+                                    Description
+                                    <span className="text-red-600 ml-1">*</span>
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Textarea
+                                      placeholder="Let users know something about your venue"
+                                      {...field}
+                                      className="h-28"
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
+                          <div className="mt-2">
+                            <FormField
+                              control={form.control}
+                              name="address"
+                              render={({ field }) => (
+                                <FormItem>
+                                  <FormLabel>
+                                    Address
+                                    <span className="text-red-600 ml-1">*</span>
+                                  </FormLabel>
+                                  <FormControl>
+                                    <Textarea
+                                      placeholder="Enter complete address of venue"
+                                      {...field}
+                                    />
+                                  </FormControl>
+                                  <FormMessage />
+                                </FormItem>
+                              )}
+                            />
+                          </div>
                           {
-                            <div className="flex justify-around min-w-full">
+                            <div className="flex justify-around min-w-full mt-2">
                               <FormField
                                 control={form.control}
                                 name="latitude"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>Latitude</FormLabel>
+                                    <FormLabel>
+                                      Latitude
+                                      <span className="text-red-600 ml-1">
+                                        *
+                                      </span>
+                                    </FormLabel>
                                     <FormControl>
                                       <Input
                                         disabled={geoLocationWatch}
@@ -316,7 +338,12 @@ const Venue = ({
                                 name="longitude"
                                 render={({ field }) => (
                                   <FormItem>
-                                    <FormLabel>Longitude</FormLabel>
+                                    <FormLabel>
+                                      Longitude
+                                      <span className="text-red-600 ml-1">
+                                        *
+                                      </span>
+                                    </FormLabel>
                                     <FormControl>
                                       <Input
                                         disabled={geoLocationWatch}
@@ -356,6 +383,7 @@ const Venue = ({
                                 <FormItem className="flex flex-col ">
                                   <FormLabel className="my-1">
                                     Category
+                                    <span className="text-red-600 ml-1">*</span>
                                   </FormLabel>
                                   <Popover>
                                     <PopoverTrigger asChild>
@@ -438,7 +466,11 @@ const Venue = ({
                       </div>
                       <div className="flex gap-2 pt-4 justify-around">
                         <DialogClose asChild>
-                          <Button type="button" variant="secondary">
+                          <Button
+                            type="button"
+                            variant="secondary"
+                            onClick={handleDialogClose}
+                          >
                             Cancel
                           </Button>
                         </DialogClose>
@@ -469,51 +501,6 @@ const Venue = ({
     </div>
   ) : (
     <div>Error occured</div>
-  );
-};
-
-const Header = ({
-  edit,
-  onEditClick,
-}: {
-  edit: boolean;
-  onEditClick: () => void;
-}) => {
-  const keywords = ["good", "keyword2", "keyword3", "keyword4", "keyword5"];
-  return (
-    <div>
-      <div className=" grid grid-cols-2 space-y-0.5">
-        <div className="flex flex-col gap-2 justify-center">
-          <h2 className="text-2xl font-bold tracking-tight">Box Cricket</h2>
-          <div className="flex gap-2">
-            <h3 className="text-xl tracking-tight mb-1">Eagle Academy</h3>
-            <Separator orientation="vertical" />
-            <p className="flex gap-2 my-auto">
-              4.5 <Star className="w-4 h-4 my-auto text-primary" />
-            </p>
-            <Separator orientation="vertical" />
-            <Button className="bg-primary" onClick={onEditClick}>
-              {edit ? "Cancel" : "Edit"}
-            </Button>
-          </div>
-        </div>
-        <div className="flex flex-col gap-2">
-          <p className="text-sm text-wrap">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Eos, quam
-            iste nobis consequatur ea sit consequuntur tenetur? A, nemo magni
-            quas reiciendis placeat sint laborum adipisci vitae voluptatum non
-            dolorem!
-          </p>
-          <div className="flex gap-2">
-            {keywords.map((keyword, i) => (
-              <Badge key={i} variant="outline" className="border-primary">
-                {keyword}
-              </Badge>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
   );
 };
 

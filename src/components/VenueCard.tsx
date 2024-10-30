@@ -37,7 +37,7 @@ const VenueCard = ({
           <div className="absolute bottom-2 right-2 bg-white px-2 py-1 rounded-full flex items-center gap-1 shadow dark:shadow-md dark:bg-gray-800 dark:text-white">
             <Star fill="#FDCC0D" className="w-4 h-4" strokeWidth={1} />
             <span className="text-sm font-medium">
-              {roundToTwoDigits(rating)}
+              {roundToTwoDigits(rating) !== 0 ? roundToTwoDigits(rating) : "--"}
             </span>
           </div>
         </div>

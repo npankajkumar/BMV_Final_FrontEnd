@@ -102,9 +102,9 @@ const CustomBookingCard: React.FC<CustomBookingCardProps> = ({ booking }) => {
           <div className="flex items-center">
             <Mail className="w-5 h-5 mr-3 text-primary" />
             <span className="text-sm font-medium">
-              {role === "customer"
-                ? booking.providerEmail
-                : booking.customerEmail}
+              {role !== "customer"
+                ? booking.customerEmail
+                : booking.providerEmail}
             </span>
           </div>
           <div className="flex items-center">
@@ -135,7 +135,7 @@ const CustomBookingCard: React.FC<CustomBookingCardProps> = ({ booking }) => {
         </div>
         <PDFDownloadLink
           document={<ReceiptDocument booking={booking} />}
-          fileName="Receipt.pdf"
+          fileName={`Receipt_${booking.id}.pdf`}
         >
           {({ loading }) => (
             <Button

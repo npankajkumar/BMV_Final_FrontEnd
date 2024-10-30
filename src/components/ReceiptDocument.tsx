@@ -1,4 +1,11 @@
-import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  Image,
+} from "@react-pdf/renderer";
 
 const styles = StyleSheet.create({
   page: { backgroundColor: "#FFFFFF", padding: 30 },
@@ -38,6 +45,17 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 12,
     width: "60%",
+  },
+  logo: {
+    width: 60,
+    height: 50,
+    marginTop: "160px",
+    marginLeft: "430px",
+  },
+  logodiv: {
+    padding: "10px",
+    borderRadius: "100%",
+    border: "3px solid #e11c48",
   },
   paid: {
     marginTop: 20,
@@ -102,13 +120,6 @@ const formatTime = (timeString: string) => {
   });
 };
 
-const formatCurrency = (amount: number) => {
-  return new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-  }).format(amount);
-};
-
 const ReceiptDocument = ({ booking }: { booking: Booking }) => (
   <Document>
     <Page size="A4" style={styles.page}>
@@ -161,6 +172,11 @@ const ReceiptDocument = ({ booking }: { booking: Booking }) => (
       </View>
       <View style={styles.paid}>
         <Text>PAID</Text>
+      </View>
+      <View style={styles.logo}>
+        <View style={styles.logodiv}>
+          <Image src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/logo-CelVtFc15sZTdtLb5bUJbsjFA5yTFE.png" />
+        </View>
       </View>
       <Text style={styles.footer}>
         Thank you for your booking. For any questions, please contact our

@@ -507,14 +507,14 @@ const EditButton = ({
               )}
             />
             <div className="flex gap-2 justify-around">
-              <LoadingButton type="submit" loading={slotEditLoading}>
-                Save
-              </LoadingButton>
               <DialogClose asChild>
                 <Button type="button" variant="secondary">
                   Cancel
                 </Button>
               </DialogClose>
+              <LoadingButton type="submit" loading={slotEditLoading}>
+                Save
+              </LoadingButton>
             </div>
           </form>
         </Form>

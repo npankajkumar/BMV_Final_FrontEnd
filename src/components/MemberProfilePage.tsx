@@ -200,7 +200,7 @@ export default function MemberProfilePage({
                           type="submit"
                           loading={profileSaveLoading}
                         >
-                          Save Changes
+                          Save
                         </LoadingButton>
                       </div>
                     </form>
