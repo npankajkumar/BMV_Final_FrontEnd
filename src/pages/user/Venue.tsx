@@ -278,24 +278,24 @@ const Venue = () => {
             <CarouselNext />
           </Carousel>
           <div className="lg:ml-20">
-            <div className={`grid grid-cols-3 p-0`}>
+            <div className={`grid md:grid-cols-3 grid-cols-2 p-0 gap-4 mt-2`}>
               <DashboardCard
-                classname="w-36 "
+                classname="md:w-36 w-full max-h-32"
                 cardHeader="Bookings"
                 customMessage=""
                 value={venue?.bookings?.length ?? 0}
                 icon={<Ticket />}
               />
               <DashboardCard
-                classname="w-36"
+                classname="md:w-36 w-full max-h-32"
                 cardHeader="Rating"
                 customMessage=""
                 value={venue ? Math.round(venue.rating * 10) / 10 : 0}
                 icon={<Star />}
               />
 
-              <div className="p-6 rounded-xl border bg-card text-card-foreground shadow">
-                <div className="tracking-tight text-sm flex gap-4 font-medium ">
+              <div className="p-6 rounded-xl border bg-card text-card-foreground shadow md:col-span-1 col-span-2 max-h-32">
+                <div className="tracking-tight text-sm flex gap-4 font-medium justify-center">
                   Rate Venue
                   <Pencil width={20} height={20} />
                 </div>
@@ -308,7 +308,7 @@ const Venue = () => {
               <div className="tracking-tight text-xl font-medium flex items-center gap-3 my-4">
                 Contact Info <Info />
               </div>
-              <div className="flex flex-col gap-4 my-2 text-lg">
+              <div className="flex flex-col gap-4 my-2 text-sm md:text-lg">
                 <div className="tracking-tight flex items-center gap-3">
                   <Phone /> {mobile}
                 </div>
@@ -334,9 +334,9 @@ const Venue = () => {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-4 gap-4">
-          <ScrollArea className="col-span-3 h-76">
-            <div className="flex w-full justify-between">
+        <div className="grid lg:grid-cols-4 grid-cols-1 gap-4">
+          <ScrollArea className="lg:col-span-3 h-76">
+            <div className="grid lg:grid-cols-4 w-full justify-between">
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -360,33 +360,33 @@ const Venue = () => {
                   />
                 </PopoverContent>
               </Popover>
-              <div className="flex space-x-4 p-4">
+              <div className="flex justify-end md:gap-4 gap-2 p-4 lg:col-span-3 items-center ">
                 {/* Blocked Legend */}
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-gray-100 cursor-not-allowed rounded border border-black"></div>
-                  <span className="text-sm">Blocked</span>
+                  <span className="text-xs">Blocked</span>
                 </div>
 
                 {/* Booked Legend */}
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-red-100 cursor-not-allowed rounded border border-black"></div>
-                  <span className="text-sm">Booked</span>
+                  <span className="text-xs">Booked</span>
                 </div>
 
                 {/* Available Legend */}
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-green-100 cursor-pointer rounded border border-black"></div>
-                  <span className="text-sm">Available</span>
+                  <span className="text-xs">Available</span>
                 </div>
 
                 {/* Selected Legend */}
                 <div className="flex items-center space-x-2">
                   <div className="w-4 h-4 bg-primary cursor-pointer rounded border border-black"></div>
-                  <span className="text-sm">Selected</span>
+                  <span className="text-xs">Selected</span>
                 </div>
               </div>
             </div>
-            <div className="m-5 grid grid-cols-4 gap-4">
+            <div className="m-5 grid md:grid-cols-3 lg:grid-cols-4 grid-cols-2 gap-4">
               {slots.length < 1 ? (
                 <div className="text-lg font-semibold">No slots</div>
               ) : (

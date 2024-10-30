@@ -43,7 +43,7 @@ const VenuePageHeader = ({
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <p className="text-sm text-wrap">{venue.description}</p>
+        <p className="text-sm text-wrap max-w-full">{venue.description}</p>
         <div className="flex gap-2">
           <Badge variant="outline" className="border-primary">
             {cName}
